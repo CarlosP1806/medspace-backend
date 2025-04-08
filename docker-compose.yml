@@ -1,0 +1,35 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: quarkus-mysql
+    environment:
+      MYSQL_DATABASE: main
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: quarkus-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://mysql:3306/main
+      - QUARKUS_DATASOURCE_USERNAME=root
+      - QUARKUS_DATASOURCE_PASSWORD=root
+
+    develop:
+      watch:
+        #when ran on watch mode
+        - action: sync
+          path: ./src #sync files at local dir
+          target: ./app/src #update files at dir on container
+
+volumes:
+  mysql-data:
+
+
