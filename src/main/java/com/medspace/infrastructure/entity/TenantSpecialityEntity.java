@@ -7,24 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
 @Entity
-@Table(name = "products")
+@Table(name = "tenant_specialities")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity extends PanacheEntityBase {
+public class TenantSpecialityEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private Long id;
+
     @Column(name = "name")
-    public String name;
-    @Column(name = "description")
-    public String description;
-    @Column(name = "uuid")
-    public String uuid;
-    @Column(name = "price")
-    public float price;
-    @Column(name = "stock")
-    public Integer stock;
+    private String name;
 }
