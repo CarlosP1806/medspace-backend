@@ -3,9 +3,11 @@ package com.medspace.infrastructure.repository;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.infrastructure.entity.ClinicEntity;
+import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.mapper.ClinicMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
@@ -14,6 +16,9 @@ import java.util.List;
 
 @ApplicationScoped
 public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
+    @Inject
+    UserRepositoryImpl userRepository;
+
     @Override
     @Transactional
     public Clinic insertClinic(Clinic clinic) {
@@ -53,5 +58,23 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
         } else {
             throw new NotFoundException("clinic with id " + id + " not found");
         }
+    }
+
+    @Override
+    @Transactional
+    public Clinic assignClinicToUser(Long clinicId, Long userId) {
+        ClinicEntity clinicEntity = findById(clinicId);
+        if(clinicEntity == null){
+            throw new NotFoundException("clinic with id " + clinicId + " not found");
+        }
+
+        UserEntity userEntity = userRepository.findById(userId);
+        if(userEntity == null){
+            throw new NotFoundException("user with id " + userId + " not found");
+        }
+
+        clinicEntity.setLandlord(userEntity);
+        persist(clinicEntity);
+        return ClinicMapper.toDomain(clinicEntity);
     }
 }

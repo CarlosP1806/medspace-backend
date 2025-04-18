@@ -1,6 +1,8 @@
 package com.medspace.infrastructure.entity;
 
 import java.sql.Timestamp;
+import java.util.Set;
+
 import com.medspace.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -60,4 +62,6 @@ public class UserEntity extends PanacheEntityBase {
     @Column(name = "default_payment_method")
     private String defaultPaymentMethod;
 
+    @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ClinicEntity> clinics;
 }

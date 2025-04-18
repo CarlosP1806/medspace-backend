@@ -1,13 +1,11 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.clinic.CreateClinicUseCase;
-import com.medspace.application.usecase.clinic.DeleteClinicByIdUseCase;
-import com.medspace.application.usecase.clinic.GetAllClinicsUseCase;
-import com.medspace.application.usecase.clinic.GetClinicByIdUseCase;
+import com.medspace.application.usecase.clinic.*;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.CreateClinicDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -29,11 +27,16 @@ public class ClinicController {
     GetClinicByIdUseCase getClinicByIdUseCase;
     @Inject
     DeleteClinicByIdUseCase deleteClinicByIdUseCase;
+    @Inject
+    AssignClinicToUserUseCase assignClinicToUserUseCase;
 
     @POST
+    @Transactional
     public Response createClinic(@Valid CreateClinicDTO clinicRequest) {
         try {
             Clinic createdClinic = createClinicUseCase.execute(clinicRequest.toClinic());
+            createdClinic = assignClinicToUserUseCase.execute(createdClinic.getId(), clinicRequest.getUserId());
+
             return Response.status(Response.Status.CREATED)
                     .entity(createdClinic)
                     .build();

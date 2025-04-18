@@ -46,6 +46,9 @@ public class CreateClinicDTO {
     @NotBlank
     private String addressLatitude;
 
+    @NotNull
+    private Long userId;
+
     public Clinic toClinic() {
         Clinic clinic = new Clinic();
 

@@ -20,40 +20,44 @@ public class ClinicEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "display_name")
+    @Column(name = "display_name", nullable = false)
     private String displayName;
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
     private Clinic.Category category;
 
-    @Column(name = "price_per_day")
+    @Column(name = "price_per_day", nullable = false)
     private double pricePerDay;
 
-    @Column(name = "max_stay_days")
+    @Column(name = "max_stay_days", nullable = false)
     private int maxStayDays;
 
-    @Column(name = "address_street")
+    @Column(name = "address_street", nullable = false)
     private String addressStreet;
 
-    @Column(name = "address_city")
+    @Column(name = "address_city", nullable = false)
     private String addressCity;
 
-    @Column(name = "address_state")
+    @Column(name = "address_state", nullable = false)
     private String addressState;
 
-    @Column(name = "address_zip")
+    @Column(name = "address_zip", nullable = false)
     private String addressZip;
 
-    @Column(name = "address_country")
+    @Column(name = "address_country", nullable = false)
     private String addressCountry;
 
-    @Column(name = "address_longitude")
+    @Column(name = "address_longitude", nullable = false)
     private String addressLongitude;
 
-    @Column(name = "address_latitude")
+    @Column(name = "address_latitude", nullable = false)
     private String addressLatitude;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "landlord_id")
+    private UserEntity landlord;
 }
