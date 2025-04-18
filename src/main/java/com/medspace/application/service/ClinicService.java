@@ -30,4 +30,8 @@ public class ClinicService {
     public List<Clinic> getAllClinics() {
         return clinicRepository.getAllClinics();
     }
+
+    public Clinic assignLandlord(Long clinicId, Long userId) {
+        return clinicRepository.assignClinicToUser(clinicId, userId);
+    }
 }
