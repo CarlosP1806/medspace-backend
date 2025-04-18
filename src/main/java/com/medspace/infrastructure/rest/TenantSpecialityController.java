@@ -5,6 +5,7 @@ import java.util.List;
 import com.medspace.application.usecase.GetAllTenantSpecialitiesUseCase;
 import com.medspace.application.usecase.GetTenantSpecialityByIdUseCase;
 import com.medspace.domain.model.TenantSpeciality;
+import com.medspace.infrastructure.dto.ResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -35,12 +36,14 @@ public class TenantSpecialityController {
             TenantSpeciality tenantSpeciality = getTenantSpecialityByIdUseCase.execute(id);
             if (tenantSpeciality == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Tenant speciality with id " + id + " not found").build();
+                        .entity(ResponseDTO.error("Tenant speciality with id " + id + " not found"))
+                        .build();
             }
-            return Response.ok(tenantSpeciality).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
+            return Response.ok(ResponseDTO.success("Fetched tenantSpeciality", tenantSpeciality))
                     .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -49,11 +52,13 @@ public class TenantSpecialityController {
     public Response getAllTenantSpecialities() {
         try {
             List<TenantSpeciality> tenantSpecialities = getAllTenantSpecialitiesUseCase.execute();
-            return Response.ok(tenantSpecialities).build();
+            return Response
+                    .ok(ResponseDTO.success("Fetched Tenant Specialities", tenantSpecialities))
+                    .build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
