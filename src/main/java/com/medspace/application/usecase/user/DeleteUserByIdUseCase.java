@@ -1,18 +1,16 @@
-package com.medspace.application.usecase;
+package com.medspace.application.usecase.user;
 
 import com.medspace.application.service.UserService;
-import com.medspace.domain.model.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class GetUserByIdUseCase {
+public class DeleteUserByIdUseCase {
 
     @Inject
     UserService userService;
 
-    public User execute(Long userId) {
-        return userService.getUserById(userId);
+    public void execute(Long userId) {
+        userService.deleteUserById(userId);
     }
-
 }

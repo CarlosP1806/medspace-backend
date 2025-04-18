@@ -2,13 +2,14 @@ package com.medspace.infrastructure.rest;
 
 import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import com.medspace.application.usecase.CreateUserUseCase;
-import com.medspace.application.usecase.DeleteUserByIdUseCase;
-import com.medspace.application.usecase.GetAllUsersUseCase;
-import com.medspace.application.usecase.GetTenantSpecialityByIdUseCase;
-import com.medspace.application.usecase.GetUserByIdUseCase;
+import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
+import com.medspace.application.usecase.user.CreateUserUseCase;
+import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
+import com.medspace.application.usecase.user.GetAllUsersUseCase;
+import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.CreateUserDTO;
+import com.medspace.infrastructure.dto.ResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class UserController {
     CreateUserUseCase createUserUseCase;
 
     @Inject
-    GetTenantSpecialityByIdUseCase getTenantSpecialityByIdUseCase;
+    GetTenantSpecialtyByIdUseCase getTenantSpecialtyByIdUseCase;
 
     @Inject
     GetUserByIdUseCase getUserByIdUseCase;
@@ -49,12 +50,12 @@ public class UserController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createUser(@MultipartForm @Valid CreateUserDTO userRequest) {
         try {
-            if (getTenantSpecialityByIdUseCase
-                    .execute(userRequest.getTenantSpecialtyId()) == null) {
+            if (getTenantSpecialtyByIdUseCase.execute(userRequest.getTenantSpecialtyId()) == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Tenant specialty with id " + userRequest.getTenantSpecialtyId()
-                                + " not found")
+                        .entity(ResponseDTO.error("Tenant specialty with id "
+                                + userRequest.getTenantSpecialtyId() + " not found"))
                         .build();
+
             }
 
 
@@ -62,7 +63,7 @@ public class UserController {
                     userRequest.getTenantProfessionalLicense());
 
 
-            return Response.ok("User Created").build();
+            return Response.ok(ResponseDTO.success("User Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
                     .build();
@@ -76,16 +77,16 @@ public class UserController {
         try {
             User user = getUserByIdUseCase.execute(id);
             if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error("User not found")).build();
             }
             deleteUserByIdUseCase.execute(id);
 
+            return Response.ok(ResponseDTO.success("User Deleted")).build();
 
-
-            return Response.ok("User deleted").build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -96,12 +97,13 @@ public class UserController {
         try {
             User user = getUserByIdUseCase.execute(id);
             if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error("User not found")).build();
             }
-            return Response.ok(user).build();
+            return Response.ok(ResponseDTO.success("User Fetched", user)).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -110,10 +112,10 @@ public class UserController {
         try {
             List<User> users = getAllUsersUseCase.execute();
 
-            return Response.ok(users).build();
+            return Response.ok(ResponseDTO.success("Users Fetched", users)).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 }

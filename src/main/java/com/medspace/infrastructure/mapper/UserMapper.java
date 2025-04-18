@@ -19,7 +19,7 @@ public class UserMapper {
         user.setPhoneNumber(userEntity.getPhoneNumber());
         user.setCreatedAt(userEntity.getCreatedAt().toInstant());
         user.setUserType(userEntity.getUserType());
-        user.setTenantSpecialty(TenantSpecialityMapper.toDomain(userEntity.getTenantSpecialty()));
+        user.setTenantSpecialty(TenantSpecialtyMapper.toDomain(userEntity.getTenantSpecialty()));
         user.setTenantProfessionalLicenseUrl(userEntity.getTenantProfessionalLicenseUrl());
         user.setAverageRating(userEntity.getAverageRating());
         user.setStripeCustomerId(userEntity.getStripeCustomerId());
@@ -43,7 +43,7 @@ public class UserMapper {
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setCreatedAt(Timestamp.from(user.getCreatedAt()));
         userEntity.setUserType(user.getUserType());
-        userEntity.setTenantSpecialty(TenantSpecialityMapper.toEntity(user.getTenantSpecialty()));
+        userEntity.setTenantSpecialty(TenantSpecialtyMapper.toEntity(user.getTenantSpecialty()));
         userEntity.setTenantProfessionalLicenseUrl(user.getTenantProfessionalLicenseUrl());
         userEntity.setAverageRating(user.getAverageRating());
         userEntity.setStripeCustomerId(user.getStripeCustomerId());

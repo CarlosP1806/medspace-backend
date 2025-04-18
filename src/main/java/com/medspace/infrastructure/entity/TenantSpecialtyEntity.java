@@ -10,12 +10,12 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "tenant_specialities")
+@Table(name = "tenant_specialties")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TenantSpecialityEntity extends PanacheEntityBase {
+public class TenantSpecialtyEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

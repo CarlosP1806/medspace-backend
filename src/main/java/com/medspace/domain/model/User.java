@@ -24,7 +24,7 @@ public class User {
     private String phoneNumber;
     private Instant createdAt;
     private UserType userType;
-    private TenantSpeciality tenantSpecialty;
+    private TenantSpecialty tenantSpecialty;
     private String tenantProfessionalLicenseUrl;
     private float averageRating;
     private String stripeCustomerId;
