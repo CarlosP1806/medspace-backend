@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Table(name = "clinics")
@@ -60,4 +61,7 @@ public class ClinicEntity {
     @ManyToOne
     @JoinColumn(name = "landlord_id")
     private UserEntity landlord;
+
+    @OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ClinicPhotoEntity> photos;
 }
