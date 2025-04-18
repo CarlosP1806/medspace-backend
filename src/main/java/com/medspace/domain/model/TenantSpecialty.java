@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TenantSpeciality {
+public class TenantSpecialty {
     private Long id;
     private String name;
 

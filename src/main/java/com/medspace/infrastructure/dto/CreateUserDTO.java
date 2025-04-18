@@ -3,7 +3,7 @@ package com.medspace.infrastructure.dto;
 
 import java.io.InputStream;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
-import com.medspace.domain.model.TenantSpeciality;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.domain.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -76,7 +76,7 @@ public class CreateUserDTO {
 
 
         if (this.tenantSpecialtyId != null && user.getUserType() == User.UserType.TENANT) {
-            TenantSpeciality specialty = new TenantSpeciality();
+            TenantSpecialty specialty = new TenantSpecialty();
             specialty.setId(this.tenantSpecialtyId);
             user.setTenantSpecialty(specialty);
         }

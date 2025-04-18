@@ -48,7 +48,7 @@ public class UserEntity extends PanacheEntityBase {
 
     @ManyToOne
     @JoinColumn(name = "tenant_specialty_id")
-    private TenantSpecialityEntity tenantSpecialty;
+    private TenantSpecialtyEntity tenantSpecialty;
 
     @Column(name = "tenant_professional_license_url")
     private String tenantProfessionalLicenseUrl;

@@ -2,11 +2,11 @@ package com.medspace.infrastructure.rest;
 
 import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import com.medspace.application.usecase.CreateUserUseCase;
-import com.medspace.application.usecase.DeleteUserByIdUseCase;
-import com.medspace.application.usecase.GetAllUsersUseCase;
-import com.medspace.application.usecase.GetTenantSpecialityByIdUseCase;
-import com.medspace.application.usecase.GetUserByIdUseCase;
+import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
+import com.medspace.application.usecase.user.CreateUserUseCase;
+import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
+import com.medspace.application.usecase.user.GetAllUsersUseCase;
+import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.CreateUserDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
@@ -33,7 +33,7 @@ public class UserController {
     CreateUserUseCase createUserUseCase;
 
     @Inject
-    GetTenantSpecialityByIdUseCase getTenantSpecialityByIdUseCase;
+    GetTenantSpecialtyByIdUseCase getTenantSpecialtyByIdUseCase;
 
     @Inject
     GetUserByIdUseCase getUserByIdUseCase;
@@ -50,8 +50,7 @@ public class UserController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createUser(@MultipartForm @Valid CreateUserDTO userRequest) {
         try {
-            if (getTenantSpecialityByIdUseCase
-                    .execute(userRequest.getTenantSpecialtyId()) == null) {
+            if (getTenantSpecialtyByIdUseCase.execute(userRequest.getTenantSpecialtyId()) == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(ResponseDTO.error("Tenant specialty with id "
                                 + userRequest.getTenantSpecialtyId() + " not found"))

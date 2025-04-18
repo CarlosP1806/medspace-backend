@@ -3,7 +3,7 @@ package com.medspace.application.service;
 import java.time.Instant;
 import java.util.List;
 import com.medspace.domain.model.User;
-import com.medspace.domain.repository.TenantSpecialityRepository;
+import com.medspace.domain.repository.TenantSpecialtyRepository;
 import com.medspace.domain.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,7 +15,7 @@ public class UserService {
     UserRepository userRepository;
 
     @Inject
-    TenantSpecialityRepository tenantSpecialityRepository;
+    TenantSpecialtyRepository tenantSpecialtyRepository;
 
 
     public void createUser(User user) {

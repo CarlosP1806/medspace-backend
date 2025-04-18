@@ -2,9 +2,9 @@ package com.medspace.infrastructure.rest;
 
 
 import java.util.List;
-import com.medspace.application.usecase.GetAllTenantSpecialitiesUseCase;
-import com.medspace.application.usecase.GetTenantSpecialityByIdUseCase;
-import com.medspace.domain.model.TenantSpeciality;
+import com.medspace.application.usecase.tenantSpecialties.GetAllTenantSpecialtiesUseCase;
+import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,30 +16,30 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
-@Path("/tenant-specialities")
+@Path("/tenant-specialties")
 @Consumes("application/json")
 @Produces("application/json")
-public class TenantSpecialityController {
+public class TenantSpecialtyController {
 
     @Inject
-    GetTenantSpecialityByIdUseCase getTenantSpecialityByIdUseCase;
+    GetTenantSpecialtyByIdUseCase getTenantSpecialtyByIdUseCase;
 
 
     @Inject
-    GetAllTenantSpecialitiesUseCase getAllTenantSpecialitiesUseCase;
+    GetAllTenantSpecialtiesUseCase getAllTenantSpecialtiesUseCase;
 
 
     @GET
     @Path("/{id}")
-    public Response getTenantSpecialityById(@PathParam("id") Long id) {
+    public Response getTenantSpecialtyById(@PathParam("id") Long id) {
         try {
-            TenantSpeciality tenantSpeciality = getTenantSpecialityByIdUseCase.execute(id);
-            if (tenantSpeciality == null) {
+            TenantSpecialty tenantSpecialty = getTenantSpecialtyByIdUseCase.execute(id);
+            if (tenantSpecialty == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Tenant speciality with id " + id + " not found"))
+                        .entity(ResponseDTO.error("Tenant Specialty with id " + id + " not found"))
                         .build();
             }
-            return Response.ok(ResponseDTO.success("Fetched tenantSpeciality", tenantSpeciality))
+            return Response.ok(ResponseDTO.success("Fetched tenantSpecialty", tenantSpecialty))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -49,11 +49,10 @@ public class TenantSpecialityController {
 
     @GET
     @Path("/")
-    public Response getAllTenantSpecialities() {
+    public Response getAllTenantSpecialties() {
         try {
-            List<TenantSpeciality> tenantSpecialities = getAllTenantSpecialitiesUseCase.execute();
-            return Response
-                    .ok(ResponseDTO.success("Fetched Tenant Specialities", tenantSpecialities))
+            List<TenantSpecialty> tenantSpecialties = getAllTenantSpecialtiesUseCase.execute();
+            return Response.ok(ResponseDTO.success("Fetched Tenant Specialties", tenantSpecialties))
                     .build();
 
         } catch (Exception e) {

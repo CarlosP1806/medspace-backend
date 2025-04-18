@@ -1,4 +1,4 @@
-package com.medspace.application.usecase;
+package com.medspace.application.usecase.user;
 
 import java.util.List;
 import com.medspace.application.service.UserService;
