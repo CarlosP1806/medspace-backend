@@ -66,6 +66,7 @@ public class ClinicPhotoRepositoryImpl implements ClinicPhotoRepository, Panache
         return ClinicPhotoMapper.toDomain(clinicPhotoEntity);
     }
 
+    @Override
     public List<ClinicPhoto> getClinicPhotosByClinicId(Long clinicId) {
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
         if (clinicEntity == null) {
@@ -78,5 +79,31 @@ public class ClinicPhotoRepositoryImpl implements ClinicPhotoRepository, Panache
         }
 
         return clinicPhotos;
+    }
+
+    @Override
+    @Transactional
+    public void setPhotoAsPrimary(Long id) {
+        ClinicPhotoEntity clinicPhotoEntity = findById(id);
+        if (clinicPhotoEntity == null) {
+            throw new NotFoundException("ClinicPhoto with id " + id + " not Found");
+        }
+
+        Long clinicId = clinicPhotoEntity.getClinic().getId();
+        ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
+        if (clinicEntity == null) {
+            throw new NotFoundException("Clinic with id " + clinicId + " not Found");
+        }
+
+        // reset the current primary photo
+        for(ClinicPhotoEntity otherClinicPhotoEntity : clinicEntity.getPhotos()) {
+            if(otherClinicPhotoEntity.getIsPrimary()) {
+                otherClinicPhotoEntity.setIsPrimary(false);
+                persist(otherClinicPhotoEntity);
+            }
+        }
+
+        clinicPhotoEntity.setIsPrimary(true);
+        persist(clinicPhotoEntity);
     }
 }

@@ -10,12 +10,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPhotoByClinicIdDTO {
+public class GetClinicPhotoDTO {
     private Long id;
     private Long clinicId;
     private String url;
 
-    public GetPhotoByClinicIdDTO(ClinicPhoto clinicPhoto) {
+    public GetClinicPhotoDTO(ClinicPhoto clinicPhoto) {
         this.id = clinicPhoto.getId();
         this.clinicId = clinicPhoto.getClinic().getId();
         this.url = clinicPhoto.getUrl();

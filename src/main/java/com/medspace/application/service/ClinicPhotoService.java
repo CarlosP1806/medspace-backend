@@ -38,4 +38,12 @@ public class ClinicPhotoService {
     public void deletePhoto(Long id) {
         clinicPhotoRepository.deletePhotoById(id);
     }
+
+    public ClinicPhoto getPhotoById(Long id) {
+        return clinicPhotoRepository.getPhotoById(id);
+    }
+
+    public void setPhotoAsPrimary(Long id) {
+        clinicPhotoRepository.setPhotoAsPrimary(id);
+    }
 }

@@ -1,11 +1,14 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
+import com.medspace.application.usecase.clinicPhoto.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
+import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.CreateClinicDTO;
-import com.medspace.infrastructure.dto.GetPhotoByClinicIdDTO;
+import com.medspace.infrastructure.dto.GetClinicPhotoDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
+import com.medspace.infrastructure.dto.SetPhotoAsPrimaryDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -15,6 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 @Path("/clinics")
@@ -33,6 +37,10 @@ public class ClinicController {
     AssignClinicToUserUseCase assignClinicToUserUseCase;
     @Inject
     GetPhotosByClinicIdUseCase getPhotosByClinicIdUseCase;
+    @Inject
+    SetPhotoAsPrimaryClinicPhotoUseCase setPhotoAsPrimaryClinicPhotoUseCase;
+    @Inject
+    GetClinicPhotoByIdUseCase getClinicPhotoByIdUseCase;
 
     @POST
     @Transactional
@@ -108,10 +116,30 @@ public class ClinicController {
     @Path("/{id}/photos")
     public Response getPhotosByClinicId(@PathParam("id") Long id) {
         try {
-            List<GetPhotoByClinicIdDTO> clinicPhotos = getPhotosByClinicIdUseCase.execute(id);
+            List<GetClinicPhotoDTO> clinicPhotos = getPhotosByClinicIdUseCase.execute(id);
 
             return Response
                     .ok(ResponseDTO.success("ClinicPhoto Fetched", clinicPhotos))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}/primary-photo")
+    public Response setPrimaryPhoto(@PathParam("id") Long id, @Valid SetPhotoAsPrimaryDTO request) {
+        try {
+            GetClinicPhotoDTO clinicPhotoDTO = getClinicPhotoByIdUseCase.execute(request.getPhotoId());
+            if(!Objects.equals(clinicPhotoDTO.getClinicId(), id)) {
+                throw new Exception("Photo does not belong to Clinic");
+            }
+            setPhotoAsPrimaryClinicPhotoUseCase.execute(request.getPhotoId());
+
+            return Response
+                    .ok(ResponseDTO.success("Clinic Photo Updated"))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

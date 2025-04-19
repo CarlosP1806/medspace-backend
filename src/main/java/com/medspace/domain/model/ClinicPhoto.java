@@ -14,6 +14,7 @@ import java.time.Instant;
 public class ClinicPhoto {
     private Long id;
     private String url;
+    private Boolean isPrimary;
 
     private Clinic clinic;
 

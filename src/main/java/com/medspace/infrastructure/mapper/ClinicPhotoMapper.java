@@ -12,6 +12,7 @@ public class ClinicPhotoMapper {
         ClinicPhoto clinicPhoto = new ClinicPhoto();
         clinicPhoto.setId(clinicPhotoEntity.getId());
         clinicPhoto.setUrl(clinicPhotoEntity.getUrl());
+        clinicPhoto.setIsPrimary(clinicPhotoEntity.getIsPrimary());
 
         clinicPhoto.setClinic(ClinicMapper.toDomain(clinicPhotoEntity.getClinic()));
 
@@ -28,6 +29,7 @@ public class ClinicPhotoMapper {
         ClinicPhotoEntity clinicPhotoEntity = new ClinicPhotoEntity();
         clinicPhotoEntity.setId(clinicPhoto.getId());
         clinicPhotoEntity.setUrl(clinicPhoto.getUrl());
+        clinicPhotoEntity.setIsPrimary(clinicPhoto.getIsPrimary());
 
         clinicPhotoEntity.setClinic(ClinicMapper.toEntity(clinicPhoto.getClinic()));
 

@@ -23,11 +23,18 @@ public class CreateClinicPhotoDTO {
     @NotNull
     private Long clinicId;
 
+    @FormParam("isPrimary")
+    @PartType(MediaType.TEXT_PLAIN)
+    @NotNull
+    private Boolean isPrimary;
+
     @FormParam("photo")
     @PartType(MediaType.APPLICATION_OCTET_STREAM)
     private InputStream photo;
 
     public ClinicPhoto toClinicPhoto() {
-        return new ClinicPhoto();
+        ClinicPhoto clinicPhoto = new ClinicPhoto();
+        clinicPhoto.setIsPrimary(isPrimary);
+        return clinicPhoto;
     }
 }

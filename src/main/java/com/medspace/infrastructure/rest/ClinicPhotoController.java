@@ -3,6 +3,7 @@ package com.medspace.infrastructure.rest;
 import com.medspace.application.usecase.clinicPhoto.AssignPhotoToClinicUseCase;
 import com.medspace.application.usecase.clinicPhoto.CreateClinicPhotoUseCase;
 import com.medspace.application.usecase.clinicPhoto.DeleteClinicPhotoByIdUseCase;
+import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.infrastructure.dto.CreateClinicPhotoDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
@@ -26,6 +27,8 @@ public class ClinicPhotoController {
     AssignPhotoToClinicUseCase assignPhotoToClinicUseCase;
     @Inject
     DeleteClinicPhotoByIdUseCase deleteClinicPhotoByIdUseCase;
+    @Inject
+    SetPhotoAsPrimaryClinicPhotoUseCase setPhotoAsPrimaryClinicPhotoUseCase;
 
     @POST
     @Transactional
@@ -35,6 +38,10 @@ public class ClinicPhotoController {
             ClinicPhoto clinicPhoto = createClinicPhotoUseCase
                     .execute(photoRequest.toClinicPhoto(), photoRequest.getPhoto());
             assignPhotoToClinicUseCase.execute(clinicPhoto.getId(), photoRequest.getClinicId());
+
+            if(photoRequest.getIsPrimary()) {
+                setPhotoAsPrimaryClinicPhotoUseCase.execute(clinicPhoto.getId());
+            }
 
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.success("ClinicPhoto Created"))
@@ -48,7 +55,7 @@ public class ClinicPhotoController {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteClinicById(@PathParam("id") Long id) {
+    public Response deleteClinicPhotoById(@PathParam("id") Long id) {
         try {
             deleteClinicPhotoByIdUseCase.execute(id);
             return Response

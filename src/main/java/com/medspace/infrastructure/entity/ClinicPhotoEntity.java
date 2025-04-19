@@ -22,6 +22,9 @@ public class ClinicPhotoEntity {
     @Column(name = "url", nullable = false)
     private String url;
 
+    @Column(name = "is_primary", nullable = false)
+    private Boolean isPrimary = false;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
