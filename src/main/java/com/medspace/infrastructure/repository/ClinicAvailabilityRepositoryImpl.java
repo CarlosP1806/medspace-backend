@@ -59,9 +59,9 @@ public class ClinicAvailabilityRepositoryImpl implements ClinicAvailabilityRepos
     @Override
     @Transactional
     public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId) {
-        ClinicAvailabilityEntity clinicAvailabilityEntity = findById(clinicId);
+        ClinicAvailabilityEntity clinicAvailabilityEntity = findById(clinicAvailabilityId);
         if (clinicAvailabilityEntity == null) {
-            throw new NotFoundException("ClinicAvailability with id " + clinicId + " not found");
+            throw new NotFoundException("ClinicAvailability with id " + clinicAvailabilityId + " not found");
         }
 
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
