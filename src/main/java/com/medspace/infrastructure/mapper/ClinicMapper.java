@@ -6,6 +6,10 @@ import com.medspace.infrastructure.entity.ClinicEntity;
 public class ClinicMapper {
 
     public static Clinic toDomain(ClinicEntity clinicEntity) {
+        if (clinicEntity == null) {
+            return null;
+        }
+
         Clinic clinic = new Clinic();
 
         clinic.setId(clinicEntity.getId());
@@ -31,6 +35,10 @@ public class ClinicMapper {
     }
 
     public static ClinicEntity toEntity(Clinic clinic) {
+        if (clinic == null) {
+            return null;
+        }
+
         ClinicEntity clinicEntity = new ClinicEntity();
 
         clinicEntity.setId(clinic.getId());
