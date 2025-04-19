@@ -1,8 +1,10 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
+import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.CreateClinicDTO;
+import com.medspace.infrastructure.dto.GetPhotoByClinicIdDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -13,10 +15,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.Map;
 
 @ApplicationScoped
-@Path("clinics")
+@Path("/clinics")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ClinicController {
@@ -30,6 +31,8 @@ public class ClinicController {
     DeleteClinicByIdUseCase deleteClinicByIdUseCase;
     @Inject
     AssignClinicToUserUseCase assignClinicToUserUseCase;
+    @Inject
+    GetPhotosByClinicIdUseCase getPhotosByClinicIdUseCase;
 
     @POST
     @Transactional
@@ -93,6 +96,22 @@ public class ClinicController {
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/photos")
+    public Response getPhotosByClinicId(@PathParam("id") Long id) {
+        try {
+            List<GetPhotoByClinicIdDTO> clinicPhotos = getPhotosByClinicIdUseCase.execute(id);
+
+            return Response
+                    .ok(ResponseDTO.success("ClinicPhoto Fetched", clinicPhotos))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

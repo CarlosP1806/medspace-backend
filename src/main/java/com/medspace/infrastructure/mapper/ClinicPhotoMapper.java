@@ -5,6 +5,10 @@ import com.medspace.infrastructure.entity.ClinicPhotoEntity;
 
 public class ClinicPhotoMapper {
     public static ClinicPhoto toDomain(ClinicPhotoEntity clinicPhotoEntity) {
+        if (clinicPhotoEntity == null) {
+            return null;
+        }
+
         ClinicPhoto clinicPhoto = new ClinicPhoto();
         clinicPhoto.setId(clinicPhotoEntity.getId());
         clinicPhoto.setUrl(clinicPhotoEntity.getUrl());
@@ -17,6 +21,10 @@ public class ClinicPhotoMapper {
     }
 
     public static ClinicPhotoEntity toEntity(ClinicPhoto clinicPhoto) {
+        if (clinicPhoto == null) {
+            return null;
+        }
+
         ClinicPhotoEntity clinicPhotoEntity = new ClinicPhotoEntity();
         clinicPhotoEntity.setId(clinicPhoto.getId());
         clinicPhotoEntity.setUrl(clinicPhoto.getUrl());
