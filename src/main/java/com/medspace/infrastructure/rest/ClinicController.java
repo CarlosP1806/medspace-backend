@@ -1,14 +1,12 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
+import com.medspace.application.usecase.clinicEquipment.GetEquipmentsByClinicIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.Clinic;
-import com.medspace.infrastructure.dto.CreateClinicDTO;
-import com.medspace.infrastructure.dto.GetClinicPhotoDTO;
-import com.medspace.infrastructure.dto.ResponseDTO;
-import com.medspace.infrastructure.dto.SetPhotoAsPrimaryDTO;
+import com.medspace.infrastructure.dto.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -41,6 +39,8 @@ public class ClinicController {
     SetPhotoAsPrimaryClinicPhotoUseCase setPhotoAsPrimaryClinicPhotoUseCase;
     @Inject
     GetClinicPhotoByIdUseCase getClinicPhotoByIdUseCase;
+    @Inject
+    GetEquipmentsByClinicIdUseCase getEquipmentsByClinicIdUseCase;
 
     @POST
     @Transactional
@@ -140,6 +140,22 @@ public class ClinicController {
 
             return Response
                     .ok(ResponseDTO.success("Clinic Photo Updated"))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/equipments")
+    public Response getEquipmentsByClinicId(@PathParam("id") Long id) {
+        try {
+            List<GetClinicEquipmentDTO> clinicEquipments = getEquipmentsByClinicIdUseCase.execute(id);
+
+            return Response
+                    .ok(ResponseDTO.success("ClinicEquipment Fetched", clinicEquipments))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
