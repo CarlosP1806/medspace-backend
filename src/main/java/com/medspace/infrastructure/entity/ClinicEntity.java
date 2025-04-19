@@ -67,4 +67,7 @@ public class ClinicEntity {
 
     @OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ClinicEquipmentEntity> equipments;
+
+    @OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ClinicAvailabilityEntity> availabilities;
 }
