@@ -1,6 +1,7 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
+import com.medspace.application.usecase.clinicAvailability.GetAvailabilitiesByClinicIdUseCase;
 import com.medspace.application.usecase.clinicEquipment.GetEquipmentsByClinicIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
@@ -41,6 +42,8 @@ public class ClinicController {
     GetClinicPhotoByIdUseCase getClinicPhotoByIdUseCase;
     @Inject
     GetEquipmentsByClinicIdUseCase getEquipmentsByClinicIdUseCase;
+    @Inject
+    GetAvailabilitiesByClinicIdUseCase getAvailabilitiesByClinicIdUseCase;
 
     @POST
     @Transactional
@@ -156,6 +159,22 @@ public class ClinicController {
 
             return Response
                     .ok(ResponseDTO.success("ClinicEquipment Fetched", clinicEquipments))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/availabilities")
+    public Response getAvailabilitiesByClinicId(@PathParam("id") Long id) {
+        try {
+            List<GetClinicAvailabilityDTO> clinicAvailabilities = getAvailabilitiesByClinicIdUseCase.execute(id);
+
+            return Response
+                    .ok(ResponseDTO.success("ClinicAvailability Fetched", clinicAvailabilities))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
