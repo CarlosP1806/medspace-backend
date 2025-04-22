@@ -15,14 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class ClinicEquipmentRepositoryImpl implements ClinicEquipmentRepository, PanacheRepositoryBase<ClinicEquipmentEntity, Long> {
+public class ClinicEquipmentRepositoryImpl
+        implements ClinicEquipmentRepository, PanacheRepositoryBase<ClinicEquipmentEntity, Long> {
     @Inject
     ClinicRepositoryImpl clinicRepository;
 
     @Transactional
     @Override
     public ClinicEquipment insertEquipment(ClinicEquipment clinicEquipment) {
-        ClinicEquipmentEntity clinicEquipmentEntity = ClinicEquipmentMapper.toEntity(clinicEquipment);
+        ClinicEquipmentEntity clinicEquipmentEntity =
+                ClinicEquipmentMapper.toEntity(clinicEquipment);
         persist(clinicEquipmentEntity);
         clinicEquipment = ClinicEquipmentMapper.toDomain(clinicEquipmentEntity);
         return clinicEquipment;
@@ -31,7 +33,7 @@ public class ClinicEquipmentRepositoryImpl implements ClinicEquipmentRepository,
     @Override
     public ClinicEquipment getEquipmentById(Long id) {
         ClinicEquipmentEntity clinicEquipmentEntity = findById(id);
-        if(clinicEquipmentEntity == null) {
+        if (clinicEquipmentEntity == null) {
             throw new NotFoundException("ClinicEquipment with id " + id + " not found");
         }
         return ClinicEquipmentMapper.toDomain(clinicEquipmentEntity);
@@ -41,8 +43,8 @@ public class ClinicEquipmentRepositoryImpl implements ClinicEquipmentRepository,
     @Transactional
     public void deleteEquipmentById(Long id) {
         ClinicEquipmentEntity clinicEquipmentEntity = findById(id);
-        if(clinicEquipmentEntity != null) {
-           delete(clinicEquipmentEntity);
+        if (clinicEquipmentEntity != null) {
+            delete(clinicEquipmentEntity);
         } else {
             throw new NotFoundException("ClinicEquipment with id " + id + " not found");
         }
@@ -52,12 +54,13 @@ public class ClinicEquipmentRepositoryImpl implements ClinicEquipmentRepository,
     @Transactional
     public ClinicEquipment assignEquipmentToClinic(Long clinicEquipmentId, Long clinicId) {
         ClinicEquipmentEntity clinicEquipmentEntity = findById(clinicEquipmentId);
-        if(clinicEquipmentEntity == null) {
-            throw new NotFoundException("ClinicEquipment with id " + clinicEquipmentId + " not found");
+        if (clinicEquipmentEntity == null) {
+            throw new NotFoundException(
+                    "ClinicEquipment with id " + clinicEquipmentId + " not found");
         }
 
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
-        if(clinicEntity == null) {
+        if (clinicEntity == null) {
             throw new NotFoundException("Clinic with id " + clinicId + " not found");
         }
 
@@ -69,12 +72,12 @@ public class ClinicEquipmentRepositoryImpl implements ClinicEquipmentRepository,
     @Override
     public List<ClinicEquipment> getEquipmentsByClinicId(Long clinicId) {
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
-        if(clinicEntity == null) {
+        if (clinicEntity == null) {
             throw new NotFoundException("Clinic with id " + clinicId + " not found");
         }
 
         List<ClinicEquipment> clinicEquipments = new ArrayList<>();
-        for(ClinicEquipmentEntity clinicEquipmentEntity : clinicEntity.getEquipments()) {
+        for (ClinicEquipmentEntity clinicEquipmentEntity : clinicEntity.getEquipments()) {
             clinicEquipments.add(ClinicEquipmentMapper.toDomain(clinicEquipmentEntity));
         }
 

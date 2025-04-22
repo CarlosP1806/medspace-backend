@@ -23,7 +23,8 @@ public class ClinicAvailabilityRepositoryImpl implements ClinicAvailabilityRepos
     @Transactional
     @Override
     public ClinicAvailability insertAvailability(ClinicAvailability clinicAvailability) {
-        ClinicAvailabilityEntity clinicAvailabilityEntity = ClinicAvailabilityMapper.toEntity(clinicAvailability);
+        ClinicAvailabilityEntity clinicAvailabilityEntity =
+                ClinicAvailabilityMapper.toEntity(clinicAvailability);
         persist(clinicAvailabilityEntity);
         clinicAvailability = ClinicAvailabilityMapper.toDomain(clinicAvailabilityEntity);
         return clinicAvailability;
@@ -61,7 +62,8 @@ public class ClinicAvailabilityRepositoryImpl implements ClinicAvailabilityRepos
     public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId) {
         ClinicAvailabilityEntity clinicAvailabilityEntity = findById(clinicAvailabilityId);
         if (clinicAvailabilityEntity == null) {
-            throw new NotFoundException("ClinicAvailability with id " + clinicAvailabilityId + " not found");
+            throw new NotFoundException(
+                    "ClinicAvailability with id " + clinicAvailabilityId + " not found");
         }
 
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
@@ -81,7 +83,7 @@ public class ClinicAvailabilityRepositoryImpl implements ClinicAvailabilityRepos
         }
 
         List<ClinicAvailability> clinicAvailabilities = new ArrayList<>();
-        for(ClinicAvailabilityEntity clinicAvailabilityEntity : clinicEntity.getAvailabilities()) {
+        for (ClinicAvailabilityEntity clinicAvailabilityEntity : clinicEntity.getAvailabilities()) {
             clinicAvailabilities.add(ClinicAvailabilityMapper.toDomain(clinicAvailabilityEntity));
         }
 

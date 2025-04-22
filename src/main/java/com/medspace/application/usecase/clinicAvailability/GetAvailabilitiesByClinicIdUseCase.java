@@ -15,10 +15,11 @@ public class GetAvailabilitiesByClinicIdUseCase {
     ClinicAvailabilityService clinicAvailabilityService;
 
     public List<GetClinicAvailabilityDTO> execute(Long id) {
-        List<ClinicAvailability> clinicAvailabilities = clinicAvailabilityService.getAvailabilitiesByClinicId(id);
+        List<ClinicAvailability> clinicAvailabilities =
+                clinicAvailabilityService.getAvailabilitiesByClinicId(id);
         List<GetClinicAvailabilityDTO> clinicAvailabilityDTOS = new ArrayList<>();
 
-        for(ClinicAvailability clinicAvailability : clinicAvailabilities){
+        for (ClinicAvailability clinicAvailability : clinicAvailabilities) {
             clinicAvailabilityDTOS.add(new GetClinicAvailabilityDTO(clinicAvailability));
         }
 

@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class ClinicPhotoRepositoryImpl implements ClinicPhotoRepository, PanacheRepositoryBase<ClinicPhotoEntity, Long> {
+public class ClinicPhotoRepositoryImpl
+        implements ClinicPhotoRepository, PanacheRepositoryBase<ClinicPhotoEntity, Long> {
     @Inject
     ClinicRepositoryImpl clinicRepository;
 
@@ -74,7 +75,7 @@ public class ClinicPhotoRepositoryImpl implements ClinicPhotoRepository, Panache
         }
 
         List<ClinicPhoto> clinicPhotos = new ArrayList<>();
-        for(ClinicPhotoEntity clinicPhotoEntity : clinicEntity.getPhotos()) {
+        for (ClinicPhotoEntity clinicPhotoEntity : clinicEntity.getPhotos()) {
             clinicPhotos.add(ClinicPhotoMapper.toDomain(clinicPhotoEntity));
         }
 
@@ -96,8 +97,8 @@ public class ClinicPhotoRepositoryImpl implements ClinicPhotoRepository, Panache
         }
 
         // reset the current primary photo
-        for(ClinicPhotoEntity otherClinicPhotoEntity : clinicEntity.getPhotos()) {
-            if(otherClinicPhotoEntity.getIsPrimary()) {
+        for (ClinicPhotoEntity otherClinicPhotoEntity : clinicEntity.getPhotos()) {
+            if (otherClinicPhotoEntity.getIsPrimary()) {
                 otherClinicPhotoEntity.setIsPrimary(false);
                 persist(otherClinicPhotoEntity);
             }

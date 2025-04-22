@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.dto;
 
 import com.medspace.domain.model.ClinicAvailability;
-import com.medspace.domain.model.ClinicEquipment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
