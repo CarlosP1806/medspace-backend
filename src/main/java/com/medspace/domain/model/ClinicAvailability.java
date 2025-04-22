@@ -14,13 +14,7 @@ import java.time.LocalTime;
 @Getter
 public class ClinicAvailability {
     public enum WeekDay {
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
+        MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
     }
 
     private Long id;

@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetEquipmentsByClinicIdUseCase {
@@ -19,7 +18,7 @@ public class GetEquipmentsByClinicIdUseCase {
         List<ClinicEquipment> clinicEquipments = clinicEquipmentService.getEquipmentsByClinicId(id);
         List<GetClinicEquipmentDTO> clinicEquipmentDTOs = new ArrayList<>();
 
-        for(ClinicEquipment clinicEquipment : clinicEquipments) {
+        for (ClinicEquipment clinicEquipment : clinicEquipments) {
             clinicEquipmentDTOs.add(new GetClinicEquipmentDTO(clinicEquipment));
         }
 

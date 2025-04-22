@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.dto;
 
 import com.medspace.domain.model.ClinicPhoto;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.core.MediaType;

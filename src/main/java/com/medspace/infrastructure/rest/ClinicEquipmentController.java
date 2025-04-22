@@ -30,17 +30,16 @@ public class ClinicEquipmentController {
     @Transactional
     public Response createClinicEquipment(@Valid CreateClinicEquipmentDTO equipmentRequest) {
         try {
-            ClinicEquipment clinicEquipment = createClinicEquipmentUseCase
-                    .execute(equipmentRequest.toClinicEquipment());
-            assignEquipmentToClinicUseCase.execute(clinicEquipment.getId(), equipmentRequest.getClinicId());
+            ClinicEquipment clinicEquipment =
+                    createClinicEquipmentUseCase.execute(equipmentRequest.toClinicEquipment());
+            assignEquipmentToClinicUseCase.execute(clinicEquipment.getId(),
+                    equipmentRequest.getClinicId());
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("ClinicEquipment Created"))
-                    .build();
+                    .entity(ResponseDTO.success("ClinicEquipment Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -49,17 +48,13 @@ public class ClinicEquipmentController {
     public Response deleteClinicEquipmentById(@PathParam("id") Long id) {
         try {
             deleteClinicEquipmentByIdUseCase.execute(id);
-            return Response
-                    .ok(ResponseDTO.success("ClinicEquipment Deleted"))
-                    .build();
+            return Response.ok(ResponseDTO.success("ClinicEquipment Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 }

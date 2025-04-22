@@ -53,12 +53,10 @@ public class ClinicController {
             assignClinicToUserUseCase.execute(createdClinic.getId(), clinicRequest.getUserId());
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("Clinic Created"))
-                    .build();
+                    .entity(ResponseDTO.success("Clinic Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -66,13 +64,10 @@ public class ClinicController {
     public Response getAllClinics() {
         try {
             List<Clinic> clinics = getAllClinicsUseCase.execute();
-            return Response
-                    .ok(ResponseDTO.success("Clinics Fetched", clinics))
-                    .build();
+            return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -83,16 +78,12 @@ public class ClinicController {
             Clinic clinic = getClinicByIdUseCase.execute(id);
             if (clinic == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Clinic not Found"))
-                        .build();
+                        .entity(ResponseDTO.error("Clinic not Found")).build();
             }
-            return Response
-                    .ok(ResponseDTO.success("Clinic Fetched", clinic))
-                    .build();
+            return Response.ok(ResponseDTO.success("Clinic Fetched", clinic)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -101,17 +92,13 @@ public class ClinicController {
     public Response deleteClinicById(@PathParam("id") Long id) {
         try {
             deleteClinicByIdUseCase.execute(id);
-            return Response
-                    .ok(ResponseDTO.success("Clinic Deleted"))
-                    .build();
+            return Response.ok(ResponseDTO.success("Clinic Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -121,13 +108,10 @@ public class ClinicController {
         try {
             List<GetClinicPhotoDTO> clinicPhotos = getPhotosByClinicIdUseCase.execute(id);
 
-            return Response
-                    .ok(ResponseDTO.success("ClinicPhoto Fetched", clinicPhotos))
-                    .build();
+            return Response.ok(ResponseDTO.success("ClinicPhoto Fetched", clinicPhotos)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -135,19 +119,17 @@ public class ClinicController {
     @Path("/{id}/primary-photo")
     public Response setPrimaryPhoto(@PathParam("id") Long id, @Valid SetPhotoAsPrimaryDTO request) {
         try {
-            GetClinicPhotoDTO clinicPhotoDTO = getClinicPhotoByIdUseCase.execute(request.getPhotoId());
-            if(!Objects.equals(clinicPhotoDTO.getClinicId(), id)) {
+            GetClinicPhotoDTO clinicPhotoDTO =
+                    getClinicPhotoByIdUseCase.execute(request.getPhotoId());
+            if (!Objects.equals(clinicPhotoDTO.getClinicId(), id)) {
                 throw new Exception("Photo does not belong to Clinic");
             }
             setPhotoAsPrimaryClinicPhotoUseCase.execute(request.getPhotoId());
 
-            return Response
-                    .ok(ResponseDTO.success("Clinic Photo Updated"))
-                    .build();
+            return Response.ok(ResponseDTO.success("Clinic Photo Updated")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -155,15 +137,14 @@ public class ClinicController {
     @Path("/{id}/equipments")
     public Response getEquipmentsByClinicId(@PathParam("id") Long id) {
         try {
-            List<GetClinicEquipmentDTO> clinicEquipments = getEquipmentsByClinicIdUseCase.execute(id);
+            List<GetClinicEquipmentDTO> clinicEquipments =
+                    getEquipmentsByClinicIdUseCase.execute(id);
 
-            return Response
-                    .ok(ResponseDTO.success("ClinicEquipment Fetched", clinicEquipments))
+            return Response.ok(ResponseDTO.success("ClinicEquipment Fetched", clinicEquipments))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -171,15 +152,15 @@ public class ClinicController {
     @Path("/{id}/availabilities")
     public Response getAvailabilitiesByClinicId(@PathParam("id") Long id) {
         try {
-            List<GetClinicAvailabilityDTO> clinicAvailabilities = getAvailabilitiesByClinicIdUseCase.execute(id);
+            List<GetClinicAvailabilityDTO> clinicAvailabilities =
+                    getAvailabilitiesByClinicIdUseCase.execute(id);
 
             return Response
                     .ok(ResponseDTO.success("ClinicAvailability Fetched", clinicAvailabilities))
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 }

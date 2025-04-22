@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
+public class ClinicRepositoryImpl
+        implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
     @Inject
     UserRepositoryImpl userRepository;
 
@@ -33,7 +34,7 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
         List<ClinicEntity> clinicEntities = listAll();
         List<Clinic> clinics = new ArrayList<>();
 
-        for(ClinicEntity clinicEntity : clinicEntities){
+        for (ClinicEntity clinicEntity : clinicEntities) {
             clinics.add(ClinicMapper.toDomain(clinicEntity));
         }
 
@@ -43,7 +44,7 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
     @Override
     public Clinic getClinicById(Long id) {
         ClinicEntity clinicEntity = findById(id);
-        if(clinicEntity == null){
+        if (clinicEntity == null) {
             return null;
         }
         return ClinicMapper.toDomain(clinicEntity);
@@ -53,7 +54,7 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
     @Transactional
     public void deleteClinicById(Long id) {
         ClinicEntity clinicEntity = findById(id);
-        if(clinicEntity != null){
+        if (clinicEntity != null) {
             delete(clinicEntity);
         } else {
             throw new NotFoundException("clinic with id " + id + " not found");
@@ -64,12 +65,12 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
     @Transactional
     public Clinic assignClinicToUser(Long clinicId, Long userId) {
         ClinicEntity clinicEntity = findById(clinicId);
-        if(clinicEntity == null){
+        if (clinicEntity == null) {
             throw new NotFoundException("clinic with id " + clinicId + " not found");
         }
 
         UserEntity userEntity = userRepository.findById(userId);
-        if(userEntity == null){
+        if (userEntity == null) {
             throw new NotFoundException("user with id " + userId + " not found");
         }
 

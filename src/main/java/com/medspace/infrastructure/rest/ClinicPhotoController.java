@@ -35,21 +35,19 @@ public class ClinicPhotoController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createClinicPhoto(@MultipartForm @Valid CreateClinicPhotoDTO photoRequest) {
         try {
-            ClinicPhoto clinicPhoto = createClinicPhotoUseCase
-                    .execute(photoRequest.toClinicPhoto(), photoRequest.getPhoto());
+            ClinicPhoto clinicPhoto = createClinicPhotoUseCase.execute(photoRequest.toClinicPhoto(),
+                    photoRequest.getPhoto());
             assignPhotoToClinicUseCase.execute(clinicPhoto.getId(), photoRequest.getClinicId());
 
-            if(photoRequest.getIsPrimary()) {
+            if (photoRequest.getIsPrimary()) {
                 setPhotoAsPrimaryClinicPhotoUseCase.execute(clinicPhoto.getId());
             }
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("ClinicPhoto Created"))
-                    .build();
+                    .entity(ResponseDTO.success("ClinicPhoto Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -58,17 +56,13 @@ public class ClinicPhotoController {
     public Response deleteClinicPhotoById(@PathParam("id") Long id) {
         try {
             deleteClinicPhotoByIdUseCase.execute(id);
-            return Response
-                    .ok(ResponseDTO.success("ClinicPhoto Deleted"))
-                    .build();
+            return Response.ok(ResponseDTO.success("ClinicPhoto Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 }

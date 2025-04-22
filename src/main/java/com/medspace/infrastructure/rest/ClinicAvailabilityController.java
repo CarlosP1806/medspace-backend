@@ -32,19 +32,19 @@ public class ClinicAvailabilityController {
 
     @POST
     @Transactional
-    public Response createClinicAvailability(@Valid CreateClinicAvailabilityDTO availabilityRequest) {
+    public Response createClinicAvailability(
+            @Valid CreateClinicAvailabilityDTO availabilityRequest) {
         try {
             ClinicAvailability clinicAvailability = createClinicAvailabilityUseCase
                     .execute(availabilityRequest.toClinicAvailability());
-            assignAvailabilityToClinicUseCase.execute(clinicAvailability.getId(), availabilityRequest.getClinicId());
+            assignAvailabilityToClinicUseCase.execute(clinicAvailability.getId(),
+                    availabilityRequest.getClinicId());
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("ClinicAvailability Created"))
-                    .build();
+                    .entity(ResponseDTO.success("ClinicAvailability Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -53,33 +53,26 @@ public class ClinicAvailabilityController {
     public Response deleteClinicAvailabilityById(@PathParam("id") Long id) {
         try {
             deleteClinicAvailabilityByIdUseCase.execute(id);
-            return Response
-                    .ok(ResponseDTO.success("ClinicAvailability Deleted"))
-                    .build();
+            return Response.ok(ResponseDTO.success("ClinicAvailability Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
     @PUT
     @Path("/{id}")
     public Response updateClinicAvailabilityById(@PathParam("id") Long id,
-                                                 @Valid UpdateClinicAvailabilityDTO availabilityRequest) {
+            @Valid UpdateClinicAvailabilityDTO availabilityRequest) {
         try {
             updateClinicAvailabilityUseCase.execute(id, availabilityRequest.toClinicAvailability());
-            return Response
-                    .ok(ResponseDTO.success("ClinicAvailability Updated"))
-                    .build();
+            return Response.ok(ResponseDTO.success("ClinicAvailability Updated")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 }

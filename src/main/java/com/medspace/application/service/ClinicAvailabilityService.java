@@ -20,7 +20,8 @@ public class ClinicAvailabilityService {
     }
 
     public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId) {
-        return clinicAvailabilityRepository.assignAvailabilityToClinic(clinicAvailabilityId, clinicId);
+        return clinicAvailabilityRepository.assignAvailabilityToClinic(clinicAvailabilityId,
+                clinicId);
     }
 
     public List<ClinicAvailability> getAvailabilitiesByClinicId(Long clinicId) {
@@ -31,7 +32,8 @@ public class ClinicAvailabilityService {
         clinicAvailabilityRepository.deleteAvailabilityById(id);
     }
 
-    public ClinicAvailability updateAvailabilityById(Long id, ClinicAvailability clinicAvailability) {
+    public ClinicAvailability updateAvailabilityById(Long id,
+            ClinicAvailability clinicAvailability) {
         return clinicAvailabilityRepository.updateAvailability(id, clinicAvailability);
     }
 }

@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.dto;
 
 import com.medspace.domain.model.ClinicAvailability;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
