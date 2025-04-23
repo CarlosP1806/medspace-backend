@@ -1,5 +1,6 @@
 package com.medspace.domain.model;
 
+import java.text.NumberFormat.Field;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class User {
     private UserType userType;
     private TenantSpecialty tenantSpecialty;
     private String tenantProfessionalLicenseUrl;
-    private float averageRating;
+    private Float averageRating;
     private String stripeCustomerId;
     private String defaultPaymentMethod;
 }

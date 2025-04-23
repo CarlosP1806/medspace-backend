@@ -1,5 +1,4 @@
 package com.medspace.infrastructure.rest;
-
 import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;

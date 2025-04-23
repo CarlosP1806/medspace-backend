@@ -54,7 +54,7 @@ public class UserEntity extends PanacheEntityBase {
     private String tenantProfessionalLicenseUrl;
 
     @Column(name = "average_rating")
-    private float averageRating;
+    private Float averageRating;
 
     @Column(name = "stripe_customer_id")
     private String stripeCustomerId;
