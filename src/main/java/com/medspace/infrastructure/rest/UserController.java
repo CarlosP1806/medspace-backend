@@ -10,6 +10,8 @@ import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.CreateUserDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
+import com.medspace.infrastructure.rest.annotations.UserOnly;
+import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -27,7 +29,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/users")
 @Consumes("application/json")
 @Produces("application/json")
-
 public class UserController {
     @Inject
     CreateUserUseCase createUserUseCase;
@@ -44,6 +45,9 @@ public class UserController {
 
     @Inject
     DeleteUserByIdUseCase deleteUserByIdUseCase;
+
+    @Inject
+    RequestContext requestContext;
 
 
     @POST
@@ -118,4 +122,38 @@ public class UserController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+
+
+    @GET
+    @UserOnly
+    @Path("/me")
+    public Response getMyProfile() {
+
+        try {
+
+
+            String userId = requestContext.getUserId();
+
+
+            // if (userId == null) {
+            // return Response.status(Response.Status.UNAUTHORIZED)
+            // .entity(ResponseDTO.error("User not authenticated")).build();
+            // }
+
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(ResponseDTO.success("Userid", userId)).build();
+
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+
+        }
+
+    }
+
+
+
 }
