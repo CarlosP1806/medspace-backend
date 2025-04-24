@@ -17,9 +17,6 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
     @Override
     @Transactional
     public User insertUser(User user) {
-
-
-
         UserEntity userEntity = UserMapper.toEntity(user);
         persist(userEntity);
         user = UserMapper.toDomain(userEntity);
@@ -52,6 +49,17 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         if (userEntity != null) {
             delete(userEntity);
         }
+    }
+
+    @Override
+    public User getUserByFirebaseId(String id) {
+        UserEntity userEntity = find("firebaseUid", id).firstResult();
+
+        if (userEntity == null) {
+            return null;
+        }
+
+        return UserMapper.toDomain(userEntity);
     }
 
 }

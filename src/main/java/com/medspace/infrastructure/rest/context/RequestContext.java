@@ -9,9 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestContext {
-
     private User user;
-
-    private String userId;
-
+    private String firebaseUid;
 }

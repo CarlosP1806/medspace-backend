@@ -19,7 +19,7 @@ public class User {
     private Long id;
     private String fullName;
     private String email;
-    private String passwordHash;
+    private String firebaseUid;
     private String profilePictureUrl;
     private String phoneNumber;
     private Instant createdAt;

@@ -20,8 +20,8 @@ import java.io.IOException;
 @Priority(Priorities.AUTHENTICATION)
 public class FirebaseAuthFilter implements ContainerRequestFilter {
 
-    // @Inject
-    // private UserRepository userRepository;
+    @Inject
+    private UserRepository userRepository;
 
     @Inject
     RequestContext requestContext;
@@ -32,11 +32,10 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
 
         // Check if the header is null or empty
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            requestContext.setUserId(null);
+            requestContext.setUser(null);
+            requestContext.setFirebaseUid(null);
             return;
         }
-
-
 
         // Extract the token from the header
         String token = authHeader.substring("Bearer".length()).trim();
@@ -45,21 +44,21 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
         try {
 
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-            // User u = userRepository.getUserByFireBaseId(decodedToken.getUid());
-            requestContext.setUserId(decodedToken.getUid());
-
+            String firebaseUid = decodedToken.getUid();
+            User u = userRepository.getUserByFirebaseId(firebaseUid);
+            requestContext.setFirebaseUid(firebaseUid);
+            requestContext.setUser(u);
 
         } catch (FirebaseAuthException e) {
 
-            requestContext.setUserId(null);
-
+            requestContext.setUser(null);
+            requestContext.setFirebaseUid(null);
 
         } catch (Exception e) {
 
             ctx.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error("Internal error adding user property to request"))
                     .build());
-
 
         }
     }

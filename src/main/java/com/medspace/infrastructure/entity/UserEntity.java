@@ -1,8 +1,7 @@
 package com.medspace.infrastructure.entity;
 
 import java.sql.Timestamp;
-import java.util.Set;
-
+import java.util.List;
 import com.medspace.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -27,11 +26,11 @@ public class UserEntity extends PanacheEntityBase {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password_hash")
-    private String passwordHash;
+    @Column(name = "firebase_uid", unique = true)
+    private String firebaseUid;
 
     @Column(name = "profile_photo_url")
     private String profilePictureUrl;
@@ -63,5 +62,5 @@ public class UserEntity extends PanacheEntityBase {
     private String defaultPaymentMethod;
 
     @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ClinicEntity> clinics;
+    private List<ClinicEntity> clinics;
 }
