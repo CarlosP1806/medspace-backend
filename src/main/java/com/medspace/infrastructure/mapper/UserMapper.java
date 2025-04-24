@@ -14,7 +14,7 @@ public class UserMapper {
         user.setId(userEntity.getId());
         user.setFullName(userEntity.getFullName());
         user.setEmail(userEntity.getEmail());
-        user.setPasswordHash(userEntity.getPasswordHash());
+        user.setFirebaseUid(userEntity.getFirebaseUid());
         user.setProfilePictureUrl(userEntity.getProfilePictureUrl());
         user.setPhoneNumber(userEntity.getPhoneNumber());
         user.setCreatedAt(userEntity.getCreatedAt().toInstant());
@@ -38,7 +38,7 @@ public class UserMapper {
         userEntity.setId(user.getId());
         userEntity.setFullName(user.getFullName());
         userEntity.setEmail(user.getEmail());
-        userEntity.setPasswordHash(user.getPasswordHash());
+        userEntity.setFirebaseUid(user.getFirebaseUid());
         userEntity.setProfilePictureUrl(user.getProfilePictureUrl());
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setCreatedAt(Timestamp.from(user.getCreatedAt()));

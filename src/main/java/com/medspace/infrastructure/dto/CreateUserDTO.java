@@ -36,11 +36,6 @@ public class CreateUserDTO {
 
 
     @NotBlank
-    @FormParam("password")
-    @PartType(MediaType.TEXT_PLAIN)
-    private String password;
-
-    @NotBlank
     @FormParam("phoneNumber")
     @PartType(MediaType.TEXT_PLAIN)
     private String phoneNumber;
@@ -70,18 +65,14 @@ public class CreateUserDTO {
         User user = new User();
         user.setFullName(this.fullName);
         user.setEmail(this.email);
-        user.setPasswordHash(this.password); // Store raw password temporarily
         user.setPhoneNumber(this.phoneNumber);
         user.setUserType(User.UserType.valueOf(this.userType));
-
 
         if (this.tenantSpecialtyId != null && user.getUserType() == User.UserType.TENANT) {
             TenantSpecialty specialty = new TenantSpecialty();
             specialty.setId(this.tenantSpecialtyId);
             user.setTenantSpecialty(specialty);
         }
-
-
 
         return user;
     }

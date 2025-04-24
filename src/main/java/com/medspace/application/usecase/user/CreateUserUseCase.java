@@ -26,8 +26,6 @@ public class CreateUserUseCase {
             user.setTenantProfessionalLicenseUrl(licenseUrl);
         }
 
-
-
         userService.createUser(user);
     }
 

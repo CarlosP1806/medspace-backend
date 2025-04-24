@@ -54,6 +54,15 @@ public class UserController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response createUser(@MultipartForm @Valid CreateUserDTO userRequest) {
         try {
+            String firebaseUid = requestContext.getFirebaseUid();
+
+            if (firebaseUid == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity(ResponseDTO.error("You need firebase UID to create account"))
+                        .build();
+            }
+
+
             if (getTenantSpecialtyByIdUseCase.execute(userRequest.getTenantSpecialtyId()) == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(ResponseDTO.error("Tenant specialty with id "
@@ -62,15 +71,22 @@ public class UserController {
 
             }
 
+            User user = userRequest.toUser();
+            user.setFirebaseUid(firebaseUid);
 
-            createUserUseCase.execute(userRequest.toUser(), userRequest.getProfilePhoto(),
+            createUserUseCase.execute(user, userRequest.getProfilePhoto(),
                     userRequest.getTenantProfessionalLicense());
 
 
             return Response.ok(ResponseDTO.success("User Created")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
-                    .build();
+            if (e.getMessage().contains("User already exists")) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity(ResponseDTO.error(e.getMessage())).build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
 
@@ -79,16 +95,17 @@ public class UserController {
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") Long id) {
         try {
-            User user = getUserByIdUseCase.execute(id);
-            if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("User not found")).build();
-            }
             deleteUserByIdUseCase.execute(id);
 
             return Response.ok(ResponseDTO.success("User Deleted")).build();
 
         } catch (Exception e) {
+
+            if (e.getMessage().contains("not found")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error(e.getMessage())).build();
+            }
+
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
@@ -100,12 +117,15 @@ public class UserController {
     public Response getUser(@PathParam("id") Long id) {
         try {
             User user = getUserByIdUseCase.execute(id);
-            if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("User not found")).build();
-            }
+
             return Response.ok(ResponseDTO.success("User Fetched", user)).build();
         } catch (Exception e) {
+
+            if (e.getMessage().contains("not found")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error(e.getMessage())).build();
+            }
+
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
@@ -128,32 +148,14 @@ public class UserController {
     @UserOnly
     @Path("/me")
     public Response getMyProfile() {
-
         try {
+            User user = requestContext.getUser();
 
-
-            String userId = requestContext.getUserId();
-
-
-            // if (userId == null) {
-            // return Response.status(Response.Status.UNAUTHORIZED)
-            // .entity(ResponseDTO.error("User not authenticated")).build();
-            // }
-
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(ResponseDTO.success("Userid", userId)).build();
-
-
-
+            return Response.ok(ResponseDTO.success("Users Fetched", user)).build();
         } catch (Exception e) {
-            // TODO: handle exception
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
-
         }
 
     }
-
-
-
 }

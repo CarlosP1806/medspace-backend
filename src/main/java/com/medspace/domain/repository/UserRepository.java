@@ -10,5 +10,7 @@ public interface UserRepository {
 
     public User getUserById(Long id);
 
+    public User getUserByFirebaseId(String id);
+
     public void deleteUserById(Long id);
 }

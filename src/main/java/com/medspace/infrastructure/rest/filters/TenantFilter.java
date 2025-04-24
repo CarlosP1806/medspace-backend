@@ -7,17 +7,17 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-
+import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
-import com.medspace.infrastructure.rest.annotations.UserOnly;
+import com.medspace.infrastructure.rest.annotations.TenantOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import java.io.IOException;
 
 
 @Provider
-@UserOnly
+@TenantOnly
 @Priority(Priorities.AUTHORIZATION)
-public class UserFilter implements ContainerRequestFilter {
+public class TenantFilter implements ContainerRequestFilter {
 
     @Inject
     RequestContext requestContext;
@@ -30,7 +30,12 @@ public class UserFilter implements ContainerRequestFilter {
                     .entity(ResponseDTO.error("User not authenticated")).build());
         }
 
+
+        if (requestContext.getUser().getUserType() != User.UserType.TENANT) {
+            ctx.abortWith(Response.status(Response.Status.FORBIDDEN)
+                    .entity(ResponseDTO.error("You must be a tenant to access this route"))
+                    .build());
+        }
+
     }
-
-
 }
