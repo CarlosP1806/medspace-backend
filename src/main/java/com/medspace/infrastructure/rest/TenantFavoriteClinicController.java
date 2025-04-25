@@ -112,7 +112,7 @@ public class TenantFavoriteClinicController {
 
     @DELETE
     @Transactional
-    @Path("/tenant/{tenantId}/clinic/{clinicId}")
+    @Path("/user/{tenantId}/clinic/{clinicId}")
     public Response removeFavoriteClinic(@PathParam("tenantId") Long tenantId,
             @PathParam("clinicId") Long clinicId) {
         try {

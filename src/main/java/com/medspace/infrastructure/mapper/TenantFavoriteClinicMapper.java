@@ -16,12 +16,8 @@ public class TenantFavoriteClinicMapper {
 
         tenantFavoriteClinic.setClinic(ClinicMapper.toDomain(tenantFavoriteClinicEntity.getClinic()));
         tenantFavoriteClinic.setTenant(UserMapper.toDomain(tenantFavoriteClinicEntity.getTenant()));
-        if (tenantFavoriteClinicEntity.getCreatedAt() != null) {
-            tenantFavoriteClinic.setCreatedAt(tenantFavoriteClinicEntity.getCreatedAt());
-        } else {
-            // Set to current time or null with appropriate handling
-            tenantFavoriteClinic.setCreatedAt(java.time.Instant.now());
-        }
+        tenantFavoriteClinic.setCreatedAt(tenantFavoriteClinicEntity.getCreatedAt());
+
 
         return tenantFavoriteClinic;
     }

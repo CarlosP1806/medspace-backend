@@ -32,8 +32,10 @@ public class TenantFavoriteClinicRepositoryImpl implements TenantFavoriteClinicR
 
     @Transactional
     @Override
-    public TenantFavoriteClinic createTenantFavoriteClinic(TenantFavoriteClinic tenantFavoriteClinic) {
-        TenantFavoriteClinicEntity tenantFavoriteClinicEntity = TenantFavoriteClinicMapper.toEntity(tenantFavoriteClinic);
+    public TenantFavoriteClinic createTenantFavoriteClinic(
+            TenantFavoriteClinic tenantFavoriteClinic) {
+        TenantFavoriteClinicEntity tenantFavoriteClinicEntity =
+                TenantFavoriteClinicMapper.toEntity(tenantFavoriteClinic);
         persist(tenantFavoriteClinicEntity);
         return TenantFavoriteClinicMapper.toDomain(tenantFavoriteClinicEntity);
     }
@@ -89,19 +91,15 @@ public class TenantFavoriteClinicRepositoryImpl implements TenantFavoriteClinicR
     @Override
     @Transactional
     public void removeFavoriteClinic(Long tenantId, Long clinicId) {
-        // Verificar si el usuario existe
+
         UserEntity userEntity = userRepository.findById(tenantId);
         if (userEntity == null) {
             throw new NotFoundException("User with id " + tenantId + " not found");
         }
-
-        // Verificar si la clínica existe
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
         if (clinicEntity == null) {
             throw new NotFoundException("Clinic with id " + clinicId + " not found");
         }
-
-        // Eliminar la relación
         long deletedCount = delete("tenant.id = ?1 and clinic.id = ?2", tenantId, clinicId);
         if (deletedCount == 0) {
             throw new NotFoundException("Favorite clinic relationship not found for tenant "
