@@ -6,25 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class GetRentRequestDTO {
 
     private Long id;
-    private Long customerId;
-    private Long spaceId;
-    private LocalDateTime requestedAt;
+    private Long tenantId;
+    private Long clinicId;
+    private Instant createdAt;
+    private Instant startDate;
+    private Instant endDate;
+    private String comments;
     private String status;
 
     public GetRentRequestDTO(RentRequest model) {
         this.id = model.getId();
-        this.customerId = model.getCustomerId();
-        this.spaceId = model.getSpaceId();
-        this.requestedAt = model.getRequestedAt();
+        this.tenantId = model.getTenant().getId();
+        this.clinicId = model.getClinic().getId();
+        this.createdAt = model.getCreatedAt();
+        this.startDate = model.getStartDate();
+        this.endDate = model.getEndDate();
+        this.comments = model.getComments();
         this.status = model.getStatus();
     }
 }

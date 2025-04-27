@@ -1,35 +1,32 @@
 package com.medspace.infrastructure.dto;
 
 import com.medspace.domain.model.RentRequest;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateRentRequestDTO {
 
-    @NotNull
-    private Long customerId;
+    private Long tenantId;
+    private Long clinicId;
+    private Instant startDate;
+    private Instant endDate;
+    private String comments;
+    private String status;
 
-    @NotNull
-    private Long spaceId;
-
-    @NotNull
-    private LocalDateTime requestedAt;
-
-    public RentRequest toRentRequest() {
+    public RentRequest toModel() {
         RentRequest rr = new RentRequest();
-        rr.setCustomerId(customerId);
-        rr.setSpaceId(spaceId);
-        rr.setRequestedAt(requestedAt);
-        // status will be set by default in the service or repository
+        rr.setStartDate(startDate);
+        rr.setEndDate(endDate);
+        rr.setComments(comments);
+        rr.setStatus(status);
         return rr;
     }
 }
