@@ -31,7 +31,23 @@ public class ClinicService {
         return clinicRepository.getAllClinics();
     }
 
+    public List<Clinic> getClinicsByLandlordId(Long landlordId) {
+        return clinicRepository.getClinicsByLandlordId(landlordId);
+    }
+
     public Clinic assignLandlord(Long clinicId, Long userId) {
         return clinicRepository.assignClinicToUser(clinicId, userId);
+    }
+
+    public Boolean validateClinicOwnership(Long clinicId, Long userId) {
+        if (clinicId == null || userId == null) {
+            return false;
+        }
+
+        Clinic clinic = clinicRepository.getClinicById(clinicId);
+        if (clinic == null) {
+            return false;
+        }
+        return clinic.getLandlord().getId().equals(userId);
     }
 }

@@ -7,7 +7,11 @@ import com.medspace.application.usecase.clinicPhoto.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
 import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
+import com.medspace.infrastructure.rest.annotations.LandlordOnly;
+import com.medspace.infrastructure.rest.annotations.UserOnly;
+import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,7 +21,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 @Path("/clinics")
@@ -44,13 +47,20 @@ public class ClinicController {
     GetEquipmentsByClinicIdUseCase getEquipmentsByClinicIdUseCase;
     @Inject
     GetAvailabilitiesByClinicIdUseCase getAvailabilitiesByClinicIdUseCase;
+    @Inject
+    GetClinicsByLandlordIdUseCase getClinicsByLandlordIdUseCase;
+
+    @Inject
+    RequestContext requestContext;
 
     @POST
     @Transactional
+    @LandlordOnly
     public Response createClinic(@Valid CreateClinicDTO clinicRequest) {
         try {
+            User loggedInUser = requestContext.getUser();
             Clinic createdClinic = createClinicUseCase.execute(clinicRequest.toClinic());
-            assignClinicToUserUseCase.execute(createdClinic.getId(), clinicRequest.getUserId());
+            assignClinicToUserUseCase.execute(createdClinic.getId(), loggedInUser.getId());
 
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.success("Clinic Created")).build();
@@ -61,6 +71,7 @@ public class ClinicController {
     }
 
     @GET
+    @UserOnly
     public Response getAllClinics() {
         try {
             List<Clinic> clinics = getAllClinicsUseCase.execute();
@@ -72,15 +83,29 @@ public class ClinicController {
     }
 
     @GET
+    @Path("/landlord")
+    @LandlordOnly
+    public Response getAllClinicsByLandlord() {
+        try {
+            User loggedInUser = requestContext.getUser();
+            List<Clinic> clinics = getClinicsByLandlordIdUseCase.execute(loggedInUser.getId());
+            return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+
+    @GET
     @Path("/{id}")
+    @UserOnly
     public Response getClinicById(@PathParam("id") Long id) {
         try {
             Clinic clinic = getClinicByIdUseCase.execute(id);
-            if (clinic == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Clinic not Found")).build();
-            }
             return Response.ok(ResponseDTO.success("Clinic Fetched", clinic)).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
@@ -89,9 +114,13 @@ public class ClinicController {
 
     @DELETE
     @Path("/{id}")
+    @LandlordOnly
+    @Transactional
     public Response deleteClinicById(@PathParam("id") Long id) {
         try {
-            deleteClinicByIdUseCase.execute(id);
+            User loggedInUser = requestContext.getUser();
+            deleteClinicByIdUseCase.execute(id, loggedInUser.getId());
+
             return Response.ok(ResponseDTO.success("Clinic Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -104,6 +133,7 @@ public class ClinicController {
 
     @GET
     @Path("/{id}/photos")
+    @UserOnly
     public Response getPhotosByClinicId(@PathParam("id") Long id) {
         try {
             List<GetClinicPhotoDTO> clinicPhotos = getPhotosByClinicIdUseCase.execute(id);
@@ -117,14 +147,14 @@ public class ClinicController {
 
     @PUT
     @Path("/{id}/primary-photo")
-    public Response setPrimaryPhoto(@PathParam("id") Long id, @Valid SetPhotoAsPrimaryDTO request) {
+    @LandlordOnly
+    @Transactional
+    public Response setPrimaryPhoto(@PathParam("id") Long clinicId,
+            @Valid SetPhotoAsPrimaryDTO request) {
         try {
-            GetClinicPhotoDTO clinicPhotoDTO =
-                    getClinicPhotoByIdUseCase.execute(request.getPhotoId());
-            if (!Objects.equals(clinicPhotoDTO.getClinicId(), id)) {
-                throw new Exception("Photo does not belong to Clinic");
-            }
-            setPhotoAsPrimaryClinicPhotoUseCase.execute(request.getPhotoId());
+            User loggedInUser = requestContext.getUser();
+            setPhotoAsPrimaryClinicPhotoUseCase.execute(request.getPhotoId(), clinicId,
+                    loggedInUser.getId());
 
             return Response.ok(ResponseDTO.success("Clinic Photo Updated")).build();
         } catch (Exception e) {
@@ -135,6 +165,7 @@ public class ClinicController {
 
     @GET
     @Path("/{id}/equipments")
+    @UserOnly
     public Response getEquipmentsByClinicId(@PathParam("id") Long id) {
         try {
             List<GetClinicEquipmentDTO> clinicEquipments =
@@ -150,6 +181,7 @@ public class ClinicController {
 
     @GET
     @Path("/{id}/availabilities")
+    @UserOnly
     public Response getAvailabilitiesByClinicId(@PathParam("id") Long id) {
         try {
             List<GetClinicAvailabilityDTO> clinicAvailabilities =

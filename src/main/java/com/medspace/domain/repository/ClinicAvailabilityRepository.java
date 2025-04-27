@@ -9,6 +9,8 @@ public interface ClinicAvailabilityRepository {
 
     public ClinicAvailability updateAvailability(Long id, ClinicAvailability clinicAvailability);
 
+    public ClinicAvailability getAvailabilityById(Long id);
+
     public void deleteAvailabilityById(Long id);
 
     public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId);

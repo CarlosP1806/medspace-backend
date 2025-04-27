@@ -42,6 +42,18 @@ public class ClinicRepositoryImpl
     }
 
     @Override
+    public List<Clinic> getClinicsByLandlordId(Long landlordId) {
+        List<ClinicEntity> clinicEntities = find("landlord.id", landlordId).list();
+        List<Clinic> clinics = new ArrayList<>();
+
+        for (ClinicEntity clinicEntity : clinicEntities) {
+            clinics.add(ClinicMapper.toDomain(clinicEntity));
+        }
+
+        return clinics;
+    }
+
+    @Override
     public Clinic getClinicById(Long id) {
         ClinicEntity clinicEntity = findById(id);
         if (clinicEntity == null) {
