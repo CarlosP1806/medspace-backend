@@ -38,8 +38,10 @@ public class NotificationController {
             List<Notification> notifications = getUserNotificationsUseCase.execute(loggedUser.getId());
             return Response.ok(ResponseDTO.success("Notifications fetched", notifications)).build();
         } catch (Exception e) {
+            // Log the exception details for internal debugging
+            Logger.getLogger(NotificationController.class.getName()).severe("Error fetching notifications: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ResponseDTO.error(e.getMessage()))
+                .entity(ResponseDTO.error("An unexpected error occurred. Please try again later."))
                 .build();
         }
     }
