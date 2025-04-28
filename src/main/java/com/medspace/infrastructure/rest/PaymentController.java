@@ -34,25 +34,59 @@ public class PaymentController {
     @POST
     @Transactional
     public Response createPayment(@Valid CreatePaymentDTO dto) {
-        User user = requestContext.getUser();
-        Payment payment = createPaymentUseCase.execute(dto.toPayment(), user);
-        return Response.ok(new PaymentResponseDTO(payment)).build();
+        try {
+            User user = requestContext.getUser();
+            Payment payment = createPaymentUseCase.execute(dto.toPayment(), user);
+            return Response.status(Response.Status.CREATED)
+                    .entity(ResponseDTO.success("Payment Created", new PaymentResponseDTO(payment)))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error("An error occurred while creating the payment"))
+                    .build();
+        }
     }
 
     @GET
     @Path("/{id}")
     public Response getPaymentById(@PathParam("id") Long id) {
-        User user = requestContext.getUser();
-        Payment payment = getPaymentByIdUseCase.execute(id, user);
-        return Response.ok(new PaymentResponseDTO(payment)).build();
+        try {
+            User user = requestContext.getUser();
+            Payment payment = getPaymentByIdUseCase.execute(id, user);
+            return Response.ok(ResponseDTO.success("Payment Fetched", new PaymentResponseDTO(payment)))
+                    .build();
+        } catch (Exception e) {
+            if (e.getMessage().contains("not found")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error("Payment not found"))
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error("An error occurred while fetching the payment"))
+                    .build();
+        }
     }
 
     @GET
     @Path("/rent-agreement/{rentAgreementId}")
     public Response getPaymentsByRentAgreementId(@PathParam("rentAgreementId") Long rentAgreementId) {
-        User user = requestContext.getUser();
-        List<Payment> payments = getPaymentsByRentAgreementIdUseCase.execute(rentAgreementId, user);
-        List<PaymentResponseDTO> dtos = payments.stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
-        return Response.ok(dtos).build();
+        try {
+            User user = requestContext.getUser();
+            List<Payment> payments = getPaymentsByRentAgreementIdUseCase.execute(rentAgreementId, user);
+            List<PaymentResponseDTO> dtos = payments.stream()
+                    .map(PaymentResponseDTO::new)
+                    .collect(Collectors.toList());
+            return Response.ok(ResponseDTO.success("Payments Fetched", dtos))
+                    .build();
+        } catch (Exception e) {
+            if (e.getMessage().contains("not found")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error("Rent agreement not found"))
+                        .build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error("An error occurred while fetching the payments"))
+                    .build();
+        }
     }
 } 
