@@ -3,10 +3,10 @@ package com.medspace.application.usecase.clinicEquipment;
 import com.medspace.application.service.ClinicEquipmentService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicEquipment;
+import io.quarkus.security.ForbiddenException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.ForbiddenException;
 
 @ApplicationScoped
 public class DeleteClinicEquipmentByIdUseCase {

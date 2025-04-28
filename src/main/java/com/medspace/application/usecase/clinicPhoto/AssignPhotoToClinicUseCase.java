@@ -3,10 +3,10 @@ package com.medspace.application.usecase.clinicPhoto;
 import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicPhoto;
+import io.quarkus.security.ForbiddenException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.ForbiddenException;
 
 @ApplicationScoped
 public class AssignPhotoToClinicUseCase {
