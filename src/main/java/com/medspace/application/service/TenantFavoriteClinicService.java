@@ -1,6 +1,5 @@
 package com.medspace.application.service;
 
-import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -38,14 +37,15 @@ public class TenantFavoriteClinicService {
     public boolean isFavoriteClinic(Long tenantId, Long clinicId) {
         return tenantFavoriteClinicRepository.isFavoriteClinic(tenantId, clinicId);
     }
+
     public TenantFavoriteClinic assignToTenant(Long favoriteClinicId, Long tenantId) {
         return tenantFavoriteClinicRepository.assignToTenant(favoriteClinicId, tenantId);
     }
-    
+
     public TenantFavoriteClinic assignToClinic(Long favoriteClinicId, Long clinicId) {
         return tenantFavoriteClinicRepository.assignToClinic(favoriteClinicId, clinicId);
     }
 
 
-    
+
 }

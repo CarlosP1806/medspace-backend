@@ -1,13 +1,11 @@
 package com.medspace.infrastructure.repository;
 
 
-import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import com.medspace.infrastructure.entity.ClinicEntity;
 import com.medspace.infrastructure.entity.TenantFavoriteClinicEntity;
 import com.medspace.infrastructure.entity.UserEntity;
-import com.medspace.infrastructure.mapper.ClinicMapper;
 import com.medspace.infrastructure.mapper.TenantFavoriteClinicMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,8 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,5 +1,5 @@
 package com.medspace.infrastructure.rest;
-import java.time.Instant;
+
 import java.util.List;
 import com.medspace.application.usecase.review.AssignReviewToAuthorUseCase;
 import com.medspace.application.usecase.review.CreateReviewUseCase;
@@ -17,10 +17,6 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 @Path("/reviews")

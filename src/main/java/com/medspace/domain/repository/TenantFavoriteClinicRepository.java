@@ -1,6 +1,5 @@
 package com.medspace.domain.repository;
 
-import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.TenantFavoriteClinic;
 
 import java.util.List;
