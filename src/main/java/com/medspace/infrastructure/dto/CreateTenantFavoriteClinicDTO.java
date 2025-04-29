@@ -1,8 +1,6 @@
 package com.medspace.infrastructure.dto;
 
-import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.TenantFavoriteClinic;
-import com.medspace.domain.model.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

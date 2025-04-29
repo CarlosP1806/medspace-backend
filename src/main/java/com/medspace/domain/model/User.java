@@ -1,6 +1,5 @@
 package com.medspace.domain.model;
 
-import java.text.NumberFormat.Field;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

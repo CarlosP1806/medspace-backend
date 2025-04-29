@@ -1,10 +1,8 @@
 package com.medspace.infrastructure.mapper;
-import com.medspace.domain.model.User;
+
 import com.medspace.domain.model.Review;
 import com.medspace.infrastructure.entity.ReviewEntity;
 import com.medspace.infrastructure.entity.UserEntity;
-import com.medspace.infrastructure.mapper.UserMapper;
-import java.time.Instant;
 
 public class ReviewMapper {
     public static Review toDomain(ReviewEntity reviewEntity) {

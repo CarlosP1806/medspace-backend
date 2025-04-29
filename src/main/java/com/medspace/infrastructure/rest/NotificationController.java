@@ -9,7 +9,6 @@ import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -35,14 +34,14 @@ public class NotificationController {
     public Response getNotifications() {
         try {
             User loggedUser = requestContext.getUser();
-            List<Notification> notifications = getUserNotificationsUseCase.execute(loggedUser.getId());
+            List<Notification> notifications =
+                    getUserNotificationsUseCase.execute(loggedUser.getId());
             return Response.ok(ResponseDTO.success("Notifications fetched", notifications)).build();
         } catch (Exception e) {
-            // Log the exception details for internal debugging
-            Logger.getLogger(NotificationController.class.getName()).severe("Error fetching notifications: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ResponseDTO.error("An unexpected error occurred. Please try again later."))
-                .build();
+                    .entity(ResponseDTO
+                            .error("An unexpected error occurred. Please try again later."))
+                    .build();
         }
     }
 
@@ -56,16 +55,13 @@ public class NotificationController {
             return Response.ok(ResponseDTO.success("Notification marked as read")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                .entity(ResponseDTO.error(e.getMessage()))
-                .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (ForbiddenException e) {
             return Response.status(Response.Status.FORBIDDEN)
-                .entity(ResponseDTO.error(e.getMessage()))
-                .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ResponseDTO.error(e.getMessage()))
-                .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
-} 
+}
