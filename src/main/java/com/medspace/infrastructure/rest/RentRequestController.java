@@ -43,7 +43,7 @@ public class RentRequestController {
     public Response create(CreateRentRequestDTO dto) {
         RentRequest toSave = dto.toModel();
 
-        RentRequest saved = createRentRequest.execute(toSave);
+        RentRequest saved = createRentRequest.execute(toSave, dto.getTenantId(), dto.getClinicId());
         GetRentRequestDTO out = new GetRentRequestDTO(saved);
 
         return Response.status(Response.Status.CREATED)
