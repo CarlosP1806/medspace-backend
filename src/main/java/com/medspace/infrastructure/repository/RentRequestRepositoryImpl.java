@@ -25,25 +25,21 @@ public class RentRequestRepositoryImpl
 
     @Override
     @Transactional
-    public RentRequest insert(RentRequest rentRequest) {
+    public RentRequest insert(RentRequest rentRequest, Long tenantId, Long clinicId) {
         RentRequestEntity entity = RentRequestMapper.toEntity(rentRequest);
 
-        if (rentRequest.getTenant() != null && rentRequest.getTenant().getId() != null) {
-            UserEntity tenant =
-                    entityManager.find(UserEntity.class, rentRequest.getTenant().getId());
+        if (tenantId != null) {
+            UserEntity tenant = entityManager.find(UserEntity.class, tenantId);
             if (tenant == null) {
-                throw new NotFoundException(
-                        "User with id " + rentRequest.getTenant().getId() + " not found");
+                throw new NotFoundException("User with id " + rentRequest + " not found");
             }
             entity.setTenant(tenant);
         }
 
-        if (rentRequest.getClinic() != null && rentRequest.getClinic().getId() != null) {
-            ClinicEntity clinic =
-                    entityManager.find(ClinicEntity.class, rentRequest.getClinic().getId());
+        if (clinicId != null) {
+            ClinicEntity clinic = entityManager.find(ClinicEntity.class, clinicId);
             if (clinic == null) {
-                throw new NotFoundException(
-                        "Clinic with id " + rentRequest.getClinic().getId() + " not found");
+                throw new NotFoundException("Clinic with id " + clinicId + " not found");
             }
             entity.setClinic(clinic);
         }
