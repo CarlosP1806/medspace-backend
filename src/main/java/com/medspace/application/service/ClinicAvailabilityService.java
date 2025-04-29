@@ -36,4 +36,8 @@ public class ClinicAvailabilityService {
             ClinicAvailability clinicAvailability) {
         return clinicAvailabilityRepository.updateAvailability(id, clinicAvailability);
     }
+
+    public ClinicAvailability getAvailabilityById(Long id) {
+        return clinicAvailabilityRepository.getAvailabilityById(id);
+    }
 }

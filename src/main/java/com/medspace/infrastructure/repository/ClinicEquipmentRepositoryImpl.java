@@ -34,7 +34,7 @@ public class ClinicEquipmentRepositoryImpl
     public ClinicEquipment getEquipmentById(Long id) {
         ClinicEquipmentEntity clinicEquipmentEntity = findById(id);
         if (clinicEquipmentEntity == null) {
-            throw new NotFoundException("ClinicEquipment with id " + id + " not found");
+            return null;
         }
         return ClinicEquipmentMapper.toDomain(clinicEquipmentEntity);
     }

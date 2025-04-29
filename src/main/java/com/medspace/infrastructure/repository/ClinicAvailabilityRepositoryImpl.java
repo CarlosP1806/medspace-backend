@@ -89,4 +89,12 @@ public class ClinicAvailabilityRepositoryImpl implements ClinicAvailabilityRepos
 
         return clinicAvailabilities;
     }
+
+    public ClinicAvailability getAvailabilityById(Long id) {
+        ClinicAvailabilityEntity clinicAvailabilityEntity = findById(id);
+        if (clinicAvailabilityEntity == null) {
+            return null;
+        }
+        return ClinicAvailabilityMapper.toDomain(clinicAvailabilityEntity);
+    }
 }

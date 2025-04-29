@@ -33,7 +33,7 @@ public class ClinicPhotoRepositoryImpl
     public ClinicPhoto getPhotoById(Long id) {
         ClinicPhotoEntity clinicPhotoEntity = findById(id);
         if (clinicPhotoEntity == null) {
-            throw new NotFoundException("ClinicPhoto with id " + id + " not Found");
+            return null;
         }
         return ClinicPhotoMapper.toDomain(clinicPhotoEntity);
     }

@@ -5,9 +5,12 @@ import com.medspace.application.usecase.clinicAvailability.CreateClinicAvailabil
 import com.medspace.application.usecase.clinicAvailability.DeleteClinicAvailabilityByIdUseCase;
 import com.medspace.application.usecase.clinicAvailability.UpdateClinicAvailabilityUseCase;
 import com.medspace.domain.model.ClinicAvailability;
+import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.CreateClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.UpdateClinicAvailabilityDTO;
+import com.medspace.infrastructure.rest.annotations.LandlordOnly;
+import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -30,15 +33,21 @@ public class ClinicAvailabilityController {
     @Inject
     UpdateClinicAvailabilityUseCase updateClinicAvailabilityUseCase;
 
+    @Inject
+    RequestContext requestContext;
+
     @POST
     @Transactional
+    @LandlordOnly
     public Response createClinicAvailability(
             @Valid CreateClinicAvailabilityDTO availabilityRequest) {
         try {
+            User loggedUser = requestContext.getUser();
+
             ClinicAvailability clinicAvailability = createClinicAvailabilityUseCase
                     .execute(availabilityRequest.toClinicAvailability());
             assignAvailabilityToClinicUseCase.execute(clinicAvailability.getId(),
-                    availabilityRequest.getClinicId());
+                    availabilityRequest.getClinicId(), loggedUser.getId());
 
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.success("ClinicAvailability Created")).build();
@@ -50,9 +59,12 @@ public class ClinicAvailabilityController {
 
     @DELETE
     @Path("/{id}")
+    @LandlordOnly
     public Response deleteClinicAvailabilityById(@PathParam("id") Long id) {
         try {
-            deleteClinicAvailabilityByIdUseCase.execute(id);
+            User loggedUser = requestContext.getUser();
+
+            deleteClinicAvailabilityByIdUseCase.execute(id, loggedUser.getId());
             return Response.ok(ResponseDTO.success("ClinicAvailability Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -65,10 +77,14 @@ public class ClinicAvailabilityController {
 
     @PUT
     @Path("/{id}")
+    @LandlordOnly
     public Response updateClinicAvailabilityById(@PathParam("id") Long id,
             @Valid UpdateClinicAvailabilityDTO availabilityRequest) {
         try {
-            updateClinicAvailabilityUseCase.execute(id, availabilityRequest.toClinicAvailability());
+            User loggedUser = requestContext.getUser();
+
+            updateClinicAvailabilityUseCase.execute(id, availabilityRequest.toClinicAvailability(),
+                    loggedUser.getId());
             return Response.ok(ResponseDTO.success("ClinicAvailability Updated")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

@@ -4,8 +4,11 @@ import com.medspace.application.usecase.clinicEquipment.AssignEquipmentToClinicU
 import com.medspace.application.usecase.clinicEquipment.CreateClinicEquipmentUseCase;
 import com.medspace.application.usecase.clinicEquipment.DeleteClinicEquipmentByIdUseCase;
 import com.medspace.domain.model.ClinicEquipment;
+import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.CreateClinicEquipmentDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
+import com.medspace.infrastructure.rest.annotations.LandlordOnly;
+import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,14 +29,20 @@ public class ClinicEquipmentController {
     @Inject
     DeleteClinicEquipmentByIdUseCase deleteClinicEquipmentByIdUseCase;
 
+    @Inject
+    RequestContext requestContext;
+
     @POST
     @Transactional
+    @LandlordOnly
     public Response createClinicEquipment(@Valid CreateClinicEquipmentDTO equipmentRequest) {
         try {
+            User loggedUser = requestContext.getUser();
+
             ClinicEquipment clinicEquipment =
                     createClinicEquipmentUseCase.execute(equipmentRequest.toClinicEquipment());
             assignEquipmentToClinicUseCase.execute(clinicEquipment.getId(),
-                    equipmentRequest.getClinicId());
+                    equipmentRequest.getClinicId(), loggedUser.getId());
 
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.success("ClinicEquipment Created")).build();
@@ -45,9 +54,12 @@ public class ClinicEquipmentController {
 
     @DELETE
     @Path("/{id}")
+    @LandlordOnly
     public Response deleteClinicEquipmentById(@PathParam("id") Long id) {
         try {
-            deleteClinicEquipmentByIdUseCase.execute(id);
+            User loggedUser = requestContext.getUser();
+
+            deleteClinicEquipmentByIdUseCase.execute(id, loggedUser.getId());
             return Response.ok(ResponseDTO.success("ClinicEquipment Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)

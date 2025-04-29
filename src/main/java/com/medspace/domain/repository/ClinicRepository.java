@@ -11,6 +11,8 @@ public interface ClinicRepository {
 
     public Clinic getClinicById(Long id);
 
+    public List<Clinic> getClinicsByLandlordId(Long landlordId);
+
     public void deleteClinicById(Long id);
 
     public Clinic assignClinicToUser(Long clinicId, Long userId);

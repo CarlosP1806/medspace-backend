@@ -46,4 +46,16 @@ public class ClinicPhotoService {
     public void setPhotoAsPrimary(Long id) {
         clinicPhotoRepository.setPhotoAsPrimary(id);
     }
+
+    public Boolean validatePhotoOwnership(Long photoId, Long clinicId) {
+        if (photoId == null || clinicId == null) {
+            return false;
+        }
+
+        ClinicPhoto clinicPhoto = clinicPhotoRepository.getPhotoById(photoId);
+        if (clinicPhoto == null) {
+            return false;
+        }
+        return clinicPhoto.getClinic().getId().equals(clinicId);
+    }
 }

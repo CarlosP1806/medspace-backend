@@ -27,6 +27,7 @@ public class LandlordFilter implements ContainerRequestFilter {
         if (requestContext.getUser() == null) {
             ctx.abortWith(Response.status(Response.Status.UNAUTHORIZED)
                     .entity(ResponseDTO.error("User not authenticated")).build());
+            return;
         }
 
 
