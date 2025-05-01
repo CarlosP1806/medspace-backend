@@ -60,10 +60,11 @@ public class ClinicController {
         try {
             User loggedInUser = requestContext.getUser();
             Clinic createdClinic = createClinicUseCase.execute(clinicRequest.toClinic());
-            assignClinicToUserUseCase.execute(createdClinic.getId(), loggedInUser.getId());
+            createdClinic =
+                    assignClinicToUserUseCase.execute(createdClinic.getId(), loggedInUser.getId());
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("Clinic Created")).build();
+                    .entity(ResponseDTO.success("Clinic Created", createdClinic)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
