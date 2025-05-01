@@ -61,13 +61,15 @@ public class CreateUserDTO {
     private InputStream tenantProfessionalLicense;
 
 
+    // You may also want to update the toUser method in CreateUserDTO.java for better safety
     public User toUser() {
         User user = new User();
         user.setFullName(this.fullName);
         user.setEmail(this.email);
         user.setPhoneNumber(this.phoneNumber);
-        user.setUserType(User.UserType.valueOf(this.userType));
+        user.setUserType(User.UserType.valueOf(this.userType.trim())); // Added trim() for safety
 
+        // Only set tenant specialty for TENANT users and when the ID is provided
         if (this.tenantSpecialtyId != null && user.getUserType() == User.UserType.TENANT) {
             TenantSpecialty specialty = new TenantSpecialty();
             specialty.setId(this.tenantSpecialtyId);
