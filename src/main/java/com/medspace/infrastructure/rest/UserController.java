@@ -1,4 +1,5 @@
 package com.medspace.infrastructure.rest;
+
 import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
@@ -61,13 +62,29 @@ public class UserController {
                         .build();
             }
 
+            if (userRequest.getUserType().equals("TENANT")) {
 
-            if (getTenantSpecialtyByIdUseCase.execute(userRequest.getTenantSpecialtyId()) == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(ResponseDTO.error("Tenant specialty with id "
-                                + userRequest.getTenantSpecialtyId() + " not found"))
-                        .build();
+                if (userRequest.getTenantSpecialtyId() == null) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(ResponseDTO.error("Tenant specialty id is required for tenant"))
+                            .build();
+                }
 
+                if (userRequest.getTenantProfessionalLicense() == null) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(ResponseDTO.error(
+                                    "Tenant TenantProfessionalLicense is required for tenant"))
+                            .build();
+                }
+
+                if (getTenantSpecialtyByIdUseCase
+                        .execute(userRequest.getTenantSpecialtyId()) == null) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(ResponseDTO.error("Tenant specialty with id "
+                                    + userRequest.getTenantSpecialtyId() + " not found"))
+                            .build();
+
+                }
             }
 
             User user = userRequest.toUser();
@@ -83,7 +100,6 @@ public class UserController {
                 return Response.status(Response.Status.CONFLICT)
                         .entity(ResponseDTO.error(e.getMessage())).build();
             }
-
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
