@@ -13,7 +13,7 @@ import java.time.Instant;
 @Getter
 public class Clinic {
     public enum Category {
-        GENERAL_USE, DENTIST, ORTHOPEDICS, PSYCHIATRY, RADIOLOGY, PHYSIOTHERAPY, PEDIATRICS,
+        GENERAL_PURPOSE, DENTIST, PEDIATRIC, PSYCHOLOGICAL, SURGICAL, DERMATOLOGICAL
     }
 
     private Long id;
