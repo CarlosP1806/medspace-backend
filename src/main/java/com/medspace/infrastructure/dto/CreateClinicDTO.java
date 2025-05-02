@@ -19,6 +19,9 @@ public class CreateClinicDTO {
     @NotBlank
     private String category;
 
+    @NotBlank
+    private String description;
+
     @NotNull
     private Double pricePerDay;
 
@@ -51,6 +54,7 @@ public class CreateClinicDTO {
 
         clinic.setDisplayName(displayName);
         clinic.setCategory(Clinic.Category.valueOf(category));
+        clinic.setDescription(description);
         clinic.setPricePerDay(pricePerDay);
         clinic.setMaxStayDays(maxStayDays);
         clinic.setAddressStreet(addressStreet);

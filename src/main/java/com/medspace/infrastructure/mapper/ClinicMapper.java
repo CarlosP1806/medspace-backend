@@ -15,6 +15,7 @@ public class ClinicMapper {
         clinic.setId(clinicEntity.getId());
         clinic.setDisplayName(clinicEntity.getDisplayName());
         clinic.setCategory(clinicEntity.getCategory());
+        clinic.setDescription(clinicEntity.getDescription());
 
         clinic.setPricePerDay(clinicEntity.getPricePerDay());
         clinic.setMaxStayDays(clinicEntity.getMaxStayDays());
@@ -44,6 +45,7 @@ public class ClinicMapper {
         clinicEntity.setId(clinic.getId());
         clinicEntity.setDisplayName(clinic.getDisplayName());
         clinicEntity.setCategory(clinic.getCategory());
+        clinicEntity.setDescription(clinic.getDescription());
 
         clinicEntity.setPricePerDay(clinic.getPricePerDay());
         clinicEntity.setMaxStayDays(clinic.getMaxStayDays());
