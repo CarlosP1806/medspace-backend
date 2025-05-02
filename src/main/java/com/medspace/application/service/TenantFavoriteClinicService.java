@@ -1,5 +1,6 @@
 package com.medspace.application.service;
 
+import com.medspace.domain.model.Review;
 import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,7 +15,6 @@ public class TenantFavoriteClinicService {
     TenantFavoriteClinicRepository tenantFavoriteClinicRepository;
 
     public TenantFavoriteClinic createTenantFavoriteClinic(TenantFavoriteClinic favoriteClinic) {
-        favoriteClinic.setCreatedAt(Instant.now());
         return tenantFavoriteClinicRepository.createTenantFavoriteClinic(favoriteClinic);
     }
 
@@ -44,6 +44,18 @@ public class TenantFavoriteClinicService {
 
     public TenantFavoriteClinic assignToClinic(Long favoriteClinicId, Long clinicId) {
         return tenantFavoriteClinicRepository.assignToClinic(favoriteClinicId, clinicId);
+    }
+
+    public Boolean validateFavoriteClinicOwnership(Long favoriteId, Long tenantId) {
+        if (favoriteId == null || tenantId == null) {
+            return false;
+        }
+        TenantFavoriteClinic favorite =
+                tenantFavoriteClinicRepository.getFavoriteClinicById(favoriteId);
+        if (favorite == null || favorite.getTenant() == null) {
+            return false;
+        }
+        return favorite.getTenant().getId().equals(tenantId);
     }
 
 

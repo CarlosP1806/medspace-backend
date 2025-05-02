@@ -2,6 +2,7 @@ package com.medspace.infrastructure.dto;
 
 import com.medspace.domain.model.TenantFavoriteClinic;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateTenantFavoriteClinicDTO {
 
-    @NotNull
-    private Long tenantId;
+
 
     @NotNull
     private Long clinicId;
