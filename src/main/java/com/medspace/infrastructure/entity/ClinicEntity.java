@@ -28,6 +28,9 @@ public class ClinicEntity {
     @Enumerated(EnumType.STRING)
     private Clinic.Category category;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
     @Column(name = "price_per_day", nullable = false)
     private double pricePerDay;
 

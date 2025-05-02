@@ -19,6 +19,7 @@ public class Clinic {
     private Long id;
     private String displayName;
     private Category category;
+    private String description;
 
     private double pricePerDay;
     private int maxStayDays;
