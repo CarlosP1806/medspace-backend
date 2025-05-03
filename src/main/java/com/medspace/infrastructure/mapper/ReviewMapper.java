@@ -17,6 +17,7 @@ public class ReviewMapper {
         review.setCreatedAt(reviewEntity.getCreatedAt());
         UserEntity userEntity = reviewEntity.getAuthor();
         review.setAuthor(UserMapper.toDomain(userEntity));
+        review.setClinic(ClinicMapper.toDomain(reviewEntity.getClinic()));
         // review.setRentAgreement(RentAgreementMapper.toDomain(reviewEntity.getRentAgreement()));
         return review;
     }
@@ -33,8 +34,8 @@ public class ReviewMapper {
         reviewEntity.setComment(review.getComment());
         reviewEntity.setCreatedAt(review.getCreatedAt());
         reviewEntity.setAuthor(UserMapper.toEntity(review.getAuthor()));
+        reviewEntity.setClinic(ClinicMapper.toEntity(review.getClinic()));
 
         return reviewEntity;
     }
-
 }

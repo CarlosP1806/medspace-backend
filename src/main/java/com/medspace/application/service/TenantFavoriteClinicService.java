@@ -1,12 +1,10 @@
 package com.medspace.application.service;
 
-import com.medspace.domain.model.Review;
 import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.time.Instant;
 import java.util.List;
 
 @ApplicationScoped

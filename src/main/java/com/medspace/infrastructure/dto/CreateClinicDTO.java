@@ -1,5 +1,6 @@
 package com.medspace.infrastructure.dto;
 
+import java.sql.Date;
 import com.medspace.domain.model.Clinic;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,12 @@ public class CreateClinicDTO {
 
     @NotNull
     private Integer maxStayDays;
+
+    @NotNull
+    private Date availableFromDate;
+
+    @NotNull
+    private Date availableToDate;
 
     @NotBlank
     private String addressStreet;
@@ -57,6 +64,8 @@ public class CreateClinicDTO {
         clinic.setDescription(description);
         clinic.setPricePerDay(pricePerDay);
         clinic.setMaxStayDays(maxStayDays);
+        clinic.setAvailableFromDate(availableFromDate);
+        clinic.setAvailableToDate(availableToDate);
         clinic.setAddressStreet(addressStreet);
         clinic.setAddressCity(addressCity);
         clinic.setAddressState(addressState);

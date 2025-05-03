@@ -1,7 +1,9 @@
 package com.medspace.application.service;
 
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ClinicRepository;
+import com.medspace.domain.repository.ReviewRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -12,6 +14,9 @@ import java.util.List;
 public class ClinicService {
     @Inject
     ClinicRepository clinicRepository;
+
+    @Inject
+    ReviewRepository reviewRepository;
 
     public Clinic createClinic(Clinic clinic) {
         clinic.setCreatedAt(Instant.now());
@@ -49,5 +54,15 @@ public class ClinicService {
             return false;
         }
         return clinic.getLandlord().getId().equals(userId);
+    }
+
+    public Double getAverageRatingById(Long clinicId) {
+        List<Review> reviews = reviewRepository.getReviewsByClinicId(clinicId);
+
+        if (reviews.isEmpty()) {
+            return null;
+        }
+        int totalRating = reviews.stream().mapToInt(Review::getRating).sum();
+        return Double.valueOf(totalRating) / reviews.size();
     }
 }

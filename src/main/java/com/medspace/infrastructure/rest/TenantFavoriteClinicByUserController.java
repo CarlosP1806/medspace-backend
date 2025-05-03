@@ -11,7 +11,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.medspace.domain.model.User;
-import com.medspace.infrastructure.rest.annotations.TenantOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class TenantFavoriteClinicByUserController {
     GetFavoriteClinicsByTenantIdUseCase getFavoriteClinicsByTenantIdUseCase;
     @Inject
     RequestContext requestContext;
-    
+
     @GET
     @Path("/me")
     @TenantOnly

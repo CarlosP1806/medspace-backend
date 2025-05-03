@@ -1,5 +1,5 @@
 package com.medspace.application.service;
-import com.medspace.domain.model.Clinic;
+
 import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ReviewRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -33,11 +33,16 @@ public class ReviewService {
 
     public Review assignAuthorToReview(Long reviewId, Long authorId) {
         return reviewRepository.assignReviewToAuthor(reviewId, authorId);
-    }    
+    }
+
+    public Review assignReviewToClinic(Long reviewId, Long clinicId) {
+        return reviewRepository.assignReviewToClinic(reviewId, clinicId);
+    }
 
     public Review assignReviewToRentAgreement(Long reviewId, Long rentAgreementId) {
         return reviewRepository.assignReviewToRentAgreement(reviewId, rentAgreementId);
     }
+
     public Boolean validateReviewOwnership(Long reviewId, Long authorId) {
         if (reviewId == null || authorId == null) {
             return false;
@@ -49,5 +54,8 @@ public class ReviewService {
         // compara con authorId, no con reviewId
         return review.getAuthor().getId().equals(authorId);
     }
-    
+
+    public List<Review> getReviewsByClinicId(Long clinicId) {
+        return reviewRepository.getReviewsByClinicId(clinicId);
+    }
 }
