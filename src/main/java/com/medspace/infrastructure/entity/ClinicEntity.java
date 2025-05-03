@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.sql.Date;
 import java.time.Instant;
 import java.util.Set;
 
@@ -60,6 +60,12 @@ public class ClinicEntity {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    @Column(name = "available_from_date", nullable = false)
+    private Date availableFromDate;
+
+    @Column(name = "available_to_date", nullable = false)
+    private Date availableToDate;
 
     @ManyToOne
     @JoinColumn(name = "landlord_id")

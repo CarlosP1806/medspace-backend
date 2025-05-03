@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.sql.Date;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -23,6 +23,8 @@ public class Clinic {
 
     private double pricePerDay;
     private int maxStayDays;
+    private Date availableFromDate;
+    private Date availableToDate;
 
     private String addressStreet;
     private String addressCity;

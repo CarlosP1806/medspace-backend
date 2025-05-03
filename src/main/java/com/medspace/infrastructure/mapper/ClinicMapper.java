@@ -19,6 +19,8 @@ public class ClinicMapper {
 
         clinic.setPricePerDay(clinicEntity.getPricePerDay());
         clinic.setMaxStayDays(clinicEntity.getMaxStayDays());
+        clinic.setAvailableFromDate(clinicEntity.getAvailableFromDate());
+        clinic.setAvailableToDate(clinicEntity.getAvailableToDate());
 
         clinic.setAddressStreet(clinicEntity.getAddressStreet());
         clinic.setAddressCity(clinicEntity.getAddressCity());
@@ -49,6 +51,8 @@ public class ClinicMapper {
 
         clinicEntity.setPricePerDay(clinic.getPricePerDay());
         clinicEntity.setMaxStayDays(clinic.getMaxStayDays());
+        clinicEntity.setAvailableFromDate(clinic.getAvailableFromDate());
+        clinicEntity.setAvailableToDate(clinic.getAvailableToDate());
 
         clinicEntity.setAddressStreet(clinic.getAddressStreet());
         clinicEntity.setAddressCity(clinic.getAddressCity());
