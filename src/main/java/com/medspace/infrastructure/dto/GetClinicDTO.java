@@ -34,7 +34,7 @@ public class GetClinicDTO {
 
     private Long landLordId;
 
-    private Double averageRating;
+    private Double averageRating; // average rating of Clinic, or null if there are no ratings
 
     public GetClinicDTO(Clinic clinic, Double averageRating) {
         this.id = clinic.getId();

@@ -4,7 +4,6 @@ import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.domain.repository.ReviewRepository;
-import com.medspace.infrastructure.dto.GetClinicDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

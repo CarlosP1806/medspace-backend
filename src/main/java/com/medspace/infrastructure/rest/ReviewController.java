@@ -10,7 +10,6 @@ import com.medspace.application.usecase.review.GetReviewByIdUseCase;
 import com.medspace.domain.model.Review;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.rest.context.RequestContext;
-import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.review.CreateReviewDTO;

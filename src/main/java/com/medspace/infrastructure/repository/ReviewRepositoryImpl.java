@@ -109,8 +109,6 @@ public class ReviewRepositoryImpl
             throw new NotFoundException("review with id " + reviewId + " not found");
         }
 
-        System.out.println("clinicId: " + clinicId);
-
         ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
         if (clinicEntity == null) {
             throw new NotFoundException("clinic with id " + clinicId + " not found");
