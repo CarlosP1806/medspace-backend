@@ -75,7 +75,7 @@ public class ClinicController {
     @UserOnly
     public Response getAllClinics() {
         try {
-            List<Clinic> clinics = getAllClinicsUseCase.execute();
+            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute();
             return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -102,8 +102,8 @@ public class ClinicController {
     @UserOnly
     public Response getClinicById(@PathParam("id") Long id) {
         try {
-            Clinic clinic = getClinicByIdUseCase.execute(id);
-            return Response.ok(ResponseDTO.success("Clinic Fetched", clinic)).build();
+            GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id);
+            return Response.ok(ResponseDTO.success("Clinic Fetched", clinicResponse)).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(ResponseDTO.error(e.getMessage())).build();

@@ -1,6 +1,8 @@
 package com.medspace.infrastructure.repository;
+
 import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ReviewRepository;
+import com.medspace.infrastructure.entity.ClinicEntity;
 import com.medspace.infrastructure.entity.ReviewEntity;
 import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.mapper.ReviewMapper;
@@ -18,6 +20,8 @@ public class ReviewRepositoryImpl
 
     @Inject
     UserRepositoryImpl userRepository;
+    @Inject
+    ClinicRepositoryImpl clinicRepository;
 
     // @Inject
     // RentAgreementRepositoryImpl rentAgreementRepository;
@@ -95,5 +99,32 @@ public class ReviewRepositoryImpl
         reviewEntity.setAuthor(userEntity);
         persist(reviewEntity);
         return ReviewMapper.toDomain(reviewEntity);
+    }
+
+    @Override
+    @Transactional
+    public Review assignReviewToClinic(Long reviewId, Long clinicId) {
+        ReviewEntity reviewEntity = findById(reviewId);
+        if (reviewEntity == null) {
+            throw new NotFoundException("review with id " + reviewId + " not found");
+        }
+
+        System.out.println("clinicId: " + clinicId);
+
+        ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
+        if (clinicEntity == null) {
+            throw new NotFoundException("clinic with id " + clinicId + " not found");
+        }
+
+        reviewEntity.setClinic(clinicEntity);
+        persist(reviewEntity);
+        return ReviewMapper.toDomain(reviewEntity);
+    }
+
+    @Override
+    public List<Review> getReviewsByClinicId(Long clinicId) {
+        List<ReviewEntity> reviewEntities = list("clinic.id", clinicId);
+        List<Review> reviews = reviewEntities.stream().map(ReviewMapper::toDomain).toList();
+        return reviews;
     }
 }

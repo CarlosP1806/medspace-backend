@@ -2,6 +2,7 @@ package com.medspace.infrastructure.rest;
 
 import java.util.List;
 import com.medspace.application.usecase.review.AssignReviewToAuthorUseCase;
+import com.medspace.application.usecase.review.AssignReviewToClinicUseCase;
 import com.medspace.application.usecase.review.CreateReviewUseCase;
 import com.medspace.application.usecase.review.DeleteReviewByIdUseCase;
 import com.medspace.application.usecase.review.GetAllReviewsUseCase;
@@ -41,6 +42,9 @@ public class ReviewController {
     @Inject
     AssignReviewToAuthorUseCase assignReviewToUserUseCase;
     @Inject
+    AssignReviewToClinicUseCase assignReviewToClinicUseCase;
+
+    @Inject
     RequestContext requestContext;
 
     @GET
@@ -63,18 +67,27 @@ public class ReviewController {
     @UserOnly
     @Transactional
     public Response createReview(@Valid CreateReviewDTO createReviewDTO) {
-        User loggedUser = requestContext.getUser();
-    
-        Review review = createReviewDTO.toReview();
-        Review createdReview = createReviewUseCase.execute(review);
-        createdReview = assignReviewToUserUseCase.execute(createdReview.getId(), loggedUser.getId());
-    
-        ReviewResponseDTO responseDTO = ReviewResponseDTO.fromReview(createdReview);
-        return Response.ok(ResponseDTO.success("Review created", responseDTO)).build();
-    }    
+        try {
+            User loggedUser = requestContext.getUser();
 
+            Review review = createReviewDTO.toReview();
+            Review createdReview = createReviewUseCase.execute(review);
+            createdReview =
+                    assignReviewToUserUseCase.execute(createdReview.getId(), loggedUser.getId());
 
+            if (createdReview.getType() == Review.Type.CLINIC) {
+                Long clinicId = createReviewDTO.getClinicId();
+                createdReview =
+                        assignReviewToClinicUseCase.execute(createdReview.getId(), clinicId);
+            }
 
+            ReviewResponseDTO responseDTO = ReviewResponseDTO.fromReview(createdReview);
+            return Response.ok(ResponseDTO.success("Review created", responseDTO)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
 
     @GET
     @Path("/{id}")
@@ -104,14 +117,12 @@ public class ReviewController {
             return Response.ok(ResponseDTO.success("Review Deleted")).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
-    
+
 
 }

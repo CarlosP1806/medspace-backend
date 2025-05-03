@@ -27,7 +27,7 @@ public class CreateReviewDTO {
     @NotBlank
     private String comment;
 
-
+    private Long clinicId;
 
     public Review toReview() {
         Review review = new Review();

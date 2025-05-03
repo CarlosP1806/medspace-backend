@@ -1,4 +1,5 @@
 package com.medspace.infrastructure.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,10 @@ public class ReviewEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity author;
+
+    @ManyToOne
+    @JoinColumn(name = "clinic_id")
+    private ClinicEntity clinic;
 
     /*
      * @ManyToOne
