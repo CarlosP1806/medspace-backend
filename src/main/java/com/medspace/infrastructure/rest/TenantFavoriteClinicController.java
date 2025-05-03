@@ -5,7 +5,10 @@ import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.infrastructure.dto.CreateTenantFavoriteClinicDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.TenantFavoriteClinicResponseDTO;
+import com.medspace.infrastructure.rest.annotations.TenantOnly;
+import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
+import com.medspace.domain.model.User;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -45,25 +48,22 @@ public class TenantFavoriteClinicController {
     @Inject
     AssignTenantFavoriteClinicToTenantUseCase assignTenantFavoriteClinicToTenantUseCase;
 
+    @Inject
+    RequestContext requestContext;
 
     @POST
     @Transactional
-    public Response createFavoriteClinic(@Valid CreateTenantFavoriteClinicDTO request) {
+    @TenantOnly
+    public Response createTenantFavoriteClinic(@Valid CreateTenantFavoriteClinicDTO favoriteClinicRequest) {
         try {
-            TenantFavoriteClinic favoriteClinic =
-                    createTenantFavoriteClinicUseCase.execute(new TenantFavoriteClinic());
-
-            favoriteClinic = assignTenantFavoriteClinicToTenantUseCase
-                    .execute(favoriteClinic.getId(), request.getTenantId());
-
-            favoriteClinic = assignTenantFavoriteClinicToClinicUseCase
-                    .execute(favoriteClinic.getId(), request.getClinicId());
-
-            TenantFavoriteClinicResponseDTO responseDTO =
-                    TenantFavoriteClinicResponseDTO.fromFavorite(favoriteClinic);
+            User loggedUser = requestContext.getUser();
+            System.out.println("Clinic ID: " + favoriteClinicRequest.getClinicId());
+            TenantFavoriteClinic favoriteClinic = createTenantFavoriteClinicUseCase.execute(favoriteClinicRequest.toDomainModel());
+            assignTenantFavoriteClinicToTenantUseCase.execute(favoriteClinic.getId(), loggedUser.getId());
+            assignTenantFavoriteClinicToClinicUseCase.execute(favoriteClinic.getId(), favoriteClinicRequest.getClinicId());
 
             return Response.status(Response.Status.CREATED)
-                    .entity(ResponseDTO.success("Favorite clinic added", responseDTO)).build();
+                    .entity(ResponseDTO.success("TenantFavoriteClinic Created")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
@@ -110,18 +110,23 @@ public class TenantFavoriteClinicController {
 
 
     @DELETE
+    @Path("/clinic/{clinicId}")
     @Transactional
-    @Path("/user/{tenantId}/clinic/{clinicId}")
-    public Response removeFavoriteClinic(@PathParam("tenantId") Long tenantId,
-            @PathParam("clinicId") Long clinicId) {
+    @TenantOnly
+    public Response removeFavoriteClinic(@PathParam("clinicId") Long clinicId) {
         try {
-            removeFavoriteClinicUseCase.execute(tenantId, clinicId);
+            User loggedUser = requestContext.getUser();
+            removeFavoriteClinicUseCase.execute(loggedUser.getId(), clinicId);
             return Response.ok(ResponseDTO.success("Favorite clinic removed")).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+    
 
 
 }

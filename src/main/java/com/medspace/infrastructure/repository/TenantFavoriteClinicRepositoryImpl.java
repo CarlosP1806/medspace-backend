@@ -6,6 +6,7 @@ import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import com.medspace.infrastructure.entity.ClinicEntity;
 import com.medspace.infrastructure.entity.TenantFavoriteClinicEntity;
 import com.medspace.infrastructure.entity.UserEntity;
+import java.time.Instant;
 import com.medspace.infrastructure.mapper.TenantFavoriteClinicMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,7 +30,10 @@ public class TenantFavoriteClinicRepositoryImpl implements TenantFavoriteClinicR
     @Transactional
     @Override
     public TenantFavoriteClinic createTenantFavoriteClinic(
-            TenantFavoriteClinic tenantFavoriteClinic) {
+        TenantFavoriteClinic tenantFavoriteClinic) {
+        if (tenantFavoriteClinic.getCreatedAt() == null) {
+            tenantFavoriteClinic.setCreatedAt(Instant.now());
+        }
         TenantFavoriteClinicEntity tenantFavoriteClinicEntity =
                 TenantFavoriteClinicMapper.toEntity(tenantFavoriteClinic);
         persist(tenantFavoriteClinicEntity);
