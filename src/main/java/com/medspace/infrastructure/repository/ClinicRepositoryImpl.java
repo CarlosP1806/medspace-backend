@@ -3,6 +3,7 @@ package com.medspace.infrastructure.repository;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
+import com.medspace.infrastructure.entity.ClinicAvailabilityEntity;
 import com.medspace.infrastructure.entity.ClinicEntity;
 import com.medspace.infrastructure.entity.ClinicEquipmentEntity;
 import com.medspace.infrastructure.entity.UserEntity;
@@ -76,7 +77,16 @@ public class ClinicRepositoryImpl
             predicates.add(equipmentJoin.get("type").in(filter.getEquipmentList()));
         }
 
-        query.select(clinic).where(cb.and(predicates.toArray(new Predicate[0])));
+        if (filter.getTargetHour() != null) {
+            Join<ClinicEntity, ClinicAvailabilityEntity> availability =
+                    clinic.join("availabilities");
+            predicates.add(
+                    cb.lessThanOrEqualTo(availability.get("startTime"), filter.getTargetHour()));
+            predicates.add(
+                    cb.greaterThanOrEqualTo(availability.get("endTime"), filter.getTargetHour()));
+        }
+
+        query.select(clinic).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
         List<ClinicEntity> entities = em.createQuery(query).getResultList();
         return entities.stream().map(ClinicMapper::toDomain).collect(Collectors.toList());
     }

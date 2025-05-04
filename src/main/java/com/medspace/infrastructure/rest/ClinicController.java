@@ -27,6 +27,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -87,7 +88,8 @@ public class ClinicController {
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities,
             @QueryParam("date") String targetDate,
-            @QueryParam("equipmentList") List<String> equipmentList) {
+            @QueryParam("equipmentList") List<String> equipmentList,
+            @QueryParam("hour") String targetHour) {
         try {
             ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
@@ -99,6 +101,10 @@ public class ClinicController {
 
             if (equipmentList != null && !equipmentList.isEmpty()) {
                 queryFilterDTO.setEquipmentList(equipmentList);
+            }
+
+            if (targetHour != null) {
+                queryFilterDTO.setTargetHour(LocalTime.parse(targetHour));
             }
 
             List<GetClinicDTO> clinics = getFilteredClinicsUseCase.execute(queryFilterDTO);

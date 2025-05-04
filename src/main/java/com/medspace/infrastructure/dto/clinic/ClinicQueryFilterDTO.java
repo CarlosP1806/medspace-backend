@@ -1,6 +1,7 @@
 package com.medspace.infrastructure.dto.clinic;
 
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class ClinicQueryFilterDTO {
     private Boolean includeAvailabilities;
     private Date targetDate;
     private List<String> equipmentList;
+    private LocalTime targetHour;
 
     public ClinicQueryFilterDTO(Boolean includePhotos, Boolean includeEquipments,
             Boolean includeAvailabilities) {
