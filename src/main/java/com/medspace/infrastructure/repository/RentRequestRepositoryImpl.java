@@ -10,9 +10,15 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +57,21 @@ public class RentRequestRepositoryImpl
     @Override
     public List<RentRequest> findAllRequests() {
         return listAll().stream().map(RentRequestMapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RentRequest> findByLandlordId(Long landlordId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RentRequestEntity> cq = cb.createQuery(RentRequestEntity.class);
+        Root<RentRequestEntity> root = cq.from(RentRequestEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        Join<RentRequestEntity, ClinicEntity> clinicJoin = root.join("clinic", JoinType.INNER);
+        predicates.add(cb.equal(clinicJoin.get("landlord").get("id"), landlordId));
+
+        cq.select(root).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
+        List<RentRequestEntity> entities = entityManager.createQuery(cq).getResultList();
+        return entities.stream().map(RentRequestMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override

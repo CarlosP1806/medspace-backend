@@ -9,6 +9,8 @@ public interface RentRequestRepository {
 
     List<RentRequest> findAllRequests();
 
+    List<RentRequest> findByLandlordId(Long landlordId);
+
     RentRequest findRequestById(Long id);
 
     boolean deleteById(Long id);

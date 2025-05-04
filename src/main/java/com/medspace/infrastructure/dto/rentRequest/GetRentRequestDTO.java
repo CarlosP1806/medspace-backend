@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.sql.Date;
 import java.time.Instant;
 
 @Getter
@@ -18,8 +18,8 @@ public class GetRentRequestDTO {
     private Long tenantId;
     private Long clinicId;
     private Instant createdAt;
-    private Instant startDate;
-    private Instant endDate;
+    private Date startDate;
+    private Date endDate;
     private String comments;
     private String status;
 
