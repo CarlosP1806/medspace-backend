@@ -12,16 +12,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClinicQueryFilterDTO {
+public class ClinicQueryDTO {
+    // Filters to determine shape of the response
     private Boolean includePhotos;
     private Boolean includeEquipments;
     private Boolean includeAvailabilities;
+
+    // Optional filters to be used in the query
     private Date targetDate;
     private List<String> equipmentList;
     private LocalTime targetHour;
     private String targetCity;
 
-    public ClinicQueryFilterDTO(Boolean includePhotos, Boolean includeEquipments,
+    public ClinicQueryDTO(Boolean includePhotos, Boolean includeEquipments,
             Boolean includeAvailabilities) {
         this.includePhotos = includePhotos;
         this.includeEquipments = includeEquipments;

@@ -6,7 +6,7 @@ import com.medspace.application.service.ClinicEquipmentService;
 import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
-import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
@@ -25,7 +25,7 @@ public class GetFilteredClinicsUseCase {
     @Inject
     ClinicAvailabilityService clinicAvailabilityService;
 
-    public List<GetClinicDTO> execute(ClinicQueryFilterDTO queryFilterDTO) {
+    public List<GetClinicDTO> execute(ClinicQueryDTO queryFilterDTO) {
         List<Clinic> clinics = clinicService.getFilteredClinics(queryFilterDTO);
         return clinics.stream().map(clinic -> {
             Double averageRating = clinicService.getAverageRatingById(clinic.getId());

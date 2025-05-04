@@ -9,7 +9,7 @@ import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhoto
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
-import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import com.medspace.infrastructure.dto.clinic.CreateClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
@@ -91,8 +91,8 @@ public class ClinicController {
             @QueryParam("equipmentList") List<String> equipmentList,
             @QueryParam("hour") String targetHour, @QueryParam("city") String targetCity) {
         try {
-            ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
-                    includeEquipments, includeAvailabilities);
+            ClinicQueryDTO queryFilterDTO =
+                    new ClinicQueryDTO(includePhotos, includeEquipments, includeAvailabilities);
 
             if (targetDate != null) {
                 Date formattedDate = Date.valueOf(targetDate);
@@ -141,8 +141,8 @@ public class ClinicController {
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
         try {
-            ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
-                    includeEquipments, includeAvailabilities);
+            ClinicQueryDTO queryFilterDTO =
+                    new ClinicQueryDTO(includePhotos, includeEquipments, includeAvailabilities);
             GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id, queryFilterDTO);
             return Response.ok(ResponseDTO.success("Clinic Fetched", clinicResponse)).build();
         } catch (NotFoundException e) {

@@ -2,7 +2,7 @@ package com.medspace.infrastructure.repository;
 
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.repository.ClinicRepository;
-import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import com.medspace.infrastructure.entity.ClinicAvailabilityEntity;
 import com.medspace.infrastructure.entity.ClinicEntity;
 import com.medspace.infrastructure.entity.ClinicEquipmentEntity;
@@ -57,7 +57,7 @@ public class ClinicRepositoryImpl
     }
 
     @Override
-    public List<Clinic> getFilteredClinics(ClinicQueryFilterDTO filter) {
+    public List<Clinic> getFilteredClinics(ClinicQueryDTO filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ClinicEntity> query = cb.createQuery(ClinicEntity.class);
         Root<ClinicEntity> clinic = query.from(ClinicEntity.class);

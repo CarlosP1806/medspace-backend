@@ -1,7 +1,7 @@
 package com.medspace.domain.repository;
 
 import com.medspace.domain.model.Clinic;
-import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import java.util.List;
 
 public interface ClinicRepository {
@@ -11,7 +11,7 @@ public interface ClinicRepository {
 
     public Clinic getClinicById(Long id);
 
-    public List<Clinic> getFilteredClinics(ClinicQueryFilterDTO queryFilterDTO);
+    public List<Clinic> getFilteredClinics(ClinicQueryDTO queryFilterDTO);
 
     public List<Clinic> getClinicsByLandlordId(Long landlordId);
 
