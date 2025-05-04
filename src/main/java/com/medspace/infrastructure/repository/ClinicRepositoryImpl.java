@@ -4,6 +4,7 @@ import com.medspace.domain.model.Clinic;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
 import com.medspace.infrastructure.entity.ClinicEntity;
+import com.medspace.infrastructure.entity.ClinicEquipmentEntity;
 import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.mapper.ClinicMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
@@ -13,6 +14,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
@@ -65,6 +68,12 @@ public class ClinicRepositoryImpl
                     cb.lessThanOrEqualTo(clinic.get("availableFromDate"), filter.getTargetDate()));
             predicates.add(
                     cb.greaterThanOrEqualTo(clinic.get("availableToDate"), filter.getTargetDate()));
+        }
+
+        if (filter.getEquipmentList() != null) {
+            Join<ClinicEntity, ClinicEquipmentEntity> equipmentJoin =
+                    clinic.join("equipments", JoinType.INNER);
+            predicates.add(equipmentJoin.get("type").in(filter.getEquipmentList()));
         }
 
         query.select(clinic).where(cb.and(predicates.toArray(new Predicate[0])));

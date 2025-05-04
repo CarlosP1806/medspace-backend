@@ -86,7 +86,8 @@ public class ClinicController {
             @QueryParam("photos") @DefaultValue("false") boolean includePhotos,
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities,
-            @QueryParam("date") String targetDate) {
+            @QueryParam("date") String targetDate,
+            @QueryParam("equipmentList") List<String> equipmentList) {
         try {
             ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
@@ -94,6 +95,10 @@ public class ClinicController {
             if (targetDate != null) {
                 Date formattedDate = Date.valueOf(targetDate);
                 queryFilterDTO.setTargetDate(formattedDate);
+            }
+
+            if (equipmentList != null && !equipmentList.isEmpty()) {
+                queryFilterDTO.setEquipmentList(equipmentList);
             }
 
             List<GetClinicDTO> clinics = getFilteredClinicsUseCase.execute(queryFilterDTO);
