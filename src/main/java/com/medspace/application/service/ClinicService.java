@@ -4,6 +4,7 @@ import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.domain.repository.ReviewRepository;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -34,6 +35,10 @@ public class ClinicService {
 
     public List<Clinic> getAllClinics() {
         return clinicRepository.getAllClinics();
+    }
+
+    public List<Clinic> getFilteredClinics(ClinicQueryFilterDTO queryFilterDTO) {
+        return clinicRepository.getFilteredClinics(queryFilterDTO);
     }
 
     public List<Clinic> getClinicsByLandlordId(Long landlordId) {

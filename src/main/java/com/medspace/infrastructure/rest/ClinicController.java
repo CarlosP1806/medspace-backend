@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import java.sql.Date;
 import java.util.List;
 
 @ApplicationScoped
@@ -56,6 +56,8 @@ public class ClinicController {
     GetAvailabilitiesByClinicIdUseCase getAvailabilitiesByClinicIdUseCase;
     @Inject
     GetClinicsByLandlordIdUseCase getClinicsByLandlordIdUseCase;
+    @Inject
+    GetFilteredClinicsUseCase getFilteredClinicsUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -80,14 +82,21 @@ public class ClinicController {
 
     @GET
     @UserOnly
-    public Response getAllClinics(
+    public Response getFilteredClinics(
             @QueryParam("photos") @DefaultValue("false") boolean includePhotos,
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
-            @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
+            @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities,
+            @QueryParam("date") String targetDate) {
         try {
             ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
-            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute(queryFilterDTO);
+
+            if (targetDate != null) {
+                Date formattedDate = Date.valueOf(targetDate);
+                queryFilterDTO.setTargetDate(formattedDate);
+            }
+
+            List<GetClinicDTO> clinics = getFilteredClinicsUseCase.execute(queryFilterDTO);
             return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
