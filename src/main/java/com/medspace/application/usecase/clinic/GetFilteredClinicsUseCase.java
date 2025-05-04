@@ -1,5 +1,6 @@
 package com.medspace.application.usecase.clinic;
 
+import java.util.List;
 import com.medspace.application.service.ClinicAvailabilityService;
 import com.medspace.application.service.ClinicEquipmentService;
 import com.medspace.application.service.ClinicPhotoService;
@@ -13,10 +14,8 @@ import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.List;
-
 @ApplicationScoped
-public class GetAllClinicsUseCase {
+public class GetFilteredClinicsUseCase {
     @Inject
     ClinicService clinicService;
     @Inject
@@ -27,7 +26,7 @@ public class GetAllClinicsUseCase {
     ClinicAvailabilityService clinicAvailabilityService;
 
     public List<GetClinicDTO> execute(ClinicQueryDTO queryFilterDTO) {
-        List<Clinic> clinics = clinicService.getAllClinics();
+        List<Clinic> clinics = clinicService.getFilteredClinics(queryFilterDTO);
         return clinics.stream().map(clinic -> {
             Double averageRating = clinicService.getAverageRatingById(clinic.getId());
 
