@@ -10,6 +10,7 @@ import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.rentRequest.CreateRentRequestDTO;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestDTO;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestPreviewDTO;
+import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.inject.Inject;
@@ -49,10 +50,14 @@ public class RentRequestController {
     @GET
     @Path("/landlord")
     @LandlordOnly
-    public Response getByLandlord() {
+    public Response getByLandlord(@QueryParam("status") String targetStatus) {
         User loggedInUser = requestContext.getUser();
-        List<GetRentRequestPreviewDTO> list =
-                getRentRequestsByLandlordId.execute(loggedInUser.getId());
+        RentRequestQueryFilterDTO filterDTO = new RentRequestQueryFilterDTO(loggedInUser.getId());
+        if (targetStatus != null) {
+            filterDTO.setStatus(targetStatus);
+        }
+
+        List<GetRentRequestPreviewDTO> list = getRentRequestsByLandlordId.execute(filterDTO);
 
         return Response.ok(ResponseDTO.success("Fetched rent-requests", list)).build();
     }

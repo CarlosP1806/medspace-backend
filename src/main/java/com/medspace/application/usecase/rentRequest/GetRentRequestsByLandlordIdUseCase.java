@@ -8,6 +8,7 @@ import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.User;
 import com.medspace.domain.repository.RentRequestRepository;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestPreviewDTO;
+import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -20,8 +21,8 @@ public class GetRentRequestsByLandlordIdUseCase {
     @Inject
     ClinicService clinicService;
 
-    public List<GetRentRequestPreviewDTO> execute(Long landlordId) {
-        List<RentRequest> rentRequests = rentRequestRepository.findByLandlordId(landlordId);
+    public List<GetRentRequestPreviewDTO> execute(RentRequestQueryFilterDTO filterDTO) {
+        List<RentRequest> rentRequests = rentRequestRepository.findByLandlordId(filterDTO);
 
         return rentRequests.stream().map(rentRequest -> {
             User tenant = userService.getUserById(rentRequest.getTenant().getId());
