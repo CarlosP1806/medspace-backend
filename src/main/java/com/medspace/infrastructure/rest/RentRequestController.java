@@ -9,6 +9,7 @@ import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.rentRequest.CreateRentRequestDTO;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestDTO;
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestPreviewDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.inject.Inject;
@@ -50,11 +51,10 @@ public class RentRequestController {
     @LandlordOnly
     public Response getByLandlord() {
         User loggedInUser = requestContext.getUser();
-        List<RentRequest> list = getRentRequestsByLandlordId.execute(loggedInUser.getId());
-        List<GetRentRequestDTO> dtos =
-                list.stream().map(GetRentRequestDTO::new).collect(Collectors.toList());
+        List<GetRentRequestPreviewDTO> list =
+                getRentRequestsByLandlordId.execute(loggedInUser.getId());
 
-        return Response.ok(ResponseDTO.success("Fetched rent-requests", dtos)).build();
+        return Response.ok(ResponseDTO.success("Fetched rent-requests", list)).build();
     }
 
     @POST
