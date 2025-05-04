@@ -89,7 +89,7 @@ public class ClinicController {
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities,
             @QueryParam("date") String targetDate,
             @QueryParam("equipmentList") List<String> equipmentList,
-            @QueryParam("hour") String targetHour) {
+            @QueryParam("hour") String targetHour, @QueryParam("city") String targetCity) {
         try {
             ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
@@ -105,6 +105,10 @@ public class ClinicController {
 
             if (targetHour != null) {
                 queryFilterDTO.setTargetHour(LocalTime.parse(targetHour));
+            }
+
+            if (targetCity != null) {
+                queryFilterDTO.setTargetCity(targetCity);
             }
 
             List<GetClinicDTO> clinics = getFilteredClinicsUseCase.execute(queryFilterDTO);

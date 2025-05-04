@@ -19,6 +19,7 @@ public class ClinicQueryFilterDTO {
     private Date targetDate;
     private List<String> equipmentList;
     private LocalTime targetHour;
+    private String targetCity;
 
     public ClinicQueryFilterDTO(Boolean includePhotos, Boolean includeEquipments,
             Boolean includeAvailabilities) {

@@ -86,6 +86,10 @@ public class ClinicRepositoryImpl
                     cb.greaterThanOrEqualTo(availability.get("endTime"), filter.getTargetHour()));
         }
 
+        if (filter.getTargetCity() != null) {
+            predicates.add(cb.equal(clinic.get("addressCity"), filter.getTargetCity()));
+        }
+
         query.select(clinic).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
         List<ClinicEntity> entities = em.createQuery(query).getResultList();
         return entities.stream().map(ClinicMapper::toDomain).collect(Collectors.toList());
