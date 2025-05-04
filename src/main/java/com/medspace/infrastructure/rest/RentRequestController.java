@@ -4,10 +4,9 @@ import com.medspace.application.usecase.rentRequest.CreateRentRequestUseCase;
 import com.medspace.application.usecase.rentRequest.ListRentRequestUseCase;
 import com.medspace.application.usecase.rentRequest.DeleteRentRequestUseCase;
 import com.medspace.domain.model.RentRequest;
-import com.medspace.infrastructure.dto.CreateRentRequestDTO;
-import com.medspace.infrastructure.dto.GetRentRequestDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
-
+import com.medspace.infrastructure.dto.rentRequest.CreateRentRequestDTO;
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

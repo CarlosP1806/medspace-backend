@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.clinic;
 
 import com.medspace.domain.model.TenantFavoriteClinic;
 import lombok.AllArgsConstructor;
@@ -19,11 +19,9 @@ public class TenantFavoriteClinicResponseDTO {
     private Instant createdAt;
 
     public static TenantFavoriteClinicResponseDTO fromFavorite(TenantFavoriteClinic favorite) {
-        return new TenantFavoriteClinicResponseDTO(
-            favorite.getId(),
-            favorite.getTenant() != null ? favorite.getTenant().getId() : null,
-            favorite.getClinic() != null ? favorite.getClinic().getId() : null,
-            favorite.getCreatedAt()
-        );
+        return new TenantFavoriteClinicResponseDTO(favorite.getId(),
+                favorite.getTenant() != null ? favorite.getTenant().getId() : null,
+                favorite.getClinic() != null ? favorite.getClinic().getId() : null,
+                favorite.getCreatedAt());
     }
 }

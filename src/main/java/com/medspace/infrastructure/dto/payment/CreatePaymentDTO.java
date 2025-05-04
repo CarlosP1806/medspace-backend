@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.payment;
 
 import com.medspace.domain.model.Payment;
 import lombok.Getter;
@@ -29,4 +29,4 @@ public class CreatePaymentDTO {
         payment.setPaymentStatus(Payment.PaymentStatus.PENDING);
         return payment;
     }
-} 
+}

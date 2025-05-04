@@ -9,6 +9,12 @@ import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhoto
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
+import com.medspace.infrastructure.dto.clinic.CreateClinicDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
+import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
@@ -73,9 +79,13 @@ public class ClinicController {
 
     @GET
     @UserOnly
-    public Response getAllClinics() {
+    public Response getAllClinics(
+            @QueryParam("photos") @DefaultValue("false") boolean includePhotos,
+            @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
+            @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
         try {
-            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute();
+            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute(includePhotos,
+                    includeEquipments, includeAvailabilities);
             return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -100,9 +110,13 @@ public class ClinicController {
     @GET
     @Path("/{id}")
     @UserOnly
-    public Response getClinicById(@PathParam("id") Long id) {
+    public Response getClinicById(@PathParam("id") Long id,
+            @QueryParam("photos") @DefaultValue("false") boolean includePhotos,
+            @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
+            @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
         try {
-            GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id);
+            GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id, includePhotos,
+                    includeEquipments, includeAvailabilities);
             return Response.ok(ResponseDTO.success("Clinic Fetched", clinicResponse)).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)

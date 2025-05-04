@@ -2,7 +2,7 @@ package com.medspace.application.usecase.clinicEquipment;
 
 import com.medspace.application.service.ClinicEquipmentService;
 import com.medspace.domain.model.ClinicEquipment;
-import com.medspace.infrastructure.dto.GetClinicEquipmentDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

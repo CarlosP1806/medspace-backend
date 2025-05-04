@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.rentRequest;
 
 import com.medspace.domain.model.RentRequest;
 import lombok.AllArgsConstructor;

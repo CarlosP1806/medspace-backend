@@ -1,6 +1,7 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.clinic;
 
 import java.sql.Date;
+import java.util.List;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.Clinic.Category;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,12 @@ public class GetClinicDTO {
 
     private Double averageRating; // average rating of Clinic, or null if there are no ratings
 
-    public GetClinicDTO(Clinic clinic, Double averageRating) {
+    private List<GetClinicPhotoDTO> photos;
+    private List<GetClinicEquipmentDTO> equipments;
+    private List<GetClinicAvailabilityDTO> availabilities;
+
+    public GetClinicDTO(Clinic clinic, Double averageRating, List<GetClinicPhotoDTO> photos,
+            List<GetClinicEquipmentDTO> equipments, List<GetClinicAvailabilityDTO> availabilities) {
         this.id = clinic.getId();
         this.displayName = clinic.getDisplayName();
         this.category = clinic.getCategory();
@@ -52,9 +58,12 @@ public class GetClinicDTO {
         this.addressCountry = clinic.getAddressCountry();
         this.addressLongitude = clinic.getAddressLongitude();
         this.addressLatitude = clinic.getAddressLatitude();
+        this.averageRating = averageRating;
 
         this.landLordId = clinic.getLandlord().getId();
 
-        this.averageRating = averageRating;
+        this.photos = photos;
+        this.equipments = equipments;
+        this.availabilities = availabilities;
     }
 }

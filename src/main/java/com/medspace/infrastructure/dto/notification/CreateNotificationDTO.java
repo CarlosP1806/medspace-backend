@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.notification;
 
 import com.medspace.domain.model.Notification;
 import jakarta.validation.constraints.NotBlank;
@@ -22,4 +22,4 @@ public class CreateNotificationDTO {
         notification.setMessage(message);
         return notification;
     }
-} 
+}
