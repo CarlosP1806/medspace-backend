@@ -9,6 +9,7 @@ import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhoto
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
 import com.medspace.infrastructure.dto.clinic.CreateClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
@@ -84,8 +85,9 @@ public class ClinicController {
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
         try {
-            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute(includePhotos,
+            ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
+            List<GetClinicDTO> clinics = getAllClinicsUseCase.execute(queryFilterDTO);
             return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -115,8 +117,9 @@ public class ClinicController {
             @QueryParam("equipments") @DefaultValue("false") boolean includeEquipments,
             @QueryParam("availabilities") @DefaultValue("false") boolean includeAvailabilities) {
         try {
-            GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id, includePhotos,
+            ClinicQueryFilterDTO queryFilterDTO = new ClinicQueryFilterDTO(includePhotos,
                     includeEquipments, includeAvailabilities);
+            GetClinicDTO clinicResponse = getClinicByIdUseCase.execute(id, queryFilterDTO);
             return Response.ok(ResponseDTO.success("Clinic Fetched", clinicResponse)).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND)

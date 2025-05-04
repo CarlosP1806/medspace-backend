@@ -5,6 +5,7 @@ import com.medspace.application.service.ClinicEquipmentService;
 import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
+import com.medspace.infrastructure.dto.clinic.ClinicQueryFilterDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
@@ -16,41 +17,52 @@ import java.util.List;
 
 @ApplicationScoped
 public class GetAllClinicsUseCase {
-    @Inject
-    ClinicService clinicService;
-    @Inject
-    ClinicPhotoService clinicPhotoService;
-    @Inject
-    ClinicEquipmentService clinicEquipmentService;
-    @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
+        @Inject
+        ClinicService clinicService;
+        @Inject
+        ClinicPhotoService clinicPhotoService;
+        @Inject
+        ClinicEquipmentService clinicEquipmentService;
+        @Inject
+        ClinicAvailabilityService clinicAvailabilityService;
 
-    public List<GetClinicDTO> execute(Boolean includePhotos, Boolean includeEquipments,
-            Boolean includeAvailabilities) {
-        List<Clinic> clinics = clinicService.getAllClinics();
-        return clinics.stream().map(clinic -> {
-            Double averageRating = clinicService.getAverageRatingById(clinic.getId());
+        public List<GetClinicDTO> execute(ClinicQueryFilterDTO queryFilterDTO) {
+                List<Clinic> clinics = clinicService.getAllClinics();
+                return clinics.stream().map(clinic -> {
+                        Double averageRating = clinicService.getAverageRatingById(clinic.getId());
 
-            List<GetClinicPhotoDTO> photoDTOs =
-                    includePhotos
-                            ? clinicPhotoService.listPhotosByClinicId(clinic.getId()).stream()
-                                    .map(GetClinicPhotoDTO::new).toList()
-                            : null;
+                        List<GetClinicPhotoDTO> photoDTOs =
+                                        queryFilterDTO.getIncludePhotos()
+                                                        ? clinicPhotoService
+                                                                        .listPhotosByClinicId(clinic
+                                                                                        .getId())
+                                                                        .stream()
+                                                                        .map(GetClinicPhotoDTO::new)
+                                                                        .toList()
+                                                        : null;
 
-            List<GetClinicEquipmentDTO> equipmentDTOs =
-                    includeEquipments
-                            ? clinicEquipmentService.getEquipmentsByClinicId(clinic.getId())
-                                    .stream().map(GetClinicEquipmentDTO::new).toList()
-                            : null;
+                        List<GetClinicEquipmentDTO> equipmentDTOs =
+                                        queryFilterDTO.getIncludeEquipments()
+                                                        ? clinicEquipmentService
+                                                                        .getEquipmentsByClinicId(
+                                                                                        clinic.getId())
+                                                                        .stream()
+                                                                        .map(GetClinicEquipmentDTO::new)
+                                                                        .toList()
+                                                        : null;
 
-            List<GetClinicAvailabilityDTO> availabilityDTOs =
-                    includeAvailabilities
-                            ? clinicAvailabilityService.getAvailabilitiesByClinicId(clinic.getId())
-                                    .stream().map(GetClinicAvailabilityDTO::new).toList()
-                            : null;
+                        List<GetClinicAvailabilityDTO> availabilityDTOs =
+                                        queryFilterDTO.getIncludeAvailabilities()
+                                                        ? clinicAvailabilityService
+                                                                        .getAvailabilitiesByClinicId(
+                                                                                        clinic.getId())
+                                                                        .stream()
+                                                                        .map(GetClinicAvailabilityDTO::new)
+                                                                        .toList()
+                                                        : null;
 
-            return new GetClinicDTO(clinic, averageRating, photoDTOs, equipmentDTOs,
-                    availabilityDTOs);
-        }).toList();
-    }
+                        return new GetClinicDTO(clinic, averageRating, photoDTOs, equipmentDTOs,
+                                        availabilityDTOs);
+                }).toList();
+        }
 }
