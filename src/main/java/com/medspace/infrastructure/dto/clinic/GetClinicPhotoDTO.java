@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.clinic;
 
 import com.medspace.domain.model.ClinicPhoto;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,12 @@ public class GetClinicPhotoDTO {
     private Long id;
     private Long clinicId;
     private String url;
+    private Boolean isPrimary;
 
     public GetClinicPhotoDTO(ClinicPhoto clinicPhoto) {
         this.id = clinicPhoto.getId();
         this.clinicId = clinicPhoto.getClinic().getId();
         this.url = clinicPhoto.getUrl();
+        this.isPrimary = clinicPhoto.getIsPrimary();
     }
 }

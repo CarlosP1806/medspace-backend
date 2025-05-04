@@ -5,8 +5,8 @@ import com.medspace.application.usecase.clinicEquipment.CreateClinicEquipmentUse
 import com.medspace.application.usecase.clinicEquipment.DeleteClinicEquipmentByIdUseCase;
 import com.medspace.domain.model.ClinicEquipment;
 import com.medspace.domain.model.User;
-import com.medspace.infrastructure.dto.CreateClinicEquipmentDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
+import com.medspace.infrastructure.dto.clinic.CreateClinicEquipmentDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;

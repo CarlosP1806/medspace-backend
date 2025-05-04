@@ -6,8 +6,8 @@ import com.medspace.application.usecase.clinicPhoto.DeleteClinicPhotoByIdUseCase
 import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.User;
-import com.medspace.infrastructure.dto.CreateClinicPhotoDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
+import com.medspace.infrastructure.dto.clinic.CreateClinicPhotoDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.notification;
 
 import com.medspace.domain.model.Notification;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,9 @@ public class GetNotificationDTO {
             this.id = notification.getId();
             this.userId = notification.getUser() != null ? notification.getUser().getId() : null;
             this.message = notification.getMessage();
-            this.createdAt = notification.getCreatedAt() != null ? notification.getCreatedAt().toString() : null;
+            this.createdAt =
+                    notification.getCreatedAt() != null ? notification.getCreatedAt().toString()
+                            : null;
         }
     }
-} 
+}

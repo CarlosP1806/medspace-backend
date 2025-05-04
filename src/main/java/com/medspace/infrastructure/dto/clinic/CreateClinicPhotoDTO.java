@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.clinic;
 
 import com.medspace.domain.model.ClinicPhoto;
 import jakarta.validation.constraints.NotNull;

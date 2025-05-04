@@ -2,7 +2,7 @@ package com.medspace.application.usecase.clinicPhoto;
 
 import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.domain.model.ClinicPhoto;
-import com.medspace.infrastructure.dto.GetClinicPhotoDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

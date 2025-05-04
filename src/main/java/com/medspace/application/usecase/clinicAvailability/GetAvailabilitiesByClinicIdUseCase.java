@@ -2,7 +2,7 @@ package com.medspace.application.usecase.clinicAvailability;
 
 import com.medspace.application.service.ClinicAvailabilityService;
 import com.medspace.domain.model.ClinicAvailability;
-import com.medspace.infrastructure.dto.GetClinicAvailabilityDTO;
+import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

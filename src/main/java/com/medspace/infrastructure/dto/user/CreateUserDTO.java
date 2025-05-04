@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.user;
 
 
 import java.io.InputStream;

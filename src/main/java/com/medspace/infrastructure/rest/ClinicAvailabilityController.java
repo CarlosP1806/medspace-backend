@@ -6,9 +6,9 @@ import com.medspace.application.usecase.clinicAvailability.DeleteClinicAvailabil
 import com.medspace.application.usecase.clinicAvailability.UpdateClinicAvailabilityUseCase;
 import com.medspace.domain.model.ClinicAvailability;
 import com.medspace.domain.model.User;
-import com.medspace.infrastructure.dto.CreateClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
-import com.medspace.infrastructure.dto.UpdateClinicAvailabilityDTO;
+import com.medspace.infrastructure.dto.clinic.CreateClinicAvailabilityDTO;
+import com.medspace.infrastructure.dto.clinic.UpdateClinicAvailabilityDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;

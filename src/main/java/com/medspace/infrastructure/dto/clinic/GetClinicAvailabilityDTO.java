@@ -1,4 +1,4 @@
-package com.medspace.infrastructure.dto;
+package com.medspace.infrastructure.dto.clinic;
 
 import com.medspace.domain.model.ClinicAvailability;
 import lombok.AllArgsConstructor;

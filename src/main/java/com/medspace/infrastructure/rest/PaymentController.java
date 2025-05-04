@@ -4,6 +4,8 @@ import com.medspace.application.usecase.payment.*;
 import com.medspace.domain.model.User;
 import com.medspace.domain.model.Payment;
 import com.medspace.infrastructure.dto.*;
+import com.medspace.infrastructure.dto.payment.CreatePaymentDTO;
+import com.medspace.infrastructure.dto.payment.PaymentResponseDTO;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -53,13 +55,13 @@ public class PaymentController {
         try {
             User user = requestContext.getUser();
             Payment payment = getPaymentByIdUseCase.execute(id, user);
-            return Response.ok(ResponseDTO.success("Payment Fetched", new PaymentResponseDTO(payment)))
+            return Response
+                    .ok(ResponseDTO.success("Payment Fetched", new PaymentResponseDTO(payment)))
                     .build();
         } catch (Exception e) {
             if (e.getMessage().contains("not found")) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Payment not found"))
-                        .build();
+                        .entity(ResponseDTO.error("Payment not found")).build();
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error("An error occurred while fetching the payment"))
@@ -69,24 +71,23 @@ public class PaymentController {
 
     @GET
     @Path("/rent-agreement/{rentAgreementId}")
-    public Response getPaymentsByRentAgreementId(@PathParam("rentAgreementId") Long rentAgreementId) {
+    public Response getPaymentsByRentAgreementId(
+            @PathParam("rentAgreementId") Long rentAgreementId) {
         try {
             User user = requestContext.getUser();
-            List<Payment> payments = getPaymentsByRentAgreementIdUseCase.execute(rentAgreementId, user);
-            List<PaymentResponseDTO> dtos = payments.stream()
-                    .map(PaymentResponseDTO::new)
-                    .collect(Collectors.toList());
-            return Response.ok(ResponseDTO.success("Payments Fetched", dtos))
-                    .build();
+            List<Payment> payments =
+                    getPaymentsByRentAgreementIdUseCase.execute(rentAgreementId, user);
+            List<PaymentResponseDTO> dtos =
+                    payments.stream().map(PaymentResponseDTO::new).collect(Collectors.toList());
+            return Response.ok(ResponseDTO.success("Payments Fetched", dtos)).build();
         } catch (Exception e) {
             if (e.getMessage().contains("not found")) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Rent agreement not found"))
-                        .build();
+                        .entity(ResponseDTO.error("Rent agreement not found")).build();
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error("An error occurred while fetching the payments"))
                     .build();
         }
     }
-} 
+}

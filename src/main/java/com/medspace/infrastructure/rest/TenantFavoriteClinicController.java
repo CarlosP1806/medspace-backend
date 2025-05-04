@@ -2,9 +2,9 @@ package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.tenantFavoriteClinic.*;
 import com.medspace.domain.model.TenantFavoriteClinic;
-import com.medspace.infrastructure.dto.CreateTenantFavoriteClinicDTO;
 import com.medspace.infrastructure.dto.ResponseDTO;
-import com.medspace.infrastructure.dto.TenantFavoriteClinicResponseDTO;
+import com.medspace.infrastructure.dto.clinic.CreateTenantFavoriteClinicDTO;
+import com.medspace.infrastructure.dto.clinic.TenantFavoriteClinicResponseDTO;
 import com.medspace.infrastructure.rest.annotations.TenantOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -54,13 +54,17 @@ public class TenantFavoriteClinicController {
     @POST
     @Transactional
     @TenantOnly
-    public Response createTenantFavoriteClinic(@Valid CreateTenantFavoriteClinicDTO favoriteClinicRequest) {
+    public Response createTenantFavoriteClinic(
+            @Valid CreateTenantFavoriteClinicDTO favoriteClinicRequest) {
         try {
             User loggedUser = requestContext.getUser();
             System.out.println("Clinic ID: " + favoriteClinicRequest.getClinicId());
-            TenantFavoriteClinic favoriteClinic = createTenantFavoriteClinicUseCase.execute(favoriteClinicRequest.toDomainModel());
-            assignTenantFavoriteClinicToTenantUseCase.execute(favoriteClinic.getId(), loggedUser.getId());
-            assignTenantFavoriteClinicToClinicUseCase.execute(favoriteClinic.getId(), favoriteClinicRequest.getClinicId());
+            TenantFavoriteClinic favoriteClinic = createTenantFavoriteClinicUseCase
+                    .execute(favoriteClinicRequest.toDomainModel());
+            assignTenantFavoriteClinicToTenantUseCase.execute(favoriteClinic.getId(),
+                    loggedUser.getId());
+            assignTenantFavoriteClinicToClinicUseCase.execute(favoriteClinic.getId(),
+                    favoriteClinicRequest.getClinicId());
 
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.success("TenantFavoriteClinic Created")).build();
@@ -126,7 +130,7 @@ public class TenantFavoriteClinicController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
-    
+
 
 
 }
