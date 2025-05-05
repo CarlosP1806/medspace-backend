@@ -13,7 +13,7 @@ import java.time.Instant;
 @Getter
 public class ClinicPhoto {
     private Long id;
-    private String url;
+    private String path;
     private Boolean isPrimary;
 
     private Clinic clinic;

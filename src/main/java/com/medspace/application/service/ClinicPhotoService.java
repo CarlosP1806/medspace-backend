@@ -1,12 +1,10 @@
 package com.medspace.application.service;
 
-import com.medspace.application.service.external.FileStorageService;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.repository.ClinicPhotoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 
@@ -14,16 +12,10 @@ import java.util.List;
 public class ClinicPhotoService {
     @Inject
     ClinicPhotoRepository clinicPhotoRepository;
-    @Inject
-    FileStorageService fileStorageService;
 
-    public ClinicPhoto createPhoto(ClinicPhoto clinicPhoto, InputStream photoInputStream) {
+    public ClinicPhoto createPhoto(ClinicPhoto clinicPhoto) {
         clinicPhoto.setCreatedAt(Instant.now());
-        String savedUrl = fileStorageService.saveFile(photoInputStream);
-        clinicPhoto.setUrl(savedUrl);
-
         clinicPhoto = clinicPhotoRepository.insertPhoto(clinicPhoto);
-
         return clinicPhoto;
     }
 
