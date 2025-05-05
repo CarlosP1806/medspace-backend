@@ -3,7 +3,7 @@ package com.medspace.infrastructure.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.sql.Date;
 import java.time.Instant;
 
 @Getter
@@ -27,10 +27,10 @@ public class RentRequestEntity {
     private Instant createdAt;
 
     @Column(name = "start_date")
-    private Instant startDate;
+    private Date startDate;
 
     @Column(name = "end_date")
-    private Instant endDate;
+    private Date endDate;
 
     @Column(name = "comments")
     private String comments;
