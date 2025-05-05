@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @ApplicationScoped
 @Path("/clinic-photos")
@@ -38,14 +37,13 @@ public class ClinicPhotoController {
 
     @POST
     @Transactional
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @LandlordOnly
-    public Response createClinicPhoto(@MultipartForm @Valid CreateClinicPhotoDTO photoRequest) {
+    public Response createClinicPhoto(@Valid CreateClinicPhotoDTO photoRequest) {
         try {
             User loggedUser = requestContext.getUser();
 
-            ClinicPhoto clinicPhoto = createClinicPhotoUseCase.execute(photoRequest.toClinicPhoto(),
-                    photoRequest.getPhoto());
+            ClinicPhoto clinicPhoto =
+                    createClinicPhotoUseCase.execute(photoRequest.toClinicPhoto());
             assignPhotoToClinicUseCase.execute(clinicPhoto.getId(), photoRequest.getClinicId(),
                     loggedUser.getId());
 

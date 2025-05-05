@@ -13,13 +13,13 @@ import lombok.Setter;
 public class GetClinicPhotoDTO {
     private Long id;
     private Long clinicId;
-    private String url;
+    private String path;
     private Boolean isPrimary;
 
     public GetClinicPhotoDTO(ClinicPhoto clinicPhoto) {
         this.id = clinicPhoto.getId();
         this.clinicId = clinicPhoto.getClinic().getId();
-        this.url = clinicPhoto.getUrl();
+        this.path = clinicPhoto.getPath();
         this.isPrimary = clinicPhoto.getIsPrimary();
     }
 }

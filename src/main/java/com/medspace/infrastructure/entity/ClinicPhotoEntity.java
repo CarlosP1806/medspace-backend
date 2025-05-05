@@ -19,8 +19,8 @@ public class ClinicPhotoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "url", nullable = false)
-    private String url;
+    @Column(name = "path", nullable = false)
+    private String path;
 
     @Column(name = "is_primary", nullable = false)
     private Boolean isPrimary = false;
