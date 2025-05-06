@@ -1,6 +1,5 @@
 package com.medspace.infrastructure.dto.rentRequest;
 
-import java.sql.Date;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.User;
@@ -15,8 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GetRentRequestPreviewDTO {
     private Long id;
-    private Date startDate;
-    private Date endDate;
     private String comments;
     private String status;
 
@@ -29,8 +26,6 @@ public class GetRentRequestPreviewDTO {
 
     public GetRentRequestPreviewDTO(RentRequest rentRequest, Clinic clinic, User tenant) {
         this.id = rentRequest.getId();
-        this.startDate = rentRequest.getStartDate();
-        this.endDate = rentRequest.getEndDate();
         this.comments = rentRequest.getComments();
         this.status = rentRequest.getStatus().toString();
 

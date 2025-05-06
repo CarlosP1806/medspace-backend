@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.sql.Date;
 import java.time.Instant;
 
 @Getter
@@ -18,8 +17,6 @@ public class GetRentRequestDTO {
     private Long tenantId;
     private Long clinicId;
     private Instant createdAt;
-    private Date startDate;
-    private Date endDate;
     private String comments;
     private String status;
 
@@ -28,8 +25,6 @@ public class GetRentRequestDTO {
         this.tenantId = model.getTenant().getId();
         this.clinicId = model.getClinic().getId();
         this.createdAt = model.getCreatedAt();
-        this.startDate = model.getStartDate();
-        this.endDate = model.getEndDate();
         this.comments = model.getComments();
         this.status = model.getStatus();
     }
