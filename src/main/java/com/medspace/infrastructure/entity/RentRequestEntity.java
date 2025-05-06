@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.sql.Date;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,4 +38,7 @@ public class RentRequestEntity {
 
     @Column(name = "status")
     private String status;
+
+    @OneToMany(mappedBy = "rentRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RentRequestDayEntity> requestedDays;
 }
