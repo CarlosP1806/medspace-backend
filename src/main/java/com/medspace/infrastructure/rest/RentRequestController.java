@@ -73,14 +73,26 @@ public class RentRequestController {
     }
 
     @POST
-    public Response create(CreateRentRequestDTO dto) {
-        RentRequest toSave = dto.toModel();
+    @TenantOnly
+    public Response create(@Valid CreateRentRequestDTO dto) {
+        try {
+            RentRequest toSave = dto.toModel();
+            List<RentRequestDay> dates = dto.getDates().stream().map(date -> {
+                RentRequestDay rentRequestDay = new RentRequestDay();
+                rentRequestDay.setDate(date);
+                return rentRequestDay;
+            }).collect(Collectors.toList());
 
-        RentRequest saved = createRentRequest.execute(toSave, dto.getTenantId(), dto.getClinicId());
-        GetRentRequestDTO out = new GetRentRequestDTO(saved);
+            RentRequest saved =
+                    createRentRequest.execute(toSave, dto.getTenantId(), dto.getClinicId(), dates);
+            GetRentRequestDTO out = new GetRentRequestDTO(saved);
 
-        return Response.status(Response.Status.CREATED)
-                .entity(ResponseDTO.success("Created rent-request", out)).build();
+            return Response.status(Response.Status.CREATED)
+                    .entity(ResponseDTO.success("Created rent-request", out)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
     }
 
     @DELETE

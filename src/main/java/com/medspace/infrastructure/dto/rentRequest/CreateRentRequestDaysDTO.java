@@ -3,7 +3,7 @@ package com.medspace.infrastructure.dto.rentRequest;
 import java.sql.Date;
 import java.util.List;
 import com.medspace.domain.model.RentRequestDay;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateRentRequestDaysDTO {
-    @NotNull
+    @NotEmpty
     private List<Date> dates;
 
     public List<RentRequestDay> toRentRequestDays() {
