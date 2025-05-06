@@ -76,6 +76,7 @@ public class RentRequestController {
     @TenantOnly
     public Response create(@Valid CreateRentRequestDTO dto) {
         try {
+            User loggedInUser = requestContext.getUser();
             RentRequest toSave = dto.toModel();
             List<RentRequestDay> dates = dto.getDates().stream().map(date -> {
                 RentRequestDay rentRequestDay = new RentRequestDay();
@@ -83,8 +84,8 @@ public class RentRequestController {
                 return rentRequestDay;
             }).collect(Collectors.toList());
 
-            RentRequest saved =
-                    createRentRequest.execute(toSave, dto.getTenantId(), dto.getClinicId(), dates);
+            RentRequest saved = createRentRequest.execute(toSave, loggedInUser.getId(),
+                    dto.getClinicId(), dates);
             GetRentRequestDTO out = new GetRentRequestDTO(saved);
 
             return Response.status(Response.Status.CREATED)

@@ -20,7 +20,6 @@ public class RentRequestDayRepositoryImpl
 
     @Transactional
     public RentRequestDay insertRentRequestDay(RentRequestDay rentRequestDay, Long rentRequestId) {
-        System.out.println("Inserting RentRequestDay: " + rentRequestId);
         RentRequestDayEntity rentRequestDayEntity = RentRequestDayMapper.toEntity(rentRequestDay);
 
         RentRequestEntity rentRequestEntity = rentRequestRepository.findById(rentRequestId);

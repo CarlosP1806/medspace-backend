@@ -1,9 +1,9 @@
 package com.medspace.infrastructure.dto.rentRequest;
 
-import com.google.firebase.database.annotations.NotNull;
 import com.medspace.domain.model.RentRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +18,7 @@ import java.util.List;
 public class CreateRentRequestDTO {
 
     @NotNull
-    private Long tenantId;
-
-    @NotNull
     private Long clinicId;
-
-    @NotNull
-    private Date startDate;
-
-    @NotNull
-    private Date endDate;
 
     @NotBlank
     private String comments;
@@ -40,8 +31,6 @@ public class CreateRentRequestDTO {
 
     public RentRequest toModel() {
         RentRequest rr = new RentRequest();
-        rr.setStartDate(startDate);
-        rr.setEndDate(endDate);
         rr.setComments(comments);
         rr.setStatus(status);
         return rr;

@@ -27,8 +27,6 @@ public class RentRequestMapper {
         }
 
         e.setCreatedAt(model.getCreatedAt());
-        e.setStartDate(model.getStartDate());
-        e.setEndDate(model.getEndDate());
         e.setComments(model.getComments());
         e.setStatus(model.getStatus());
 
@@ -53,8 +51,6 @@ public class RentRequestMapper {
         }
 
         m.setCreatedAt(entity.getCreatedAt());
-        m.setStartDate(entity.getStartDate());
-        m.setEndDate(entity.getEndDate());
         m.setComments(entity.getComments());
         m.setStatus(entity.getStatus());
 

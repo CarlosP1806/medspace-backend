@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.sql.Date;
 import java.time.Instant;
 
 
@@ -17,8 +16,6 @@ public class RentRequest {
     private User tenant;
     private Clinic clinic;
     private Instant createdAt;
-    private Date startDate;
-    private Date endDate;
     private String comments;
     private String status;
 }
