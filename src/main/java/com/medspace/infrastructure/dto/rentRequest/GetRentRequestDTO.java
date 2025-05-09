@@ -18,7 +18,7 @@ public class GetRentRequestDTO {
     private Long clinicId;
     private Instant createdAt;
     private String comments;
-    private String status;
+    private RentRequest.Status status;
 
     public GetRentRequestDTO(RentRequest model) {
         this.id = model.getId();
