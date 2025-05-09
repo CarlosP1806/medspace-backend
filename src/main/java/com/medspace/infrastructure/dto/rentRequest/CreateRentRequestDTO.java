@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.dto.rentRequest;
 
 import com.medspace.domain.model.RentRequest;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,11 +19,7 @@ public class CreateRentRequestDTO {
     @NotNull
     private Long clinicId;
 
-    @NotBlank
     private String comments;
-
-    @NotBlank
-    private String status;
 
     @NotEmpty
     private List<Date> dates;
@@ -32,7 +27,7 @@ public class CreateRentRequestDTO {
     public RentRequest toModel() {
         RentRequest rr = new RentRequest();
         rr.setComments(comments);
-        rr.setStatus(status);
+        rr.setStatus(RentRequest.Status.PENDING);
         return rr;
     }
 }

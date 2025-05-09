@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.Instant;
 import java.util.List;
+import com.medspace.domain.model.RentRequest;
 
 @Getter
 @Setter
@@ -29,8 +30,9 @@ public class RentRequestEntity {
     @Column(name = "comments")
     private String comments;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RentRequest.Status status;
 
     @OneToMany(mappedBy = "rentRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RentRequestDayEntity> requestedDays;

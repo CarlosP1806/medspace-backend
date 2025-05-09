@@ -12,10 +12,15 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RentRequest {
+    public enum Status {
+        PENDING, ACCEPTED, REJECTED
+    }
+
+
     private Long id;
     private User tenant;
     private Clinic clinic;
     private Instant createdAt;
     private String comments;
-    private String status;
+    private Status status;
 }
