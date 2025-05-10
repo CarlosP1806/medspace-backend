@@ -1,7 +1,9 @@
 package com.medspace.application.service;
 
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.Review;
+import com.medspace.domain.repository.ClinicPhotoRepository;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.domain.repository.ReviewRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -18,6 +20,9 @@ public class ClinicService {
 
     @Inject
     ReviewRepository reviewRepository;
+
+    @Inject
+    ClinicPhotoRepository clinicPhotoRepository;
 
     public Clinic createClinic(Clinic clinic) {
         clinic.setCreatedAt(Instant.now());
@@ -69,5 +74,45 @@ public class ClinicService {
         }
         int totalRating = reviews.stream().mapToInt(Review::getRating).sum();
         return Double.valueOf(totalRating) / reviews.size();
+    }
+
+    // Photo methods
+
+    public ClinicPhoto createClinicPhoto(ClinicPhoto clinicPhoto) {
+        clinicPhoto.setCreatedAt(Instant.now());
+        clinicPhoto = clinicPhotoRepository.insertPhoto(clinicPhoto);
+        return clinicPhoto;
+    }
+
+    public ClinicPhoto assignPhotoToClinic(Long clinicPhotoId, Long clinicId) {
+        return clinicPhotoRepository.assignPhotoToClinic(clinicPhotoId, clinicId);
+    }
+
+    public List<ClinicPhoto> listPhotosByClinicId(Long clinicId) {
+        return clinicPhotoRepository.getClinicPhotosByClinicId(clinicId);
+    }
+
+    public void deleteClinicPhotoById(Long id) {
+        clinicPhotoRepository.deletePhotoById(id);
+    }
+
+    public ClinicPhoto getClinicPhotoById(Long id) {
+        return clinicPhotoRepository.getPhotoById(id);
+    }
+
+    public void setClinicPhotoAsPrimary(Long id) {
+        clinicPhotoRepository.setPhotoAsPrimary(id);
+    }
+
+    public Boolean validateClinicPhotoOwnership(Long photoId, Long clinicId) {
+        if (photoId == null || clinicId == null) {
+            return false;
+        }
+
+        ClinicPhoto clinicPhoto = clinicPhotoRepository.getPhotoById(photoId);
+        if (clinicPhoto == null) {
+            return false;
+        }
+        return clinicPhoto.getClinic().getId().equals(clinicId);
     }
 }

@@ -1,6 +1,5 @@
 package com.medspace.application.usecase.clinicPhoto;
 
-import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicPhoto;
 import io.quarkus.security.ForbiddenException;
@@ -11,8 +10,6 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class AssignPhotoToClinicUseCase {
     @Inject
-    ClinicPhotoService clinicPhotoService;
-    @Inject
     ClinicService clinicService;
 
     @Transactional
@@ -22,6 +19,6 @@ public class AssignPhotoToClinicUseCase {
             throw new ForbiddenException("Assign unauthorized");
         }
 
-        return clinicPhotoService.assignPhotoToClinic(clinicPhotoId, clinicId);
+        return clinicService.assignPhotoToClinic(clinicPhotoId, clinicId);
     }
 }
