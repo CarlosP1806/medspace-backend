@@ -1,9 +1,9 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.clinicPhoto.AssignPhotoToClinicUseCase;
-import com.medspace.application.usecase.clinicPhoto.CreateClinicPhotoUseCase;
-import com.medspace.application.usecase.clinicPhoto.DeleteClinicPhotoByIdUseCase;
-import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
+import com.medspace.application.usecase.clinic.photo.AssignPhotoToClinicUseCase;
+import com.medspace.application.usecase.clinic.photo.CreateClinicPhotoUseCase;
+import com.medspace.application.usecase.clinic.photo.DeleteClinicPhotoByIdUseCase;
+import com.medspace.application.usecase.clinic.photo.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;

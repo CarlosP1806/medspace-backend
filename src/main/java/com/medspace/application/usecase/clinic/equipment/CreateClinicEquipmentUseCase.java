@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.clinicEquipment;
+package com.medspace.application.usecase.clinic.equipment;
 
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicEquipment;

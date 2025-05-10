@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.clinicAvailability;
+package com.medspace.application.usecase.clinic.availability;
 
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicAvailability;

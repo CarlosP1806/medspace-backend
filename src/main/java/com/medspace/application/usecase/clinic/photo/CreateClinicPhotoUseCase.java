@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.clinicPhoto;
+package com.medspace.application.usecase.clinic.photo;
 
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicPhoto;

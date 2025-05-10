@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.clinicEquipment;
+package com.medspace.application.usecase.clinic.equipment;
 
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicEquipment;
@@ -8,17 +8,19 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class AssignEquipmentToClinicUseCase {
+public class DeleteClinicEquipmentByIdUseCase {
     @Inject
     ClinicService clinicService;
 
     @Transactional
-    public ClinicEquipment execute(Long clinicEquipmentId, Long clinicId, Long userId) {
+    public void execute(Long id, Long userId) {
+        ClinicEquipment clinicEquipment = clinicService.getClinicEquipmentById(id);
+        Long clinicId = clinicEquipment != null ? clinicEquipment.getClinic().getId() : null;
         Boolean isOwner = clinicService.validateClinicOwnership(clinicId, userId);
         if (!isOwner) {
-            throw new ForbiddenException("Assign unauthorized");
+            throw new ForbiddenException("Delete unauthorized");
         }
 
-        return clinicService.assignEquipmentToClinic(clinicEquipmentId, clinicId);
+        clinicService.deleteClinicEquipmentById(id);
     }
 }

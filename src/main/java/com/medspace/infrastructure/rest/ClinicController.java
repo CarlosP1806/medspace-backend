@@ -1,11 +1,11 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
-import com.medspace.application.usecase.clinicAvailability.GetAvailabilitiesByClinicIdUseCase;
-import com.medspace.application.usecase.clinicEquipment.GetEquipmentsByClinicIdUseCase;
-import com.medspace.application.usecase.clinicPhoto.GetClinicPhotoByIdUseCase;
-import com.medspace.application.usecase.clinicPhoto.GetPhotosByClinicIdUseCase;
-import com.medspace.application.usecase.clinicPhoto.SetPhotoAsPrimaryClinicPhotoUseCase;
+import com.medspace.application.usecase.clinic.availability.GetAvailabilitiesByClinicIdUseCase;
+import com.medspace.application.usecase.clinic.equipment.GetEquipmentsByClinicIdUseCase;
+import com.medspace.application.usecase.clinic.photo.GetClinicPhotoByIdUseCase;
+import com.medspace.application.usecase.clinic.photo.GetPhotosByClinicIdUseCase;
+import com.medspace.application.usecase.clinic.photo.SetPhotoAsPrimaryClinicPhotoUseCase;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
