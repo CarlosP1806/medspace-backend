@@ -15,6 +15,7 @@ import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
+import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
@@ -120,12 +121,14 @@ public class ClinicController {
     }
 
     @GET
-    @Path("/landlord")
+    @Path("/my-clinics")
     @LandlordOnly
     public Response getAllClinicsByLandlord() {
         try {
             User loggedInUser = requestContext.getUser();
-            List<Clinic> clinics = getClinicsByLandlordIdUseCase.execute(loggedInUser.getId());
+
+            List<MyClinicDTO> clinics = getClinicsByLandlordIdUseCase.execute(loggedInUser.getId());
+
             return Response.ok(ResponseDTO.success("Clinics Fetched", clinics)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
