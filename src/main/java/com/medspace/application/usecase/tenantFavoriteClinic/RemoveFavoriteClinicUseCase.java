@@ -1,15 +1,15 @@
 package com.medspace.application.usecase.tenantFavoriteClinic;
 
-import com.medspace.application.service.TenantFavoriteClinicService;
+import com.medspace.application.service.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RemoveFavoriteClinicUseCase {
     @Inject
-    TenantFavoriteClinicService tenantFavoriteClinicService;
+    UserService userService;
 
     public void execute(Long tenantId, Long clinicId) {
-        tenantFavoriteClinicService.removeFavoriteClinic(tenantId, clinicId);
+        userService.deleteTenantFavoriteClinic(tenantId, clinicId);
     }
 }
