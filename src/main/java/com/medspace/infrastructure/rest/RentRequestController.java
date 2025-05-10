@@ -1,11 +1,11 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.rentRequest.CreateRentRequestDaysUseCase;
-import com.medspace.application.usecase.rentRequest.CreateRentRequestUseCase;
-import com.medspace.application.usecase.rentRequest.ListRentRequestUseCase;
-import com.medspace.application.usecase.rentRequest.DeleteRentRequestUseCase;
-import com.medspace.application.usecase.rentRequest.GetRentRequestsByLandlordIdUseCase;
-import com.medspace.application.usecase.rentRequest.ListRentRequestDaysUseCase;
+import com.medspace.application.usecase.rent.CreateRentRequestDaysUseCase;
+import com.medspace.application.usecase.rent.CreateRentRequestUseCase;
+import com.medspace.application.usecase.rent.DeleteRentRequestUseCase;
+import com.medspace.application.usecase.rent.GetRentRequestsByLandlordIdUseCase;
+import com.medspace.application.usecase.rent.ListRentRequestDaysUseCase;
+import com.medspace.application.usecase.rent.ListRentRequestUseCase;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.RentRequestDay;
 import com.medspace.domain.model.User;

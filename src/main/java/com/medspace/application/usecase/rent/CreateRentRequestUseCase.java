@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.rentRequest;
+package com.medspace.application.usecase.rent;
 
 import java.util.List;
 import com.medspace.application.service.RentService;

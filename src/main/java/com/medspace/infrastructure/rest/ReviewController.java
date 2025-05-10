@@ -1,12 +1,12 @@
 package com.medspace.infrastructure.rest;
 
 import java.util.List;
-import com.medspace.application.usecase.review.AssignReviewToAuthorUseCase;
-import com.medspace.application.usecase.review.AssignReviewToClinicUseCase;
-import com.medspace.application.usecase.review.CreateReviewUseCase;
-import com.medspace.application.usecase.review.DeleteReviewByIdUseCase;
-import com.medspace.application.usecase.review.GetAllReviewsUseCase;
-import com.medspace.application.usecase.review.GetReviewByIdUseCase;
+import com.medspace.application.usecase.rent.review.AssignReviewToAuthorUseCase;
+import com.medspace.application.usecase.rent.review.AssignReviewToClinicUseCase;
+import com.medspace.application.usecase.rent.review.CreateReviewUseCase;
+import com.medspace.application.usecase.rent.review.DeleteReviewByIdUseCase;
+import com.medspace.application.usecase.rent.review.GetAllReviewsUseCase;
+import com.medspace.application.usecase.rent.review.GetReviewByIdUseCase;
 import com.medspace.domain.model.Review;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.rest.context.RequestContext;

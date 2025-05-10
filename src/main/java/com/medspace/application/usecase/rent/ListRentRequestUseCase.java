@@ -1,18 +1,17 @@
-package com.medspace.application.usecase.review;
+package com.medspace.application.usecase.rent;
 
 import com.medspace.application.service.RentService;
-import com.medspace.domain.model.Review;
+import com.medspace.domain.model.RentRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 
 @ApplicationScoped
-public class GetAllReviewsUseCase {
+public class ListRentRequestUseCase {
     @Inject
     RentService rentService;
 
-    public List<Review> execute() {
-        return rentService.getAllReviews();
+    public List<RentRequest> execute() {
+        return rentService.listAllRentRequests();
     }
 }

@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.payment;
+package com.medspace.application.usecase.rent.payment;
 
 import com.medspace.application.service.RentService;
 import com.medspace.domain.model.User;

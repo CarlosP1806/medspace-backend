@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.rentRequest;
+package com.medspace.application.usecase.rent;
 
 import com.medspace.application.service.RentService;
 import jakarta.enterprise.context.ApplicationScoped;
