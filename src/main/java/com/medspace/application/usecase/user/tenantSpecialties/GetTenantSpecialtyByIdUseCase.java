@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.tenantSpecialties;
+package com.medspace.application.usecase.user.tenantSpecialties;
 
 import com.medspace.application.service.UserService;
 import com.medspace.domain.model.TenantSpecialty;

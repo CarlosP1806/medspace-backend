@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.tenantFavoriteClinic;
+package com.medspace.application.usecase.user.tenantFavoriteClinic;
 
 import com.medspace.application.service.UserService;
 import com.medspace.domain.model.TenantFavoriteClinic;

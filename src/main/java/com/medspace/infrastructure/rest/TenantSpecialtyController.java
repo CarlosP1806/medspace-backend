@@ -2,8 +2,8 @@ package com.medspace.infrastructure.rest;
 
 
 import java.util.List;
-import com.medspace.application.usecase.tenantSpecialties.GetAllTenantSpecialtiesUseCase;
-import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
+import com.medspace.application.usecase.user.tenantSpecialties.GetAllTenantSpecialtiesUseCase;
+import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;

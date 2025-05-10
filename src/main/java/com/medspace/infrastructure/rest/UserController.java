@@ -2,11 +2,11 @@ package com.medspace.infrastructure.rest;
 
 import java.util.List;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import com.medspace.application.usecase.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.application.usecase.user.CreateUserUseCase;
 import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
 import com.medspace.application.usecase.user.GetUserByIdUseCase;
+import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.user.CreateUserDTO;

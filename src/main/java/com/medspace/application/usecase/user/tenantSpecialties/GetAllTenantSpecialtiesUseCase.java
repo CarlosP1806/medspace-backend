@@ -1,4 +1,4 @@
-package com.medspace.application.usecase.tenantSpecialties;
+package com.medspace.application.usecase.user.tenantSpecialties;
 
 import java.util.List;
 import com.medspace.application.service.UserService;
