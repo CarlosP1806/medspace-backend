@@ -1,18 +1,17 @@
 package com.medspace.application.usecase.rentRequest;
 
-import com.medspace.domain.repository.RentRequestRepository;
+import com.medspace.application.service.RentService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class DeleteRentRequestUseCase {
-
     @Inject
-    RentRequestRepository rentRequestRepository;
+    RentService rentService;
 
     @Transactional
     public void execute(Long id) {
-        rentRequestRepository.deleteById(id);
+        rentService.deleteRentRequestById(id);
     }
 }
