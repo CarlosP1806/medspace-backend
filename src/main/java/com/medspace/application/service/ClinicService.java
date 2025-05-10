@@ -1,8 +1,10 @@
 package com.medspace.application.service;
 
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.ClinicEquipment;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.Review;
+import com.medspace.domain.repository.ClinicEquipmentRepository;
 import com.medspace.domain.repository.ClinicPhotoRepository;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.domain.repository.ReviewRepository;
@@ -17,12 +19,12 @@ import java.util.List;
 public class ClinicService {
     @Inject
     ClinicRepository clinicRepository;
-
     @Inject
     ReviewRepository reviewRepository;
-
     @Inject
     ClinicPhotoRepository clinicPhotoRepository;
+    @Inject
+    ClinicEquipmentRepository clinicEquipmentRepository;
 
     public Clinic createClinic(Clinic clinic) {
         clinic.setCreatedAt(Instant.now());
@@ -114,5 +116,30 @@ public class ClinicService {
             return false;
         }
         return clinicPhoto.getClinic().getId().equals(clinicId);
+    }
+
+
+    // Equipment methods
+
+    public ClinicEquipment createClinicEquipment(ClinicEquipment clinicEquipment) {
+        clinicEquipment.setCreatedAt(Instant.now());
+        clinicEquipment = clinicEquipmentRepository.insertEquipment(clinicEquipment);
+        return clinicEquipment;
+    }
+
+    public ClinicEquipment assignEquipmentToClinic(Long clinicEquipmentId, Long clinicId) {
+        return clinicEquipmentRepository.assignEquipmentToClinic(clinicEquipmentId, clinicId);
+    }
+
+    public List<ClinicEquipment> getEquipmentsByClinicId(Long clinicId) {
+        return clinicEquipmentRepository.getEquipmentsByClinicId(clinicId);
+    }
+
+    public void deleteClinicEquipmentById(Long id) {
+        clinicEquipmentRepository.deleteEquipmentById(id);
+    }
+
+    public ClinicEquipment getClinicEquipmentById(Long id) {
+        return clinicEquipmentRepository.getEquipmentById(id);
     }
 }
