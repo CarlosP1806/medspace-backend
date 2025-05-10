@@ -3,6 +3,7 @@ package com.medspace.application.service;
 import java.time.Instant;
 import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.domain.model.User;
 import com.medspace.domain.repository.TenantSpecialtyRepository;
 import com.medspace.domain.repository.UserRepository;
@@ -82,4 +83,13 @@ public class UserService {
         return userRepository.getAllUsers();
     }
 
+    // Specialty methods
+
+    public TenantSpecialty getTenantSpecialtyById(Long id) {
+        return tenantSpecialtyRepository.getTenantSpecialtyById(id);
+    }
+
+    public List<TenantSpecialty> getAllTenantSpecialties() {
+        return tenantSpecialtyRepository.getAllTenantSpecialties();
+    }
 }

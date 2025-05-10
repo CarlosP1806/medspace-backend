@@ -1,6 +1,6 @@
 package com.medspace.application.usecase.tenantSpecialties;
 
-import com.medspace.application.service.TenantSpecialtyService;
+import com.medspace.application.service.UserService;
 import com.medspace.domain.model.TenantSpecialty;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -8,14 +8,12 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class GetTenantSpecialtyByIdUseCase {
-
     @Inject
-    TenantSpecialtyService tenantSpecialtyService;
+    UserService userService;
 
     public TenantSpecialty execute(Long id) {
-        TenantSpecialty tenantSpecialty = tenantSpecialtyService.getTenantSpecialtyById(id);
+        TenantSpecialty tenantSpecialty = userService.getTenantSpecialtyById(id);
 
         return tenantSpecialty;
     }
-
 }
