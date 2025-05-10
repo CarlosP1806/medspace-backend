@@ -1,9 +1,9 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.clinicAvailability.AssignAvailabilityToClinicUseCase;
-import com.medspace.application.usecase.clinicAvailability.CreateClinicAvailabilityUseCase;
-import com.medspace.application.usecase.clinicAvailability.DeleteClinicAvailabilityByIdUseCase;
-import com.medspace.application.usecase.clinicAvailability.UpdateClinicAvailabilityUseCase;
+import com.medspace.application.usecase.clinic.availability.AssignAvailabilityToClinicUseCase;
+import com.medspace.application.usecase.clinic.availability.CreateClinicAvailabilityUseCase;
+import com.medspace.application.usecase.clinic.availability.DeleteClinicAvailabilityByIdUseCase;
+import com.medspace.application.usecase.clinic.availability.UpdateClinicAvailabilityUseCase;
 import com.medspace.domain.model.ClinicAvailability;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;

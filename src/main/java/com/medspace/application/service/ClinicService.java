@@ -1,7 +1,13 @@
 package com.medspace.application.service;
 
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.ClinicAvailability;
+import com.medspace.domain.model.ClinicEquipment;
+import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.Review;
+import com.medspace.domain.repository.ClinicAvailabilityRepository;
+import com.medspace.domain.repository.ClinicEquipmentRepository;
+import com.medspace.domain.repository.ClinicPhotoRepository;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.domain.repository.ReviewRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -15,9 +21,14 @@ import java.util.List;
 public class ClinicService {
     @Inject
     ClinicRepository clinicRepository;
-
     @Inject
     ReviewRepository reviewRepository;
+    @Inject
+    ClinicPhotoRepository clinicPhotoRepository;
+    @Inject
+    ClinicEquipmentRepository clinicEquipmentRepository;
+    @Inject
+    ClinicAvailabilityRepository clinicAvailabilityRepository;
 
     public Clinic createClinic(Clinic clinic) {
         clinic.setCreatedAt(Instant.now());
@@ -69,5 +80,99 @@ public class ClinicService {
         }
         int totalRating = reviews.stream().mapToInt(Review::getRating).sum();
         return Double.valueOf(totalRating) / reviews.size();
+    }
+
+    // Photo methods
+
+    public ClinicPhoto createClinicPhoto(ClinicPhoto clinicPhoto) {
+        clinicPhoto.setCreatedAt(Instant.now());
+        clinicPhoto = clinicPhotoRepository.insertPhoto(clinicPhoto);
+        return clinicPhoto;
+    }
+
+    public ClinicPhoto assignPhotoToClinic(Long clinicPhotoId, Long clinicId) {
+        return clinicPhotoRepository.assignPhotoToClinic(clinicPhotoId, clinicId);
+    }
+
+    public List<ClinicPhoto> listPhotosByClinicId(Long clinicId) {
+        return clinicPhotoRepository.getClinicPhotosByClinicId(clinicId);
+    }
+
+    public void deleteClinicPhotoById(Long id) {
+        clinicPhotoRepository.deletePhotoById(id);
+    }
+
+    public ClinicPhoto getClinicPhotoById(Long id) {
+        return clinicPhotoRepository.getPhotoById(id);
+    }
+
+    public void setClinicPhotoAsPrimary(Long id) {
+        clinicPhotoRepository.setPhotoAsPrimary(id);
+    }
+
+    public Boolean validateClinicPhotoOwnership(Long photoId, Long clinicId) {
+        if (photoId == null || clinicId == null) {
+            return false;
+        }
+
+        ClinicPhoto clinicPhoto = clinicPhotoRepository.getPhotoById(photoId);
+        if (clinicPhoto == null) {
+            return false;
+        }
+        return clinicPhoto.getClinic().getId().equals(clinicId);
+    }
+
+    // Equipment methods
+
+    public ClinicEquipment createClinicEquipment(ClinicEquipment clinicEquipment) {
+        clinicEquipment.setCreatedAt(Instant.now());
+        clinicEquipment = clinicEquipmentRepository.insertEquipment(clinicEquipment);
+        return clinicEquipment;
+    }
+
+    public ClinicEquipment assignEquipmentToClinic(Long clinicEquipmentId, Long clinicId) {
+        return clinicEquipmentRepository.assignEquipmentToClinic(clinicEquipmentId, clinicId);
+    }
+
+    public List<ClinicEquipment> getEquipmentsByClinicId(Long clinicId) {
+        return clinicEquipmentRepository.getEquipmentsByClinicId(clinicId);
+    }
+
+    public void deleteClinicEquipmentById(Long id) {
+        clinicEquipmentRepository.deleteEquipmentById(id);
+    }
+
+    public ClinicEquipment getClinicEquipmentById(Long id) {
+        return clinicEquipmentRepository.getEquipmentById(id);
+    }
+
+    // Availability methods
+
+    public ClinicAvailability createClinicAvailability(ClinicAvailability clinicAvailability) {
+        clinicAvailability.setCreatedAt(Instant.now());
+        clinicAvailability = clinicAvailabilityRepository.insertAvailability(clinicAvailability);
+        return clinicAvailability;
+    }
+
+    public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId) {
+        return clinicAvailabilityRepository.assignAvailabilityToClinic(clinicAvailabilityId,
+                clinicId);
+    }
+
+    public List<ClinicAvailability> getAvailabilitiesByClinicId(Long clinicId) {
+        return clinicAvailabilityRepository.getAvailabilitiesByClinicId(clinicId);
+    }
+
+    public void deleteClinicAvailabilityById(Long id) {
+        clinicAvailabilityRepository.deleteAvailabilityById(id);
+    }
+
+    public ClinicAvailability updateClinicAvailabilityById(Long id,
+            ClinicAvailability clinicAvailability) {
+        return clinicAvailabilityRepository.updateAvailability(id, clinicAvailability);
+    }
+
+    public ClinicAvailability getClinicAvailabilityById(Long id) {
+        return clinicAvailabilityRepository.getAvailabilityById(id);
     }
 }

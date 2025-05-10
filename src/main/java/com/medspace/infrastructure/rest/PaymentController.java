@@ -1,7 +1,7 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.payment.*;
 import com.medspace.domain.model.User;
+import com.medspace.application.usecase.rent.payment.*;
 import com.medspace.domain.model.Payment;
 import com.medspace.infrastructure.dto.*;
 import com.medspace.infrastructure.dto.payment.CreatePaymentDTO;

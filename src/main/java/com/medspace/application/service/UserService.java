@@ -3,7 +3,10 @@ package com.medspace.application.service;
 import java.time.Instant;
 import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
+import com.medspace.domain.model.TenantFavoriteClinic;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.domain.model.User;
+import com.medspace.domain.repository.TenantFavoriteClinicRepository;
 import com.medspace.domain.repository.TenantSpecialtyRepository;
 import com.medspace.domain.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,12 +15,12 @@ import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class UserService {
-
     @Inject
     UserRepository userRepository;
-
     @Inject
     TenantSpecialtyRepository tenantSpecialtyRepository;
+    @Inject
+    TenantFavoriteClinicRepository tenantFavoriteClinicRepository;
 
     @Transactional
     public void createUser(User user) {
@@ -82,4 +85,59 @@ public class UserService {
         return userRepository.getAllUsers();
     }
 
+    // Specialty methods
+
+    public TenantSpecialty getTenantSpecialtyById(Long id) {
+        return tenantSpecialtyRepository.getTenantSpecialtyById(id);
+    }
+
+    public List<TenantSpecialty> getAllTenantSpecialties() {
+        return tenantSpecialtyRepository.getAllTenantSpecialties();
+    }
+
+    // Favorite clinic methods
+
+    public TenantFavoriteClinic createTenantFavoriteClinic(TenantFavoriteClinic favoriteClinic) {
+        return tenantFavoriteClinicRepository.createTenantFavoriteClinic(favoriteClinic);
+    }
+
+    public TenantFavoriteClinic getTenantFavoriteClinicById(Long id) {
+        return tenantFavoriteClinicRepository.getFavoriteClinicById(id);
+    }
+
+    public List<TenantFavoriteClinic> getFavoriteClinicsByTenantId(Long tenantId) {
+        return tenantFavoriteClinicRepository.getFavoriteClinicsByTenantId(tenantId);
+    }
+
+    public List<TenantFavoriteClinic> getFavoriteClinicsByClinicId(Long clinicId) {
+        return tenantFavoriteClinicRepository.getFavoriteClinicsByClinicId(clinicId);
+    }
+
+    public void deleteTenantFavoriteClinic(Long tenantId, Long clinicId) {
+        tenantFavoriteClinicRepository.removeFavoriteClinic(tenantId, clinicId);
+    }
+
+    public boolean isTenantFavoriteClinic(Long tenantId, Long clinicId) {
+        return tenantFavoriteClinicRepository.isFavoriteClinic(tenantId, clinicId);
+    }
+
+    public TenantFavoriteClinic assignFavoriteClinicToTenant(Long favoriteClinicId, Long tenantId) {
+        return tenantFavoriteClinicRepository.assignToTenant(favoriteClinicId, tenantId);
+    }
+
+    public TenantFavoriteClinic assignFavoriteClinicToClinic(Long favoriteClinicId, Long clinicId) {
+        return tenantFavoriteClinicRepository.assignToClinic(favoriteClinicId, clinicId);
+    }
+
+    public Boolean validateTenantFavoriteClinicOwnership(Long favoriteId, Long tenantId) {
+        if (favoriteId == null || tenantId == null) {
+            return false;
+        }
+        TenantFavoriteClinic favorite =
+                tenantFavoriteClinicRepository.getFavoriteClinicById(favoriteId);
+        if (favorite == null || favorite.getTenant() == null) {
+            return false;
+        }
+        return favorite.getTenant().getId().equals(tenantId);
+    }
 }

@@ -1,8 +1,5 @@
 package com.medspace.application.usecase.clinic;
 
-import com.medspace.application.service.ClinicAvailabilityService;
-import com.medspace.application.service.ClinicEquipmentService;
-import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -19,12 +16,6 @@ import java.util.List;
 public class GetAllClinicsUseCase {
     @Inject
     ClinicService clinicService;
-    @Inject
-    ClinicPhotoService clinicPhotoService;
-    @Inject
-    ClinicEquipmentService clinicEquipmentService;
-    @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
 
     public List<GetClinicDTO> execute(ClinicQueryDTO queryFilterDTO) {
         List<Clinic> clinics = clinicService.getAllClinics();
@@ -33,20 +24,20 @@ public class GetAllClinicsUseCase {
 
             List<GetClinicPhotoDTO> photoDTOs =
                     queryFilterDTO.getIncludePhotos()
-                            ? clinicPhotoService.listPhotosByClinicId(clinic.getId()).stream()
+                            ? clinicService.listPhotosByClinicId(clinic.getId()).stream()
                                     .map(GetClinicPhotoDTO::new).toList()
                             : null;
 
             List<GetClinicEquipmentDTO> equipmentDTOs =
                     queryFilterDTO.getIncludeEquipments()
-                            ? clinicEquipmentService.getEquipmentsByClinicId(clinic.getId())
-                                    .stream().map(GetClinicEquipmentDTO::new).toList()
+                            ? clinicService.getEquipmentsByClinicId(clinic.getId()).stream()
+                                    .map(GetClinicEquipmentDTO::new).toList()
                             : null;
 
             List<GetClinicAvailabilityDTO> availabilityDTOs =
                     queryFilterDTO.getIncludeAvailabilities()
-                            ? clinicAvailabilityService.getAvailabilitiesByClinicId(clinic.getId())
-                                    .stream().map(GetClinicAvailabilityDTO::new).toList()
+                            ? clinicService.getAvailabilitiesByClinicId(clinic.getId()).stream()
+                                    .map(GetClinicAvailabilityDTO::new).toList()
                             : null;
 
             return new GetClinicDTO(clinic, averageRating, photoDTOs, equipmentDTOs,

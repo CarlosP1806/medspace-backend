@@ -1,8 +1,8 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.clinicEquipment.AssignEquipmentToClinicUseCase;
-import com.medspace.application.usecase.clinicEquipment.CreateClinicEquipmentUseCase;
-import com.medspace.application.usecase.clinicEquipment.DeleteClinicEquipmentByIdUseCase;
+import com.medspace.application.usecase.clinic.equipment.AssignEquipmentToClinicUseCase;
+import com.medspace.application.usecase.clinic.equipment.CreateClinicEquipmentUseCase;
+import com.medspace.application.usecase.clinic.equipment.DeleteClinicEquipmentByIdUseCase;
 import com.medspace.domain.model.ClinicEquipment;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;

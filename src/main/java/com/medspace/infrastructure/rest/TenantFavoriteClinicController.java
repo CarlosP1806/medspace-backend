@@ -1,6 +1,6 @@
 package com.medspace.infrastructure.rest;
 
-import com.medspace.application.usecase.tenantFavoriteClinic.*;
+import com.medspace.application.usecase.user.tenantFavoriteClinic.*;
 import com.medspace.domain.model.TenantFavoriteClinic;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.clinic.CreateTenantFavoriteClinicDTO;

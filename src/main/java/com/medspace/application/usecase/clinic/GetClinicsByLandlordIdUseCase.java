@@ -2,7 +2,6 @@ package com.medspace.application.usecase.clinic;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.medspace.application.service.ClinicPhotoService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.ClinicPhoto;
@@ -16,16 +15,12 @@ public class GetClinicsByLandlordIdUseCase {
     @Inject
     ClinicService clinicService;
 
-    @Inject
-    ClinicPhotoService clinicPhotoService;
-
     public List<MyClinicDTO> execute(Long landlordId) {
         List<Clinic> clinics = clinicService.getClinicsByLandlordId(landlordId);
         List<MyClinicDTO> myClinics = new ArrayList<>();
 
         for (Clinic clinic : clinics) {
-            List<ClinicPhoto> clinicPhotos =
-                    clinicPhotoService.listPhotosByClinicId(clinic.getId());
+            List<ClinicPhoto> clinicPhotos = clinicService.listPhotosByClinicId(clinic.getId());
 
             // Find primary photo or use the first one if available
             ClinicPhoto mainPhoto = null;
