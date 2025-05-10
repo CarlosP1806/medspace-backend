@@ -1,6 +1,6 @@
 package com.medspace.application.usecase.clinicAvailability;
 
-import com.medspace.application.service.ClinicAvailabilityService;
+import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicAvailability;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -8,9 +8,9 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class CreateClinicAvailabilityUseCase {
     @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
+    ClinicService clinicService;
 
     public ClinicAvailability execute(ClinicAvailability clinicAvailability) {
-        return clinicAvailabilityService.createAvailability(clinicAvailability);
+        return clinicService.createClinicAvailability(clinicAvailability);
     }
 }

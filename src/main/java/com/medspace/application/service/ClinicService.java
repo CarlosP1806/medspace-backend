@@ -1,9 +1,11 @@
 package com.medspace.application.service;
 
 import com.medspace.domain.model.Clinic;
+import com.medspace.domain.model.ClinicAvailability;
 import com.medspace.domain.model.ClinicEquipment;
 import com.medspace.domain.model.ClinicPhoto;
 import com.medspace.domain.model.Review;
+import com.medspace.domain.repository.ClinicAvailabilityRepository;
 import com.medspace.domain.repository.ClinicEquipmentRepository;
 import com.medspace.domain.repository.ClinicPhotoRepository;
 import com.medspace.domain.repository.ClinicRepository;
@@ -25,6 +27,8 @@ public class ClinicService {
     ClinicPhotoRepository clinicPhotoRepository;
     @Inject
     ClinicEquipmentRepository clinicEquipmentRepository;
+    @Inject
+    ClinicAvailabilityRepository clinicAvailabilityRepository;
 
     public Clinic createClinic(Clinic clinic) {
         clinic.setCreatedAt(Instant.now());
@@ -118,7 +122,6 @@ public class ClinicService {
         return clinicPhoto.getClinic().getId().equals(clinicId);
     }
 
-
     // Equipment methods
 
     public ClinicEquipment createClinicEquipment(ClinicEquipment clinicEquipment) {
@@ -141,5 +144,35 @@ public class ClinicService {
 
     public ClinicEquipment getClinicEquipmentById(Long id) {
         return clinicEquipmentRepository.getEquipmentById(id);
+    }
+
+    // Availability methods
+
+    public ClinicAvailability createClinicAvailability(ClinicAvailability clinicAvailability) {
+        clinicAvailability.setCreatedAt(Instant.now());
+        clinicAvailability = clinicAvailabilityRepository.insertAvailability(clinicAvailability);
+        return clinicAvailability;
+    }
+
+    public ClinicAvailability assignAvailabilityToClinic(Long clinicAvailabilityId, Long clinicId) {
+        return clinicAvailabilityRepository.assignAvailabilityToClinic(clinicAvailabilityId,
+                clinicId);
+    }
+
+    public List<ClinicAvailability> getAvailabilitiesByClinicId(Long clinicId) {
+        return clinicAvailabilityRepository.getAvailabilitiesByClinicId(clinicId);
+    }
+
+    public void deleteClinicAvailabilityById(Long id) {
+        clinicAvailabilityRepository.deleteAvailabilityById(id);
+    }
+
+    public ClinicAvailability updateClinicAvailabilityById(Long id,
+            ClinicAvailability clinicAvailability) {
+        return clinicAvailabilityRepository.updateAvailability(id, clinicAvailability);
+    }
+
+    public ClinicAvailability getClinicAvailabilityById(Long id) {
+        return clinicAvailabilityRepository.getAvailabilityById(id);
     }
 }

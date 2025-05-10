@@ -1,6 +1,5 @@
 package com.medspace.application.usecase.clinicAvailability;
 
-import com.medspace.application.service.ClinicAvailabilityService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicAvailability;
 import io.quarkus.security.ForbiddenException;
@@ -11,8 +10,6 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class AssignAvailabilityToClinicUseCase {
     @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
-    @Inject
     ClinicService clinicService;
 
     @Transactional
@@ -22,6 +19,6 @@ public class AssignAvailabilityToClinicUseCase {
             throw new ForbiddenException("Assign unauthorized");
         }
 
-        return clinicAvailabilityService.assignAvailabilityToClinic(clinicAvailabilityId, clinicId);
+        return clinicService.assignAvailabilityToClinic(clinicAvailabilityId, clinicId);
     }
 }

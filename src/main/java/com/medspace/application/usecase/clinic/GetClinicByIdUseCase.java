@@ -1,7 +1,6 @@
 package com.medspace.application.usecase.clinic;
 
 import java.util.List;
-import com.medspace.application.service.ClinicAvailabilityService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -17,8 +16,6 @@ import jakarta.ws.rs.NotFoundException;
 public class GetClinicByIdUseCase {
     @Inject
     ClinicService clinicService;
-    @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
 
     public GetClinicDTO execute(Long id, ClinicQueryDTO queryFilterDTO) {
         Clinic clinic = clinicService.getClinicById(id);
@@ -40,7 +37,7 @@ public class GetClinicByIdUseCase {
                         : null;
 
         List<GetClinicAvailabilityDTO> availabilityDTOs = queryFilterDTO.getIncludeAvailabilities()
-                ? clinicAvailabilityService.getAvailabilitiesByClinicId(id).stream()
+                ? clinicService.getAvailabilitiesByClinicId(id).stream()
                         .map(GetClinicAvailabilityDTO::new).toList()
                 : null;
 

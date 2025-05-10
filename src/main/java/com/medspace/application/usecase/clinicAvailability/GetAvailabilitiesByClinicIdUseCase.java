@@ -1,6 +1,6 @@
 package com.medspace.application.usecase.clinicAvailability;
 
-import com.medspace.application.service.ClinicAvailabilityService;
+import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.ClinicAvailability;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,11 +12,11 @@ import java.util.List;
 @ApplicationScoped
 public class GetAvailabilitiesByClinicIdUseCase {
     @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
+    ClinicService clinicService;
 
     public List<GetClinicAvailabilityDTO> execute(Long id) {
         List<ClinicAvailability> clinicAvailabilities =
-                clinicAvailabilityService.getAvailabilitiesByClinicId(id);
+                clinicService.getAvailabilitiesByClinicId(id);
         List<GetClinicAvailabilityDTO> clinicAvailabilityDTOS = new ArrayList<>();
 
         for (ClinicAvailability clinicAvailability : clinicAvailabilities) {

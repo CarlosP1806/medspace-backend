@@ -1,7 +1,6 @@
 package com.medspace.application.usecase.clinic;
 
 import java.util.List;
-import com.medspace.application.service.ClinicAvailabilityService;
 import com.medspace.application.service.ClinicService;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -16,8 +15,6 @@ import jakarta.inject.Inject;
 public class GetFilteredClinicsUseCase {
     @Inject
     ClinicService clinicService;
-    @Inject
-    ClinicAvailabilityService clinicAvailabilityService;
 
     public List<GetClinicDTO> execute(ClinicQueryDTO queryFilterDTO) {
         List<Clinic> clinics = clinicService.getFilteredClinics(queryFilterDTO);
@@ -38,8 +35,8 @@ public class GetFilteredClinicsUseCase {
 
             List<GetClinicAvailabilityDTO> availabilityDTOs =
                     queryFilterDTO.getIncludeAvailabilities()
-                            ? clinicAvailabilityService.getAvailabilitiesByClinicId(clinic.getId())
-                                    .stream().map(GetClinicAvailabilityDTO::new).toList()
+                            ? clinicService.getAvailabilitiesByClinicId(clinic.getId()).stream()
+                                    .map(GetClinicAvailabilityDTO::new).toList()
                             : null;
 
             return new GetClinicDTO(clinic, averageRating, photoDTOs, equipmentDTOs,
