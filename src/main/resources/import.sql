@@ -2,8 +2,8 @@
 INSERT INTO tenant_specialties (name) VALUES ('General Medicine');
 
 INSERT INTO users (
-    full_name, email, firebase_uid, profile_photo_url, phone_number,
-    created_at, user_type, tenant_specialty_id, tenant_professional_license_url,
+    full_name, email, firebase_uid, pfp_path, phone_number,
+    created_at, user_type, tenant_specialty_id, tenant_license_path,
     average_rating, stripe_customer_id, default_payment_method
 ) VALUES 
 (
@@ -21,6 +21,3 @@ INSERT INTO users (
     CURRENT_TIMESTAMP, 'ANALYST', null, null,
     null, null, null
 );
-
-
-
