@@ -14,5 +14,7 @@ public interface RentRequestRepository {
 
     RentRequest findRequestById(Long id);
 
+    void updateRentRequestStatus(Long id, RentRequest.Status status);
+
     boolean deleteById(Long id);
 }
