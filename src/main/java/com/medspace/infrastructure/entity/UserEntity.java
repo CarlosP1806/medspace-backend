@@ -32,11 +32,14 @@ public class UserEntity extends PanacheEntityBase {
     @Column(name = "firebase_uid", unique = true)
     private String firebaseUid;
 
-    @Column(name = "profile_photo_url")
-    private String profilePictureUrl;
+    @Column(name = "pfp_path")
+    private String pfpPath;
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "bio")
+    private String bio;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -49,8 +52,8 @@ public class UserEntity extends PanacheEntityBase {
     @JoinColumn(name = "tenant_specialty_id")
     private TenantSpecialtyEntity tenantSpecialty;
 
-    @Column(name = "tenant_professional_license_url")
-    private String tenantProfessionalLicenseUrl;
+    @Column(name = "tenant_license_path")
+    private String tenantLicensePath;
 
     @Column(name = "average_rating")
     private Float averageRating;

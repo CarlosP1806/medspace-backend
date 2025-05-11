@@ -20,15 +20,16 @@ public class User {
     private String fullName;
     private String email;
     private String firebaseUid;
-    private String profilePictureUrl;
+    private String pfpPath;
     private String phoneNumber;
     private Instant createdAt;
     private UserType userType;
     private TenantSpecialty tenantSpecialty;
-    private String tenantProfessionalLicenseUrl;
+    private String tenantLicensePath;
     private Float averageRating;
     private String stripeCustomerId;
     private String defaultPaymentMethod;
+    private String bio;
 }
 
 

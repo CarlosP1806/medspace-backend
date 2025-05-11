@@ -34,6 +34,6 @@ public class GetRentRequestPreviewDTO {
 
         this.clinicDisplayName = clinic.getDisplayName();
         this.tenantFullName = tenant.getFullName();
-        this.tenantProfilePictureUrl = tenant.getProfilePictureUrl();
+        this.tenantProfilePictureUrl = tenant.getPfpPath();
     }
 }

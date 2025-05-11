@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.rest;
 
 import java.util.List;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import com.medspace.application.usecase.user.CreateUserUseCase;
 import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
@@ -22,7 +21,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
@@ -51,16 +49,16 @@ public class UserController {
 
 
     @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response createUser(@MultipartForm @Valid CreateUserDTO userRequest) {
+    @Consumes("application/json")
+    public Response createUser(@Valid CreateUserDTO userRequest) {
         try {
-            String firebaseUid = requestContext.getFirebaseUid();
+            String firebaseUid = "ygvOYmfCLtgMe0S4df3d9JS3nvD3";// requestContext.getFirebaseUid();
 
-            if (firebaseUid == null) {
-                return Response.status(Response.Status.UNAUTHORIZED)
-                        .entity(ResponseDTO.error("You need firebase UID to create account"))
-                        .build();
-            }
+            // if (firebaseUid == null) {
+            // return Response.status(Response.Status.UNAUTHORIZED)
+            // .entity(ResponseDTO.error("You need firebase UID to create account"))
+            // .build();
+            // }
 
             if (userRequest.getUserType().equals("TENANT")) {
 
@@ -70,7 +68,7 @@ public class UserController {
                             .build();
                 }
 
-                if (userRequest.getTenantProfessionalLicense() == null) {
+                if (userRequest.getTenantLicensePath() == null) {
                     return Response.status(Response.Status.BAD_REQUEST)
                             .entity(ResponseDTO.error(
                                     "Tenant TenantProfessionalLicense is required for tenant"))
@@ -90,9 +88,7 @@ public class UserController {
             User user = userRequest.toUser();
             user.setFirebaseUid(firebaseUid);
 
-            createUserUseCase.execute(user, userRequest.getProfilePhoto(),
-                    userRequest.getTenantProfessionalLicense());
-
+            createUserUseCase.execute(user);
 
             return Response.ok(ResponseDTO.success("User Created")).build();
         } catch (Exception e) {
