@@ -97,4 +97,15 @@ public class RentRequestRepositoryImpl
         }
         return true;
     }
+
+    @Override
+    @Transactional
+    public void updateRentRequestStatus(Long id, RentRequest.Status status) {
+        RentRequestEntity entity = findById(id);
+        if (entity == null) {
+            throw new NotFoundException("RentRequest with id " + id + " not found");
+        }
+        entity.setStatus(status);
+        persist(entity);
+    }
 }

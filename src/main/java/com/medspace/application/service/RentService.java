@@ -55,6 +55,34 @@ public class RentService {
         return rentRequestDayRepository.getRentRequestDaysByRentRequestId(rentRequestId);
     }
 
+    public void updateRentRequestStatus(Long rentRequestId, RentRequest.Status status) {
+        rentRequestRepository.updateRentRequestStatus(rentRequestId, status);
+    }
+
+    public Boolean validateRentRequestOwnership(Long rentRequestId, Long userId) {
+        if (rentRequestId == null || userId == null) {
+            return false;
+        }
+        RentRequest rentRequest = rentRequestRepository.findRequestById(rentRequestId);
+        if (rentRequest == null || rentRequest.getTenant() == null) {
+            return false;
+        }
+        return rentRequest.getClinic().getLandlord().getId().equals(userId);
+    }
+
+    public Boolean isRentRequestPending(Long rentRequestId) {
+        RentRequest rentRequest = rentRequestRepository.findRequestById(rentRequestId);
+        return rentRequest.getStatus() == RentRequest.Status.PENDING;
+    }
+
+    public Boolean processRentRequestPayment(Long rentRequestId) {
+        Boolean hasPendingStatus = isRentRequestPending(rentRequestId);
+        if (!hasPendingStatus) {
+            throw new IllegalArgumentException("Rent request is already processed");
+        }
+        return true;
+    }
+
     // Review methods
 
     public Review createReview(Review review) {

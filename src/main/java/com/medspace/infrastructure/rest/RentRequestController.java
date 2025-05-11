@@ -1,11 +1,13 @@
 package com.medspace.infrastructure.rest;
 
+import com.medspace.application.usecase.rent.AcceptRentRequestUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestUseCase;
 import com.medspace.application.usecase.rent.DeleteRentRequestUseCase;
 import com.medspace.application.usecase.rent.GetRentRequestsByLandlordIdUseCase;
 import com.medspace.application.usecase.rent.ListRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.ListRentRequestUseCase;
+import com.medspace.application.usecase.rent.RejectRentRequestUseCase;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.RentRequestDay;
 import com.medspace.domain.model.User;
@@ -44,12 +46,16 @@ public class RentRequestController {
     CreateRentRequestDaysUseCase createRentRequestDaysUseCase;
     @Inject
     ListRentRequestDaysUseCase listRentRequestDaysUseCase;
+    @Inject
+    AcceptRentRequestUseCase acceptRentRequestUseCase;
+    @Inject
+    RejectRentRequestUseCase rejectRentRequestUseCase;
 
     @Inject
     RequestContext requestContext;
 
     @GET
-    public Response getAll() {
+    public Response getAllRentRequests() {
         List<RentRequest> list = listRentRequests.execute();
         List<GetRentRequestDTO> dtos =
                 list.stream().map(GetRentRequestDTO::new).collect(Collectors.toList());
@@ -58,9 +64,9 @@ public class RentRequestController {
     }
 
     @GET
-    @Path("/landlord")
+    @Path("/my-received-requests")
     @LandlordOnly
-    public Response getByLandlord(@QueryParam("status") String targetStatus) {
+    public Response getRequestsByLandlord(@QueryParam("status") String targetStatus) {
         User loggedInUser = requestContext.getUser();
         RentRequestQueryFilterDTO filterDTO = new RentRequestQueryFilterDTO(loggedInUser.getId());
         if (targetStatus != null) {
@@ -74,7 +80,7 @@ public class RentRequestController {
 
     @POST
     @TenantOnly
-    public Response create(@Valid CreateRentRequestDTO dto) {
+    public Response createRentRequest(@Valid CreateRentRequestDTO dto) {
         try {
             User loggedInUser = requestContext.getUser();
             RentRequest toSave = dto.toModel();
@@ -96,9 +102,41 @@ public class RentRequestController {
         }
     }
 
+    @PUT
+    @Path("{id}/accept")
+    @LandlordOnly
+    public Response acceptRentRequest(@PathParam("id") Long id) {
+        try {
+            User loggedInUser = requestContext.getUser();
+            Boolean success = acceptRentRequestUseCase.execute(id, loggedInUser.getId());
+            if (!success) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(ResponseDTO.error("Payment failed")).build();
+            }
+            return Response.ok(ResponseDTO.success("Accepted rent-request")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+
+    @PUT
+    @Path("{id}/reject")
+    @LandlordOnly
+    public Response rejectRentRequest(@PathParam("id") Long id) {
+        try {
+            User loggedInUser = requestContext.getUser();
+            rejectRentRequestUseCase.execute(id, loggedInUser.getId());
+            return Response.ok(ResponseDTO.success("Rejected rent-request")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") Long id) {
+    public Response deleteRentRequest(@PathParam("id") Long id) {
         deleteRentRequest.execute(id);
         return Response.ok(ResponseDTO.success("Deleted rent-request")).build();
     }
