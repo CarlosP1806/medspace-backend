@@ -36,7 +36,7 @@ public class CreateUserDTO {
     private String bio;
 
     @NotNull
-    @Pattern(regexp = " LANDLORD|TENANT|ANALYST",
+    @Pattern(regexp = "LANDLORD|TENANT|ANALYST",
             message = "User type must be one of: LANDLORD, TENANT, ANALYST")
     private String userType;
 
