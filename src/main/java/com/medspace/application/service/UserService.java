@@ -80,6 +80,11 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void updateUserById(Long id, User user) {
+        userRepository.updateUserById(id, user);
+    }
+
 
     public List<User> getAllUsers() {
         return userRepository.getAllUsers();
