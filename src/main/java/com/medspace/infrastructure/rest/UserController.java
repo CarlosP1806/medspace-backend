@@ -3,12 +3,14 @@ package com.medspace.infrastructure.rest;
 import java.util.List;
 import com.medspace.application.usecase.user.CreateUserUseCase;
 import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
+import com.medspace.application.usecase.user.EditUserProfileByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
 import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.user.CreateUserDTO;
+import com.medspace.infrastructure.dto.user.EditUserDTO;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -18,6 +20,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -47,18 +50,21 @@ public class UserController {
     @Inject
     RequestContext requestContext;
 
+    @Inject
+    EditUserProfileByIdUseCase editUserProfileByIdUseCase;
+
 
     @POST
     @Consumes("application/json")
     public Response createUser(@Valid CreateUserDTO userRequest) {
         try {
-            String firebaseUid = "ygvOYmfCLtgMe0S4df3d9JS3nvD3";// requestContext.getFirebaseUid();
+            String firebaseUid = requestContext.getFirebaseUid();
 
-            // if (firebaseUid == null) {
-            // return Response.status(Response.Status.UNAUTHORIZED)
-            // .entity(ResponseDTO.error("You need firebase UID to create account"))
-            // .build();
-            // }
+            if (firebaseUid == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity(ResponseDTO.error("You need firebase UID to create account"))
+                        .build();
+            }
 
             if (userRequest.getUserType().equals("TENANT")) {
 
@@ -169,4 +175,35 @@ public class UserController {
         }
 
     }
+
+    @PUT
+    @UserOnly
+    @Path("/me")
+    public Response editMyProfile(@Valid EditUserDTO userRequest) {
+        try {
+            User user = requestContext.getUser();
+
+
+            if (user.getUserType() == User.UserType.TENANT) {
+
+                if (userRequest.getTenantSpecialtyId() != null && getTenantSpecialtyByIdUseCase
+                        .execute(userRequest.getTenantSpecialtyId()) == null) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(ResponseDTO.error("Tenant specialty with id "
+                                    + userRequest.getTenantSpecialtyId() + " not found"))
+                            .build();
+
+                }
+            }
+
+            editUserProfileByIdUseCase.execute(user.getId(), userRequest);
+
+            return Response.ok(ResponseDTO.success("Users Updated")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+
+    }
+
 }
