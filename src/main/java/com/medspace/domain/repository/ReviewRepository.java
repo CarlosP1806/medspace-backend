@@ -10,13 +10,13 @@ public interface ReviewRepository {
 
     public Review getReviewById(Long id);
 
+    public List<Review> getReviewsByLandlordId(Long landlordId);
+
+    public List<Review> getReviewsByTenantId(Long tenantId);
+
     public List<Review> getReviewsByClinicId(Long clinicId);
 
     public Void deleteReviewById(Long id);
 
-    public Review assignReviewToRentAgreement(Long reviewId, Long rentAgreementId);
-
-    public Review assignReviewToClinic(Long reviewId, Long clinicId);
-
-    public Review assignReviewToAuthor(Long reviewId, Long authorId);
+    public Review assignReviewToRentRequest(Long reviewId, Long rentRequestId);
 }

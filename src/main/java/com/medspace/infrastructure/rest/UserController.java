@@ -6,11 +6,13 @@ import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
 import com.medspace.application.usecase.user.EditUserProfileByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
 import com.medspace.application.usecase.user.GetUserByIdUseCase;
+import com.medspace.application.usecase.user.GetUserPublicProfileUseCase;
 import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.user.CreateUserDTO;
 import com.medspace.infrastructure.dto.user.EditUserDTO;
+import com.medspace.infrastructure.dto.user.GetUserPublicProfileDTO;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -33,19 +35,16 @@ import jakarta.ws.rs.core.Response;
 public class UserController {
     @Inject
     CreateUserUseCase createUserUseCase;
-
     @Inject
     GetTenantSpecialtyByIdUseCase getTenantSpecialtyByIdUseCase;
-
     @Inject
     GetUserByIdUseCase getUserByIdUseCase;
-
-
     @Inject
     GetAllUsersUseCase getAllUsersUseCase;
-
     @Inject
     DeleteUserByIdUseCase deleteUserByIdUseCase;
+    @Inject
+    GetUserPublicProfileUseCase getUserPublicProfileUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -143,6 +142,20 @@ public class UserController {
                         .entity(ResponseDTO.error(e.getMessage())).build();
             }
 
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/public-profile")
+    @UserOnly
+    public Response getUserPublicProfile(@PathParam("id") Long id) {
+        try {
+            GetUserPublicProfileDTO userProfileDTO = getUserPublicProfileUseCase.execute(id);
+
+            return Response.ok(ResponseDTO.success("User Fetched", userProfileDTO)).build();
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }

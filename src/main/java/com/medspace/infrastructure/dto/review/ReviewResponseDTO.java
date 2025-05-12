@@ -18,16 +18,11 @@ public class ReviewResponseDTO {
     private Integer rating;
     private String comment;
     private Instant createdAt;
-    private Long authorId;
+    private Long rentRequestId;
 
     public static ReviewResponseDTO fromReview(Review review) {
-        return new ReviewResponseDTO(
-            review.getId(),
-            review.getType().name(),
-            review.getRating(),
-            review.getComment(),
-            review.getCreatedAt(),
-            review.getAuthor() != null ? review.getAuthor().getId() : null
-        );
+        return new ReviewResponseDTO(review.getId(), review.getType().name(), review.getRating(),
+                review.getComment(), review.getCreatedAt(),
+                review.getRentRequest() != null ? review.getRentRequest().getId() : null);
     }
 }
