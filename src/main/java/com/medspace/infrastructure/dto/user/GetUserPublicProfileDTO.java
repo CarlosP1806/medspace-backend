@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GetUserPublicProfileDTO {
     private Long id;
-    private String fullname;
+    private String fullName;
     private Double averageRating; // average rating of User, or null if there are no ratings
     private TenantSpecialty tenantSpecialty;
     private User.UserType userType;
@@ -30,7 +30,7 @@ public class GetUserPublicProfileDTO {
     public GetUserPublicProfileDTO(User user, Double userAverageRating, List<GetReviewDTO> reviews,
             List<GetClinicPreviewDTO> ownedClinics) {
         this.id = user.getId();
-        this.fullname = user.getFullName();
+        this.fullName = user.getFullName();
         this.averageRating = userAverageRating;
         this.tenantSpecialty = user.getTenantSpecialty();
         this.userType = user.getUserType();

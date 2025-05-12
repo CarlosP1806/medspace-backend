@@ -106,28 +106,6 @@ public class UserController {
         }
     }
 
-
-    @DELETE
-    @Path("/{id}")
-    public Response deleteUser(@PathParam("id") Long id) {
-        try {
-            deleteUserByIdUseCase.execute(id);
-
-            return Response.ok(ResponseDTO.success("User Deleted")).build();
-
-        } catch (Exception e) {
-
-            if (e.getMessage().contains("not found")) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error(e.getMessage())).build();
-            }
-
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
-    }
-
-
     @GET
     @Path("/{id}")
     public Response getUser(@PathParam("id") Long id) {
@@ -217,6 +195,30 @@ public class UserController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
 
+    }
+
+
+    @DELETE
+    @UserOnly
+    @Path("/me")
+    public Response deleteUser() {
+        try {
+            User user = requestContext.getUser();
+
+            deleteUserByIdUseCase.execute(user.getId());
+
+            return Response.ok(ResponseDTO.success("User Deleted")).build();
+
+        } catch (Exception e) {
+
+            if (e.getMessage().contains("not found")) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(ResponseDTO.error(e.getMessage())).build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
     }
 
 }
