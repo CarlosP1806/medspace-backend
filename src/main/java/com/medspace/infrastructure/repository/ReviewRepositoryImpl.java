@@ -3,16 +3,25 @@ package com.medspace.infrastructure.repository;
 import com.medspace.domain.model.Review;
 import com.medspace.domain.repository.ReviewRepository;
 import com.medspace.infrastructure.entity.ClinicEntity;
+import com.medspace.infrastructure.entity.RentRequestEntity;
 import com.medspace.infrastructure.entity.ReviewEntity;
 import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.mapper.ReviewMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ReviewRepositoryImpl
@@ -21,10 +30,12 @@ public class ReviewRepositoryImpl
     @Inject
     UserRepositoryImpl userRepository;
     @Inject
+    RentRequestRepositoryImpl rentRequestRepository;
+    @Inject
     ClinicRepositoryImpl clinicRepository;
 
-    // @Inject
-    // RentAgreementRepositoryImpl rentAgreementRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Override
     @Transactional
@@ -67,62 +78,80 @@ public class ReviewRepositoryImpl
 
     @Override
     @Transactional
-    public Review assignReviewToRentAgreement(Long reviewId, Long rentAgreementId) {
-        /*
-         * ReviewEntity reviewEntity = findById(reviewId); if (reviewEntity == null) { throw new
-         * NotFoundException("review with id " + reviewId + " not found"); }
-         * 
-         * RentAgreementEntity rentAgreementEntity =
-         * rentAgreementRepository.findById(rentAgreementId); if (rentAgreementEntity == null) {
-         * throw new NotFoundException("rent agreement with id " + rentAgreementId + " not found");
-         * }
-         * 
-         * reviewEntity.setRentAgreement(rentAgreementEntity); persist(reviewEntity); return
-         * ReviewMapper.toDomain(reviewEntity);
-         */
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    @Transactional
-    public Review assignReviewToAuthor(Long reviewId, Long authorId) {
+    public Review assignReviewToRentRequest(Long reviewId, Long rentRequestId) {
         ReviewEntity reviewEntity = findById(reviewId);
         if (reviewEntity == null) {
             throw new NotFoundException("review with id " + reviewId + " not found");
         }
 
-        UserEntity userEntity = userRepository.findById(authorId);
-        if (userEntity == null) {
-            throw new NotFoundException("author with id " + authorId + " not found");
+        RentRequestEntity rentRequestEntity = rentRequestRepository.findById(rentRequestId);
+        if (rentRequestEntity == null) {
+            throw new NotFoundException("rent request with id " + rentRequestId + " not found");
         }
 
-        reviewEntity.setAuthor(userEntity);
+        reviewEntity.setRentRequest(rentRequestEntity);
         persist(reviewEntity);
         return ReviewMapper.toDomain(reviewEntity);
     }
 
     @Override
-    @Transactional
-    public Review assignReviewToClinic(Long reviewId, Long clinicId) {
-        ReviewEntity reviewEntity = findById(reviewId);
-        if (reviewEntity == null) {
-            throw new NotFoundException("review with id " + reviewId + " not found");
-        }
+    public List<Review> getReviewsByLandlordId(Long landlordId) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
 
-        ClinicEntity clinicEntity = clinicRepository.findById(clinicId);
-        if (clinicEntity == null) {
-            throw new NotFoundException("clinic with id " + clinicId + " not found");
-        }
+        Root<ReviewEntity> review = query.from(ReviewEntity.class);
 
-        reviewEntity.setClinic(clinicEntity);
-        persist(reviewEntity);
-        return ReviewMapper.toDomain(reviewEntity);
+        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
+        Join<RentRequestEntity, ClinicEntity> clinicJoin = rentRequestJoin.join("clinic");
+        Join<ClinicEntity, UserEntity> userJoin = clinicJoin.join("landlord");
+
+        predicates.add(cb.equal(userJoin.get("id"), landlordId));
+        predicates.add(cb.equal(review.get("type"), Review.Type.LANDLORD));
+
+        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
+        List<ReviewEntity> entities = em.createQuery(query).getResultList();
+
+        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Review> getReviewsByTenantId(Long tenantId) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        Root<ReviewEntity> review = query.from(ReviewEntity.class);
+
+        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
+        Join<RentRequestEntity, UserEntity> userJoin = rentRequestJoin.join("tenant");
+
+        predicates.add(cb.equal(userJoin.get("id"), tenantId));
+        predicates.add(cb.equal(review.get("type"), Review.Type.TENANT));
+
+        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
+        List<ReviewEntity> entities = em.createQuery(query).getResultList();
+
+        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public List<Review> getReviewsByClinicId(Long clinicId) {
-        List<ReviewEntity> reviewEntities = list("clinic.id", clinicId);
-        List<Review> reviews = reviewEntities.stream().map(ReviewMapper::toDomain).toList();
-        return reviews;
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        Root<ReviewEntity> review = query.from(ReviewEntity.class);
+
+        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
+        Join<RentRequestEntity, ClinicEntity> clinicJoin = rentRequestJoin.join("clinic");
+
+        predicates.add(cb.equal(clinicJoin.get("id"), clinicId));
+        predicates.add(cb.equal(review.get("type"), Review.Type.CLINIC));
+
+        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
+        List<ReviewEntity> entities = em.createQuery(query).getResultList();
+
+        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
     }
 }

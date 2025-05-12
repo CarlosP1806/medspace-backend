@@ -98,6 +98,19 @@ public class ClinicService {
         return clinicPhotoRepository.getClinicPhotosByClinicId(clinicId);
     }
 
+    public String getMainPhotoPathByClinicId(Long clinicId) {
+        List<ClinicPhoto> clinicPhotos = clinicPhotoRepository.getClinicPhotosByClinicId(clinicId);
+        if (clinicPhotos.isEmpty()) {
+            return null;
+        }
+        for (ClinicPhoto clinicPhoto : clinicPhotos) {
+            if (clinicPhoto.getIsPrimary()) {
+                return clinicPhoto.getPath();
+            }
+        }
+        return null;
+    }
+
     public void deleteClinicPhotoById(Long id) {
         clinicPhotoRepository.deletePhotoById(id);
     }

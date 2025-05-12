@@ -36,4 +36,7 @@ public class RentRequestEntity {
 
     @OneToMany(mappedBy = "rentRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RentRequestDayEntity> requestedDays;
+
+    @OneToMany(mappedBy = "rentRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ReviewEntity> reviews;
 }

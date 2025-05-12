@@ -2,7 +2,6 @@ package com.medspace.infrastructure.mapper;
 
 import com.medspace.domain.model.Review;
 import com.medspace.infrastructure.entity.ReviewEntity;
-import com.medspace.infrastructure.entity.UserEntity;
 
 public class ReviewMapper {
     public static Review toDomain(ReviewEntity reviewEntity) {
@@ -15,10 +14,7 @@ public class ReviewMapper {
         review.setRating(reviewEntity.getRating());
         review.setComment(reviewEntity.getComment());
         review.setCreatedAt(reviewEntity.getCreatedAt());
-        UserEntity userEntity = reviewEntity.getAuthor();
-        review.setAuthor(UserMapper.toDomain(userEntity));
-        review.setClinic(ClinicMapper.toDomain(reviewEntity.getClinic()));
-        // review.setRentAgreement(RentAgreementMapper.toDomain(reviewEntity.getRentAgreement()));
+        review.setRentRequest(RentRequestMapper.toDomain(reviewEntity.getRentRequest()));
         return review;
     }
 
@@ -33,8 +29,7 @@ public class ReviewMapper {
         reviewEntity.setRating(review.getRating());
         reviewEntity.setComment(review.getComment());
         reviewEntity.setCreatedAt(review.getCreatedAt());
-        reviewEntity.setAuthor(UserMapper.toEntity(review.getAuthor()));
-        reviewEntity.setClinic(ClinicMapper.toEntity(review.getClinic()));
+        reviewEntity.setRentRequest(RentRequestMapper.toEntity(review.getRentRequest()));
 
         return reviewEntity;
     }

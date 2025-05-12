@@ -1,8 +1,7 @@
 package com.medspace.infrastructure.rest;
 
 import java.util.List;
-import com.medspace.application.usecase.rent.review.AssignReviewToAuthorUseCase;
-import com.medspace.application.usecase.rent.review.AssignReviewToClinicUseCase;
+import com.medspace.application.usecase.rent.review.AssignReviewToRentRequestUseCase;
 import com.medspace.application.usecase.rent.review.CreateReviewUseCase;
 import com.medspace.application.usecase.rent.review.DeleteReviewByIdUseCase;
 import com.medspace.application.usecase.rent.review.GetAllReviewsUseCase;
@@ -27,8 +26,6 @@ import jakarta.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 
-
-
 public class ReviewController {
     @Inject
     CreateReviewUseCase createReviewUseCase;
@@ -39,9 +36,7 @@ public class ReviewController {
     @Inject
     DeleteReviewByIdUseCase deleteReviewByIdUseCase;
     @Inject
-    AssignReviewToAuthorUseCase assignReviewToUserUseCase;
-    @Inject
-    AssignReviewToClinicUseCase assignReviewToClinicUseCase;
+    AssignReviewToRentRequestUseCase assignReviewToRentRequestUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -60,25 +55,15 @@ public class ReviewController {
         }
     }
 
-
-
     @POST
     @UserOnly
     @Transactional
     public Response createReview(@Valid CreateReviewDTO createReviewDTO) {
         try {
-            User loggedUser = requestContext.getUser();
-
             Review review = createReviewDTO.toReview();
             Review createdReview = createReviewUseCase.execute(review);
-            createdReview =
-                    assignReviewToUserUseCase.execute(createdReview.getId(), loggedUser.getId());
-
-            if (createdReview.getType() == Review.Type.CLINIC) {
-                Long clinicId = createReviewDTO.getClinicId();
-                createdReview =
-                        assignReviewToClinicUseCase.execute(createdReview.getId(), clinicId);
-            }
+            createdReview = assignReviewToRentRequestUseCase.execute(createdReview.getId(),
+                    createReviewDTO.getRentRequestId());
 
             ReviewResponseDTO responseDTO = ReviewResponseDTO.fromReview(createdReview);
             return Response.ok(ResponseDTO.success("Review created", responseDTO)).build();

@@ -1,18 +1,22 @@
 package com.medspace.application.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import com.medspace.domain.model.Payment;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.RentRequestDay;
 import com.medspace.domain.model.Review;
+import com.medspace.domain.model.User;
 import com.medspace.domain.repository.PaymentRepository;
 import com.medspace.domain.repository.RentRequestDayRepository;
 import com.medspace.domain.repository.RentRequestRepository;
 import com.medspace.domain.repository.ReviewRepository;
+import com.medspace.domain.repository.UserRepository;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class RentService {
@@ -24,6 +28,8 @@ public class RentService {
     ReviewRepository reviewRepository;
     @Inject
     PaymentRepository paymentRepository;
+    @Inject
+    UserRepository userRepository;
 
     // Rent request methods
 
@@ -103,32 +109,54 @@ public class RentService {
         reviewRepository.deleteReviewById(id);
     }
 
-    public Review assignAuthorToReview(Long reviewId, Long authorId) {
-        return reviewRepository.assignReviewToAuthor(reviewId, authorId);
+    public Review assignReviewToRentRequest(Long reviewId, Long rentRequestId) {
+        return reviewRepository.assignReviewToRentRequest(reviewId, rentRequestId);
     }
 
-    public Review assignReviewToClinic(Long reviewId, Long clinicId) {
-        return reviewRepository.assignReviewToClinic(reviewId, clinicId);
-    }
+    public User getReviewAuthor(Long reviewId) {
+        Review review = reviewRepository.getReviewById(reviewId);
+        if (review == null) {
+            return null;
+        }
 
-    public Review assignReviewToRentAgreement(Long reviewId, Long rentAgreementId) {
-        return reviewRepository.assignReviewToRentAgreement(reviewId, rentAgreementId);
+        if (review.getType() == Review.Type.CLINIC) {
+            return review.getRentRequest().getTenant();
+        } else if (review.getType() == Review.Type.LANDLORD) {
+            return review.getRentRequest().getTenant();
+        } else if (review.getType() == Review.Type.TENANT) {
+            return review.getRentRequest().getClinic().getLandlord();
+        } else {
+            throw new IllegalArgumentException("Unsupported review type: " + review.getType());
+        }
     }
 
     public Boolean validateReviewOwnership(Long reviewId, Long authorId) {
         if (reviewId == null || authorId == null) {
             return false;
         }
+
         Review review = reviewRepository.getReviewById(reviewId);
-        if (review == null || review.getAuthor() == null) {
+        User author = getReviewAuthor(reviewId);
+        if (author == null || review == null) {
             return false;
         }
-        // compara con authorId, no con reviewId
-        return review.getAuthor().getId().equals(authorId);
+
+        return author.getId().equals(authorId);
     }
 
-    public List<Review> getReviewsByClinicId(Long clinicId) {
-        return reviewRepository.getReviewsByClinicId(clinicId);
+    // Returns all the reviews received by a user
+    public List<Review> getReviewsByUserId(Long userId) {
+        User user = userRepository.getUserById(userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (user.getUserType() == User.UserType.LANDLORD) {
+            return reviewRepository.getReviewsByLandlordId(userId);
+        } else if (user.getUserType() == User.UserType.TENANT) {
+            return reviewRepository.getReviewsByTenantId(userId);
+        }
+        return new ArrayList<>();
     }
 
     // Payment methods

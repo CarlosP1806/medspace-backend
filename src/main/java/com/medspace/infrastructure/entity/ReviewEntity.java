@@ -33,17 +33,6 @@ public class ReviewEntity {
     private Instant createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity author;
-
-    @ManyToOne
-    @JoinColumn(name = "clinic_id")
-    private ClinicEntity clinic;
-
-    /*
-     * @ManyToOne
-     * 
-     * @JoinColumn(name = "rent_agreement_id", nullable = false) private RentAgreementEntity
-     * rentAgreement;
-     */
+    @JoinColumn(name = "rent_request_id")
+    private RentRequestEntity rentRequest;
 }

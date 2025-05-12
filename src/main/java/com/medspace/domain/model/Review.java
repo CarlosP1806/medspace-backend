@@ -18,9 +18,7 @@ public class Review {
         CLINIC, LANDLORD, TENANT,
     }
 
-    // private Long rentAgreementId;
-    private User author;
-    private Clinic clinic;
+    public RentRequest rentRequest;
     private Integer rating;
     private String comment;
     private Instant createdAt;
