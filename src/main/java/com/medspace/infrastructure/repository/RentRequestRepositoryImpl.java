@@ -121,7 +121,10 @@ public class RentRequestRepositoryImpl
         Join<RentRequestEntity, ClinicEntity> clinicJoin = root.join("clinic", JoinType.INNER);
         Join<UserEntity, TenantSpecialtyEntity> specialtyJoin = tenantJoin.join("tenantSpecialty", JoinType.LEFT);
 
-        cq.select(root).distinct(true);
+        // Add predicate to filter only accepted requests
+        Predicate acceptedStatus = cb.equal(root.get("status"), RentRequest.Status.ACCEPTED);
+        cq.select(root).distinct(true).where(acceptedStatus);
+        
         List<RentRequestEntity> entities = entityManager.createQuery(cq).getResultList();
 
         return entities.stream()
