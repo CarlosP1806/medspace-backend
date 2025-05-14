@@ -2,7 +2,10 @@ package com.medspace.domain.repository;
 
 import com.medspace.domain.model.RentRequest;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
+
 import java.util.List;
+
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestSpecialistsDashboardDTO;
 
 public interface RentRequestRepository {
 
@@ -17,4 +20,6 @@ public interface RentRequestRepository {
     void updateRentRequestStatus(Long id, RentRequest.Status status);
 
     boolean deleteById(Long id);
+
+    List<GetRentRequestSpecialistsDashboardDTO> getSpecialistsDashboardData();
 }

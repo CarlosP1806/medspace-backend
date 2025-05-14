@@ -6,7 +6,9 @@ import com.medspace.infrastructure.entity.RentRequestEntity;
 import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
 import com.medspace.infrastructure.entity.ClinicEntity;
+import com.medspace.infrastructure.entity.TenantSpecialtyEntity;
 import com.medspace.infrastructure.mapper.RentRequestMapper;
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestSpecialistsDashboardDTO;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -107,5 +109,44 @@ public class RentRequestRepositoryImpl
         }
         entity.setStatus(status);
         persist(entity);
+    }
+
+    @Override
+    public List<GetRentRequestSpecialistsDashboardDTO> getSpecialistsDashboardData() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RentRequestEntity> cq = cb.createQuery(RentRequestEntity.class);
+        Root<RentRequestEntity> root = cq.from(RentRequestEntity.class);
+
+        Join<RentRequestEntity, UserEntity> tenantJoin = root.join("tenant", JoinType.INNER);
+        Join<RentRequestEntity, ClinicEntity> clinicJoin = root.join("clinic", JoinType.INNER);
+        Join<UserEntity, TenantSpecialtyEntity> specialtyJoin = tenantJoin.join("tenantSpecialty", JoinType.LEFT);
+
+        cq.select(root).distinct(true);
+        List<RentRequestEntity> entities = entityManager.createQuery(cq).getResultList();
+
+        return entities.stream()
+            .map(entity -> {
+                GetRentRequestSpecialistsDashboardDTO dto = new GetRentRequestSpecialistsDashboardDTO();
+                dto.setRentRequestId(entity.getId());
+                dto.setTenantName(entity.getTenant().getFullName());
+                dto.setClinicName(entity.getClinic().getDisplayName());
+                dto.setStatus(entity.getStatus());
+                dto.setCreatedAt(entity.getCreatedAt());
+                
+                // Set tenant specialty
+                if (entity.getTenant().getTenantSpecialty() != null) {
+                    dto.setTenantSpecialty(entity.getTenant().getTenantSpecialty().getName());
+                }
+                
+                // Set clinic location information
+                dto.setClinicAddress(entity.getClinic().getAddressStreet() + ", " + 
+                                   entity.getClinic().getAddressCity());
+                dto.setClinicBorough(entity.getClinic().getAddressCity()); // Assuming city is the borough
+                dto.setClinicLatitude(Double.parseDouble(entity.getClinic().getAddressLatitude()));
+                dto.setClinicLongitude(Double.parseDouble(entity.getClinic().getAddressLongitude()));
+                
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }
