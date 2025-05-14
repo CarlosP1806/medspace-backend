@@ -12,6 +12,8 @@ public interface RentRequestRepository {
 
     List<RentRequest> findByLandlordId(RentRequestQueryFilterDTO filterDTO);
 
+    List<RentRequest> findByTenantId(RentRequestQueryFilterDTO filterDTO);
+
     RentRequest findRequestById(Long id);
 
     void updateRentRequestStatus(Long id, RentRequest.Status status);

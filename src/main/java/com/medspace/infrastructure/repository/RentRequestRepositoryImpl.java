@@ -68,7 +68,7 @@ public class RentRequestRepositoryImpl
 
         List<Predicate> predicates = new ArrayList<>();
         Join<RentRequestEntity, ClinicEntity> clinicJoin = root.join("clinic", JoinType.INNER);
-        predicates.add(cb.equal(clinicJoin.get("landlord").get("id"), filterDTO.getLandlordId()));
+        predicates.add(cb.equal(clinicJoin.get("landlord").get("id"), filterDTO.getUserId()));
 
         if (filterDTO.getStatus() != null) {
             predicates.add(cb.equal(root.get("status"), filterDTO.getStatus()));
@@ -76,6 +76,19 @@ public class RentRequestRepositoryImpl
 
         cq.select(root).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
         List<RentRequestEntity> entities = entityManager.createQuery(cq).getResultList();
+        return entities.stream().map(RentRequestMapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RentRequest> findByTenantId(RentRequestQueryFilterDTO filterDTO) {
+        List<RentRequestEntity> entities = find("tenant.id", filterDTO.getUserId()).list();
+
+        if (filterDTO.getStatus() != null) {
+            entities = entities.stream()
+                    .filter(entity -> entity.getStatus().toString().equals(filterDTO.getStatus()))
+                    .collect(Collectors.toList());
+        }
+
         return entities.stream().map(RentRequestMapper::toDomain).collect(Collectors.toList());
     }
 

@@ -4,7 +4,7 @@ import com.medspace.application.usecase.rent.AcceptRentRequestUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestUseCase;
 import com.medspace.application.usecase.rent.DeleteRentRequestUseCase;
-import com.medspace.application.usecase.rent.GetRentRequestsByLandlordIdUseCase;
+import com.medspace.application.usecase.rent.GetRentRequestsByUserId;
 import com.medspace.application.usecase.rent.ListRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.ListRentRequestUseCase;
 import com.medspace.application.usecase.rent.RejectRentRequestUseCase;
@@ -20,6 +20,7 @@ import com.medspace.infrastructure.dto.rentRequest.GetRentRequestPreviewDTO;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.TenantOnly;
+import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -41,7 +42,7 @@ public class RentRequestController {
     @Inject
     DeleteRentRequestUseCase deleteRentRequest;
     @Inject
-    GetRentRequestsByLandlordIdUseCase getRentRequestsByLandlordId;
+    GetRentRequestsByUserId getRentRequestsByUserId;
     @Inject
     CreateRentRequestDaysUseCase createRentRequestDaysUseCase;
     @Inject
@@ -64,16 +65,16 @@ public class RentRequestController {
     }
 
     @GET
-    @Path("/my-received-requests")
-    @LandlordOnly
-    public Response getRequestsByLandlord(@QueryParam("status") String targetStatus) {
+    @Path("/my-requests")
+    @UserOnly
+    public Response getRequestsByUser(@QueryParam("status") String targetStatus) {
         User loggedInUser = requestContext.getUser();
         RentRequestQueryFilterDTO filterDTO = new RentRequestQueryFilterDTO(loggedInUser.getId());
         if (targetStatus != null) {
             filterDTO.setStatus(targetStatus);
         }
 
-        List<GetRentRequestPreviewDTO> list = getRentRequestsByLandlordId.execute(filterDTO);
+        List<GetRentRequestPreviewDTO> list = getRentRequestsByUserId.execute(filterDTO);
 
         return Response.ok(ResponseDTO.success("Fetched rent-requests", list)).build();
     }
