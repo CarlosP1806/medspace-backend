@@ -1,5 +1,7 @@
 package com.medspace.infrastructure.dto.rentRequest;
 
+import java.sql.Date;
+import java.util.List;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.User;
@@ -21,10 +23,17 @@ public class GetRentRequestPreviewDTO {
     private Long clinicId;
 
     private String clinicDisplayName;
+    private String clinicAddress;
+    private String clinicMainPhotoPath;
+
     private String tenantFullName;
     private String tenantProfilePictureUrl;
+    private String tenantSpecialty;
 
-    public GetRentRequestPreviewDTO(RentRequest rentRequest, Clinic clinic, User tenant) {
+    private List<Date> requestedDays;
+
+    public GetRentRequestPreviewDTO(RentRequest rentRequest, Clinic clinic, User tenant,
+            List<Date> requestedDays, String clinicMainPhotoPath) {
         this.id = rentRequest.getId();
         this.comments = rentRequest.getComments();
         this.status = rentRequest.getStatus().toString();
@@ -33,7 +42,14 @@ public class GetRentRequestPreviewDTO {
         this.clinicId = clinic.getId();
 
         this.clinicDisplayName = clinic.getDisplayName();
+        this.clinicAddress = clinic.getAddressStreet() + ", " + clinic.getAddressCity() + ", "
+                + clinic.getAddressState() + ", " + clinic.getAddressCountry();
+        this.clinicMainPhotoPath = clinicMainPhotoPath;
+
         this.tenantFullName = tenant.getFullName();
         this.tenantProfilePictureUrl = tenant.getPfpPath();
+        this.tenantSpecialty = tenant.getTenantSpecialty().getName();
+
+        this.requestedDays = requestedDays;
     }
 }
