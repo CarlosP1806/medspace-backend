@@ -188,4 +188,8 @@ public class ClinicService {
     public ClinicAvailability getClinicAvailabilityById(Long id) {
         return clinicAvailabilityRepository.getAvailabilityById(id);
     }
+    public long countAllClinics() {
+        return clinicRepository.countAll();
+    }
+    
 }

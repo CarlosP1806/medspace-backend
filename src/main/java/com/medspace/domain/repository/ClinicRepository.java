@@ -18,4 +18,7 @@ public interface ClinicRepository {
     public void deleteClinicById(Long id);
 
     public Clinic assignClinicToUser(Long clinicId, Long userId);
+    
+    long countAll();
+    
 }

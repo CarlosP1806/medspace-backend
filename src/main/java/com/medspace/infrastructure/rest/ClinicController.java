@@ -6,6 +6,7 @@ import com.medspace.application.usecase.clinic.equipment.GetEquipmentsByClinicId
 import com.medspace.application.usecase.clinic.photo.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinic.photo.GetPhotosByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.photo.SetPhotoAsPrimaryClinicPhotoUseCase;
+import com.medspace.application.usecase.clinic.GetTotalClinicsCountUseCase;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
@@ -60,6 +61,8 @@ public class ClinicController {
     GetClinicsByLandlordIdUseCase getClinicsByLandlordIdUseCase;
     @Inject
     GetFilteredClinicsUseCase getFilteredClinicsUseCase;
+    @Inject 
+    GetTotalClinicsCountUseCase getTotalClinicsCountUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -135,7 +138,23 @@ public class ClinicController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+    @GET
+    @Path("/clinics-count")
 
+    public Response getTotalClinicsCount() {
+        try {
+            long total = getTotalClinicsCountUseCase.execute();
+            return Response.ok(
+                ResponseDTO.success("Total clinics count fetched", total)
+            ).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage()))
+                    .build();
+        }
+    }
+    
+    
     @GET
     @Path("/{id}")
     @UserOnly

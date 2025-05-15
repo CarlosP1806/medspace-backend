@@ -1,5 +1,6 @@
 package com.medspace.infrastructure.repository;
 
+
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.repository.ClinicRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
@@ -27,8 +28,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class ClinicRepositoryImpl
-        implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
+public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
+
+
     @Inject
     UserRepositoryImpl userRepository;
 
@@ -144,4 +146,9 @@ public class ClinicRepositoryImpl
         persist(clinicEntity);
         return ClinicMapper.toDomain(clinicEntity);
     }
+
+    @Override
+    public long countAll() {
+        return count();
+    }    
 }
