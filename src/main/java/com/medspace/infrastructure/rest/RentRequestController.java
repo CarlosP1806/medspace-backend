@@ -1,6 +1,7 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.rent.AcceptRentRequestUseCase;
+import com.medspace.application.usecase.rent.CancelRentRequestUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.CreateRentRequestUseCase;
 import com.medspace.application.usecase.rent.DeleteRentRequestUseCase;
@@ -53,6 +54,8 @@ public class RentRequestController {
     AcceptRentRequestUseCase acceptRentRequestUseCase;
     @Inject
     RejectRentRequestUseCase rejectRentRequestUseCase;
+    @Inject
+    CancelRentRequestUseCase cancelRentRequestUseCase;
     @Inject
     GetSpecialistsDashboardDataUseCase getSpecialistsDashboardDataUseCase;
 
@@ -139,6 +142,20 @@ public class RentRequestController {
         }
     }
 
+    @PUT
+    @Path("{id}/cancel")
+    @TenantOnly
+    public Response cancelRentRequest(@PathParam("id") Long id) {
+        try {
+            User loggedInUser = requestContext.getUser();
+            cancelRentRequestUseCase.execute(id, loggedInUser.getId());
+            return Response.ok(ResponseDTO.success("Cancelled rent-request")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+
     @DELETE
     @Path("{id}")
     public Response deleteRentRequest(@PathParam("id") Long id) {
@@ -181,7 +198,8 @@ public class RentRequestController {
     @GET
     @Path("/specialists-dashboard")
     public Response getSpecialistsDashboardData() {
-        List<GetRentRequestSpecialistsDashboardDTO> data = getSpecialistsDashboardDataUseCase.execute();
+        List<GetRentRequestSpecialistsDashboardDTO> data =
+                getSpecialistsDashboardDataUseCase.execute();
         return Response.ok(ResponseDTO.success("Fetched specialists dashboard data", data)).build();
     }
 
