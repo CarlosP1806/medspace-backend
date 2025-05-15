@@ -8,6 +8,7 @@ import com.medspace.application.usecase.rent.GetRentRequestsByUserId;
 import com.medspace.application.usecase.rent.ListRentRequestDaysUseCase;
 import com.medspace.application.usecase.rent.ListRentRequestUseCase;
 import com.medspace.application.usecase.rent.RejectRentRequestUseCase;
+import com.medspace.application.usecase.rent.GetSpecialistsDashboardDataUseCase;
 import com.medspace.domain.model.RentRequest;
 import com.medspace.domain.model.RentRequestDay;
 import com.medspace.domain.model.User;
@@ -18,6 +19,7 @@ import com.medspace.infrastructure.dto.rentRequest.GetRentRequestDTO;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestDayDTO;
 import com.medspace.infrastructure.dto.rentRequest.GetRentRequestPreviewDTO;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestSpecialistsDashboardDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.TenantOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
@@ -51,6 +53,8 @@ public class RentRequestController {
     AcceptRentRequestUseCase acceptRentRequestUseCase;
     @Inject
     RejectRentRequestUseCase rejectRentRequestUseCase;
+    @Inject
+    GetSpecialistsDashboardDataUseCase getSpecialistsDashboardDataUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -172,6 +176,13 @@ public class RentRequestController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
+    }
+
+    @GET
+    @Path("/specialists-dashboard")
+    public Response getSpecialistsDashboardData() {
+        List<GetRentRequestSpecialistsDashboardDTO> data = getSpecialistsDashboardDataUseCase.execute();
+        return Response.ok(ResponseDTO.success("Fetched specialists dashboard data", data)).build();
     }
 
 }

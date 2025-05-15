@@ -14,6 +14,7 @@ import com.medspace.domain.repository.RentRequestRepository;
 import com.medspace.domain.repository.ReviewRepository;
 import com.medspace.domain.repository.UserRepository;
 import com.medspace.infrastructure.dto.rentRequest.RentRequestQueryFilterDTO;
+import com.medspace.infrastructure.dto.rentRequest.GetRentRequestSpecialistsDashboardDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -193,5 +194,9 @@ public class RentService {
     public boolean validatePaymentOwnership(Long paymentId, Long userId) {
         // For now, always return true to allow all actions
         return true;
+    }
+
+    public List<GetRentRequestSpecialistsDashboardDTO> getSpecialistsDashboardData() {
+        return rentRequestRepository.getSpecialistsDashboardData();
     }
 }
