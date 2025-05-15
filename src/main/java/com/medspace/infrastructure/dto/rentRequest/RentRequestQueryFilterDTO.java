@@ -10,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RentRequestQueryFilterDTO {
-    private Long landlordId;
+    private Long userId;
     private String status;
 
-    public RentRequestQueryFilterDTO(Long landlordId) {
-        this.landlordId = landlordId;
+    public RentRequestQueryFilterDTO(Long userId) {
+        this.userId = userId;
     }
 }

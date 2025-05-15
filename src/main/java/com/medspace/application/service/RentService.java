@@ -42,8 +42,15 @@ public class RentService {
         rentRequestRepository.deleteById(id);
     }
 
-    public List<RentRequest> listRentRequestsByLandlordId(RentRequestQueryFilterDTO queryDTO) {
-        return rentRequestRepository.findByLandlordId(queryDTO);
+    public List<RentRequest> listRentRequestsByUserId(RentRequestQueryFilterDTO queryDTO) {
+        User.UserType userType = userRepository.getUserById(queryDTO.getUserId()).getUserType();
+        if (userType == User.UserType.LANDLORD) {
+            return rentRequestRepository.findByLandlordId(queryDTO);
+        } else if (userType == User.UserType.TENANT) {
+            return rentRequestRepository.findByTenantId(queryDTO);
+        }
+
+        return new ArrayList<>();
     }
 
     public List<RentRequest> listAllRentRequests() {
