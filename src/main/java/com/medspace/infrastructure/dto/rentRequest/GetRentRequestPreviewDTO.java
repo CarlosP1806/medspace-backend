@@ -21,6 +21,7 @@ public class GetRentRequestPreviewDTO {
     private String status;
 
     private Long tenantId;
+    private Long landlordId;
     private Long clinicId;
 
     private String clinicDisplayName;
@@ -31,6 +32,9 @@ public class GetRentRequestPreviewDTO {
     private String tenantFullName;
     private String tenantProfilePictureUrl;
     private String tenantSpecialty;
+
+    private String landlordFullName;
+    private String landlordProfilePictureUrl;
 
     private List<Date> requestedDays;
 
@@ -53,6 +57,10 @@ public class GetRentRequestPreviewDTO {
         this.tenantFullName = tenant.getFullName();
         this.tenantProfilePictureUrl = tenant.getPfpPath();
         this.tenantSpecialty = tenant.getTenantSpecialty().getName();
+
+        this.landlordId = clinic.getLandlord().getId();
+        this.landlordFullName = clinic.getLandlord().getFullName();
+        this.landlordProfilePictureUrl = clinic.getLandlord().getPfpPath();
 
         this.requestedDays = requestedDays;
     }

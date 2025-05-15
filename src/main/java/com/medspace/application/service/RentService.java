@@ -84,6 +84,17 @@ public class RentService {
         return rentRequest.getClinic().getLandlord().getId().equals(userId);
     }
 
+    public Boolean validateRentRequestSentByTenant(Long rentRequestId, Long tenantId) {
+        if (rentRequestId == null || tenantId == null) {
+            return false;
+        }
+        RentRequest rentRequest = rentRequestRepository.findRequestById(rentRequestId);
+        if (rentRequest == null || rentRequest.getTenant() == null) {
+            return false;
+        }
+        return rentRequest.getTenant().getId().equals(tenantId);
+    }
+
     public Boolean isRentRequestPending(Long rentRequestId) {
         RentRequest rentRequest = rentRequestRepository.findRequestById(rentRequestId);
         return rentRequest.getStatus() == RentRequest.Status.PENDING;

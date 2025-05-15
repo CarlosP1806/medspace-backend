@@ -1,7 +1,6 @@
 package com.medspace.infrastructure.entity;
 
 import com.medspace.domain.model.Clinic;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

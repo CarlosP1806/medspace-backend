@@ -13,9 +13,8 @@ import java.time.Instant;
 @AllArgsConstructor
 public class RentRequest {
     public enum Status {
-        PENDING, ACCEPTED, REJECTED
+        PENDING, ACCEPTED, REJECTED, CANCELED
     }
-
 
     private Long id;
     private User tenant;
