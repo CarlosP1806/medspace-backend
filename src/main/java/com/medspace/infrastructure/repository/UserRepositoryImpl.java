@@ -125,7 +125,10 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
 
         return UserMapper.toDomain(originalUserEntity);
     }
-
+    @Override
+    public long countByUserType(User.UserType userType) {
+        return count("userType", userType);
+    }
 
 
 }
