@@ -145,4 +145,7 @@ public class UserService {
         }
         return favorite.getTenant().getId().equals(tenantId);
     }
+    public long countAllTenants() {
+        return userRepository.countByUserType(User.UserType.TENANT);
+    }
 }

@@ -15,4 +15,7 @@ public interface UserRepository {
     public void deleteUserById(Long id);
 
     public User updateUserById(Long id, User user);
+
+    long countByUserType(User.UserType userType);
+    
 }
