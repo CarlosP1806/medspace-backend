@@ -66,4 +66,7 @@ public class UserEntity extends PanacheEntityBase {
 
     @OneToMany(mappedBy = "landlord", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClinicEntity> clinics;
+
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RentRequestEntity> rentRequests;
 }

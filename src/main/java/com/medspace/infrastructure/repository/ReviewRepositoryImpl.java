@@ -12,15 +12,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -96,62 +92,53 @@ public class ReviewRepositoryImpl
 
     @Override
     public List<Review> getReviewsByLandlordId(Long landlordId) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
-        List<Predicate> predicates = new ArrayList<>();
-
-        Root<ReviewEntity> review = query.from(ReviewEntity.class);
-
-        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
-        Join<RentRequestEntity, ClinicEntity> clinicJoin = rentRequestJoin.join("clinic");
-        Join<ClinicEntity, UserEntity> userJoin = clinicJoin.join("landlord");
-
-        predicates.add(cb.equal(userJoin.get("id"), landlordId));
-        predicates.add(cb.equal(review.get("type"), Review.Type.LANDLORD));
-
-        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
-        List<ReviewEntity> entities = em.createQuery(query).getResultList();
-
-        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
+        UserEntity landlord = userRepository.findById(landlordId);
+        List<ClinicEntity> clinics = landlord.getClinics();
+        List<ReviewEntity> reviews = new ArrayList<>();
+        for (ClinicEntity clinic : clinics) {
+            Set<RentRequestEntity> rentRequests = clinic.getRentRequests();
+            for (RentRequestEntity rentRequest : rentRequests) {
+                List<ReviewEntity> reviewEntities = rentRequest.getReviews().stream()
+                        .filter(reviewEntity -> reviewEntity.getType() == Review.Type.LANDLORD)
+                        .collect(Collectors.toList());
+                reviews.addAll(reviewEntities);
+            }
+        }
+        return reviews.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public List<Review> getReviewsByTenantId(Long tenantId) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
-        List<Predicate> predicates = new ArrayList<>();
+        UserEntity tenant = userRepository.findById(tenantId);
+        List<RentRequestEntity> rentRequestOfTenant = tenant.getRentRequests();
+        List<ReviewEntity> reviews = new ArrayList<>();
 
-        Root<ReviewEntity> review = query.from(ReviewEntity.class);
+        for (RentRequestEntity rentRequest : rentRequestOfTenant) {
+            List<ReviewEntity> reviewEntities = rentRequest.getReviews().stream()
+                    .filter(reviewEntity -> reviewEntity.getType() == Review.Type.TENANT)
+                    .collect(Collectors.toList());
+            reviews.addAll(reviewEntities);
+        }
 
-        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
-        Join<RentRequestEntity, UserEntity> userJoin = rentRequestJoin.join("tenant");
-
-        predicates.add(cb.equal(userJoin.get("id"), tenantId));
-        predicates.add(cb.equal(review.get("type"), Review.Type.TENANT));
-
-        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
-        List<ReviewEntity> entities = em.createQuery(query).getResultList();
-
-        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
+        return reviews.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public List<Review> getReviewsByClinicId(Long clinicId) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<ReviewEntity> query = cb.createQuery(ReviewEntity.class);
-        List<Predicate> predicates = new ArrayList<>();
+        ClinicEntity clinic = clinicRepository.findById(clinicId);
+        if (clinic == null) {
+            return new ArrayList<>();
+        }
 
-        Root<ReviewEntity> review = query.from(ReviewEntity.class);
+        Set<RentRequestEntity> rentRequests = clinic.getRentRequests();
+        List<ReviewEntity> reviews = new ArrayList<>();
+        for (RentRequestEntity rentRequest : rentRequests) {
+            List<ReviewEntity> reviewEntities = rentRequest.getReviews().stream()
+                    .filter(reviewEntity -> reviewEntity.getType() == Review.Type.CLINIC)
+                    .collect(Collectors.toList());
+            reviews.addAll(reviewEntities);
+        }
 
-        Join<ReviewEntity, RentRequestEntity> rentRequestJoin = review.join("rentRequest");
-        Join<RentRequestEntity, ClinicEntity> clinicJoin = rentRequestJoin.join("clinic");
-
-        predicates.add(cb.equal(clinicJoin.get("id"), clinicId));
-        predicates.add(cb.equal(review.get("type"), Review.Type.CLINIC));
-
-        query.select(review).distinct(true).where(cb.and(predicates.toArray(new Predicate[0])));
-        List<ReviewEntity> entities = em.createQuery(query).getResultList();
-
-        return entities.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
+        return reviews.stream().map(ReviewMapper::toDomain).collect(Collectors.toList());
     }
 }

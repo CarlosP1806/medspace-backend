@@ -74,7 +74,7 @@ public class RentRequestController {
     @GET
     @Path("/my-requests")
     @UserOnly
-    public Response getRequestsByUser(@QueryParam("status") String targetStatus) {
+    public Response getRequestsByUser(@QueryParam("status") RentRequest.Status targetStatus) {
         User loggedInUser = requestContext.getUser();
         RentRequestQueryFilterDTO filterDTO = new RentRequestQueryFilterDTO(loggedInUser.getId());
         if (targetStatus != null) {
