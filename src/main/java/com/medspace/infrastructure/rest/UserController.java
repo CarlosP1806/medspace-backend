@@ -7,12 +7,14 @@ import com.medspace.application.usecase.user.EditUserProfileByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
 import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.application.usecase.user.GetUserPublicProfileUseCase;
+import com.medspace.application.usecase.user.GetTenantCountUseCase;
 import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.user.CreateUserDTO;
 import com.medspace.infrastructure.dto.user.EditUserDTO;
 import com.medspace.infrastructure.dto.user.GetUserPublicProfileDTO;
+import com.medspace.infrastructure.rest.annotations.AnalystOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -45,6 +47,8 @@ public class UserController {
     DeleteUserByIdUseCase deleteUserByIdUseCase;
     @Inject
     GetUserPublicProfileUseCase getUserPublicProfileUseCase;
+    @Inject
+    GetTenantCountUseCase getTenantCountUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -218,6 +222,22 @@ public class UserController {
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+    }
+    @GET
+    
+    @Path("/specialist-count")
+    @AnalystOnly
+    public Response getTenantCount() {
+        try {
+            long totalTenants = getTenantCountUseCase.execute();
+            return Response.ok(
+                ResponseDTO.success("Total specialist count fetched", totalTenants)
+            ).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                           .entity(ResponseDTO.error(e.getMessage()))
+                           .build();
         }
     }
 
