@@ -43,6 +43,10 @@ public class RentService {
         rentRequestRepository.deleteById(id);
     }
 
+    public RentRequest getRentRequestById(Long id) {
+        return rentRequestRepository.findRequestById(id);
+    }
+
     public List<RentRequest> listRentRequestsByUserId(RentRequestQueryFilterDTO queryDTO) {
         User.UserType userType = userRepository.getUserById(queryDTO.getUserId()).getUserType();
         if (userType == User.UserType.LANDLORD) {
@@ -178,8 +182,11 @@ public class RentService {
         return new ArrayList<>();
     }
 
-    // Payment methods
+    public List<Review> getReviewsByClinicId(Long clinicId) {
+        return reviewRepository.getReviewsByClinicId(clinicId);
+    }
 
+    // Payment methods
     public Payment createPayment(Payment payment) {
         payment.setCreatedAt(Instant.now());
         payment = paymentRepository.savePayment(payment);
