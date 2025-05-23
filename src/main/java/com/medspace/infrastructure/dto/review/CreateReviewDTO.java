@@ -17,9 +17,6 @@ import lombok.Setter;
 public class CreateReviewDTO {
 
     @NotNull
-    private Review.Type type;
-
-    @NotNull
     @Min(1)
     @Max(5)
     private Integer rating;
@@ -30,11 +27,11 @@ public class CreateReviewDTO {
     @NotNull
     private Long rentRequestId;
 
-    public Review toReview() {
+    public Review toReview(Review.Type type) {
         Review review = new Review();
-        review.setType(type);
         review.setRating(rating);
         review.setComment(comment);
+        review.setType(type);
         return review;
     }
 }

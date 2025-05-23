@@ -1,21 +1,19 @@
 package com.medspace.infrastructure.rest;
 
 import java.util.List;
-import com.medspace.application.usecase.rent.review.AssignReviewToRentRequestUseCase;
 import com.medspace.application.usecase.rent.review.CreateReviewUseCase;
-import com.medspace.application.usecase.rent.review.DeleteReviewByIdUseCase;
-import com.medspace.application.usecase.rent.review.GetAllReviewsUseCase;
-import com.medspace.application.usecase.rent.review.GetReviewByIdUseCase;
+import com.medspace.application.usecase.rent.review.GetReviewsByClinicIdUseCase;
+import com.medspace.application.usecase.rent.review.GetReviewsByUserIdUseCase;
 import com.medspace.domain.model.Review;
-import com.medspace.domain.model.User;
 import com.medspace.infrastructure.rest.context.RequestContext;
+import com.medspace.infrastructure.rest.annotations.LandlordOnly;
+import com.medspace.infrastructure.rest.annotations.TenantOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.review.CreateReviewDTO;
-import com.medspace.infrastructure.dto.review.ReviewResponseDTO;
+import com.medspace.infrastructure.dto.review.GetReviewDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
@@ -29,84 +27,61 @@ import jakarta.ws.rs.core.MediaType;
 public class ReviewController {
     @Inject
     CreateReviewUseCase createReviewUseCase;
+
     @Inject
-    GetAllReviewsUseCase getAllReviewsUseCase;
+    GetReviewsByUserIdUseCase getReviewsByUserIdUseCase;
+
     @Inject
-    GetReviewByIdUseCase getReviewByIdUseCase;
-    @Inject
-    DeleteReviewByIdUseCase deleteReviewByIdUseCase;
-    @Inject
-    AssignReviewToRentRequestUseCase assignReviewToRentRequestUseCase;
+    GetReviewsByClinicIdUseCase getReviewsByClinicIdUseCase;
 
     @Inject
     RequestContext requestContext;
 
     @GET
-    public Response getAllReviews() {
-        try {
-            List<Review> reviews = getAllReviewsUseCase.execute();
-            List<ReviewResponseDTO> response =
-                    reviews.stream().map(ReviewResponseDTO::fromReview).toList();
-            return Response.ok(ResponseDTO.success("Reviews Fetched", response)).build();
-
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
-    }
-
-    @POST
     @UserOnly
-    @Transactional
-    public Response createReview(@Valid CreateReviewDTO createReviewDTO) {
-        try {
-            Review review = createReviewDTO.toReview();
-            Review createdReview = createReviewUseCase.execute(review);
-            createdReview = assignReviewToRentRequestUseCase.execute(createdReview.getId(),
-                    createReviewDTO.getRentRequestId());
+    @Path("/user/{id}")
+    public Response getReviewsByUserId(@PathParam("id") Long id) {
+        List<GetReviewDTO> reviews = getReviewsByUserIdUseCase.execute(id);
 
-            ReviewResponseDTO responseDTO = ReviewResponseDTO.fromReview(createdReview);
-            return Response.ok(ResponseDTO.success("Review created", responseDTO)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
+        return Response.ok(ResponseDTO.success("Reviews Fetched", reviews)).build();
     }
 
     @GET
-    @Path("/{id}")
-    public Response getReviewById(@PathParam("id") Long id) {
-        try {
-            Review review = getReviewByIdUseCase.execute(id);
-            if (review == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(ResponseDTO.error("Clinic not Found")).build();
-            }
-            ReviewResponseDTO responseDTO = ReviewResponseDTO.fromReview(review);
-            return Response.ok(ResponseDTO.success("Clinic Fetched", responseDTO)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
+    @UserOnly
+    @Path("/clinic/{id}")
+    public Response getReviewsByClinicId(@PathParam("id") Long id) {
+        List<GetReviewDTO> reviews = getReviewsByClinicIdUseCase.execute(id);
+
+        return Response.ok(ResponseDTO.success("Reviews Fetched", reviews)).build();
     }
 
-    @DELETE
-    @Path("/{id}")
-    @UserOnly
-    @Transactional
-    public Response deleteReviewById(@PathParam("id") Long id) {
-        try {
-            User loggedInUser = requestContext.getUser();
-            deleteReviewByIdUseCase.execute(id, loggedInUser.getId());
-            return Response.ok(ResponseDTO.success("Review Deleted")).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
+    @POST
+    @LandlordOnly
+    @Path("/tenant")
+    public Response createTenantReview(@Valid CreateReviewDTO request) {
+        createReviewUseCase.execute(request, Review.Type.TENANT);
+
+        return Response.ok(ResponseDTO.success("Review Created")).build();
     }
+
+    @POST
+    @TenantOnly
+    @Path("/landlord")
+    public Response createLandlordReview(@Valid CreateReviewDTO request) {
+        createReviewUseCase.execute(request, Review.Type.LANDLORD);
+
+        return Response.ok(ResponseDTO.success("Review Created")).build();
+    }
+
+    @POST
+    @TenantOnly
+    @Path("/clinic")
+    public Response createClinicReview(@Valid CreateReviewDTO request) {
+        createReviewUseCase.execute(request, Review.Type.CLINIC);
+
+        return Response.ok(ResponseDTO.success("Review Created")).build();
+    }
+
 
 
 }
