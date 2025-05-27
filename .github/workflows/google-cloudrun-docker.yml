@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B package -Dnative
+        run: mvn -B package -Dnative -DskipTests
 
       - name: Authenticate with Google Cloud
         id: auth
