@@ -29,10 +29,12 @@
 
 name: 'Build and Deploy to Cloud Run'
 
+
 on:
   push:
     branches:
-      - '"main"'
+      - cicdTest
+
 
 env:
   PROJECT_ID: 'med-space-c2eba' 
