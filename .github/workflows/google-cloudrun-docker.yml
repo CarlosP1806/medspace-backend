@@ -75,15 +75,16 @@ jobs:
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
       - name: 'Build and Push Container'
-        id: "deploy"
         run: |-
-          DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
-          docker build --tag "${DOCKER_TAG}" .
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          docker build -f src/main/docker/Dockerfile.native-micro --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
+
+      # END - Docker auth and build
+
+
       - name: 'Deploy to Cloud Run'
-
-        # END - Docker auth and build
-
+        id: "deploy"
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: '${{ env.SERVICE }}'
@@ -94,5 +95,4 @@ jobs:
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
-
           echo ${{ steps.deploy.outputs.url }}
