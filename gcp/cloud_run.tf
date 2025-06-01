@@ -78,7 +78,7 @@ resource "google_cloud_run_v2_service" "backend_service" {
 
 
 ## IAM Binding to allow all users to invoke the Cloud Run service
-resource "google_cloud_run_service_iam_binding" "default" {
+resource "google_cloud_run_service_iam_binding" "backend_default" {
   location = google_cloud_run_v2_service.backend_service.location
   service  = google_cloud_run_v2_service.backend_service.name
   role     = "roles/run.invoker"
@@ -94,8 +94,7 @@ resource "google_cloud_run_v2_service" "python_backend_service" {
   name                = var.python_backend_service_name
   location            = var.region
   deletion_protection = false
-  ingress             = "INGRESS_TRAFFIC_INTERNAL_ONLY"
-  #ingress = "INGRESS_TRAFFIC_ALL"
+  ingress             = "INGRESS_TRAFFIC_ALL"
 
   lifecycle {
     ignore_changes = [
@@ -149,7 +148,7 @@ resource "google_cloud_run_v2_service" "python_backend_service" {
 
 
 
-## IAM Binding to allow all users to invoke the Cloud Run main backend service
+## IAM Binding to allow all users to invoke the Cloud Run python backend service
 resource "google_cloud_run_service_iam_binding" "python_backend_default" {
   location = google_cloud_run_v2_service.python_backend_service.location
   service  = google_cloud_run_v2_service.python_backend_service.name
