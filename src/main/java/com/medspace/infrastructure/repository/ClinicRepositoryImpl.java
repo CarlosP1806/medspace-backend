@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
+public class ClinicRepositoryImpl
+        implements ClinicRepository, PanacheRepositoryBase<ClinicEntity, Long> {
 
 
     @Inject
@@ -150,5 +151,19 @@ public class ClinicRepositoryImpl implements ClinicRepository, PanacheRepository
     @Override
     public long countAll() {
         return count();
-    }    
+    }
+
+    @Override
+    public long countClinicsByCategory(Clinic.Category category) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<ClinicEntity> clinic = query.from(ClinicEntity.class);
+    
+        Predicate predicate = cb.equal(clinic.get("category"), category);
+        query.select(cb.count(clinic)).where(predicate);
+    
+        return em.createQuery(query).getSingleResult();
+    }
+    
+
 }

@@ -1,14 +1,19 @@
 package com.medspace.infrastructure.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import com.medspace.application.service.UserService;
 import com.medspace.application.usecase.user.CreateUserUseCase;
 import com.medspace.application.usecase.user.DeleteUserByIdUseCase;
 import com.medspace.application.usecase.user.EditUserProfileByIdUseCase;
 import com.medspace.application.usecase.user.GetAllUsersUseCase;
+import java.util.Map;
+import com.medspace.application.usecase.user.GetSpecialistCountBySpecialtyUseCase;
 import com.medspace.application.usecase.user.GetUserByIdUseCase;
 import com.medspace.application.usecase.user.GetUserPublicProfileUseCase;
 import com.medspace.application.usecase.user.GetTenantCountUseCase;
 import com.medspace.application.usecase.user.tenantSpecialties.GetTenantSpecialtyByIdUseCase;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.ResponseDTO;
 import com.medspace.infrastructure.dto.user.CreateUserDTO;
@@ -28,6 +33,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
@@ -55,6 +61,12 @@ public class UserController {
 
     @Inject
     EditUserProfileByIdUseCase editUserProfileByIdUseCase;
+
+    @Inject
+    GetSpecialistCountBySpecialtyUseCase getSpecialistCountBySpecialtyUseCase;
+    
+    @Inject
+    UserService userService;
 
 
     @POST
@@ -224,21 +236,43 @@ public class UserController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+
     @GET
-    
+
     @Path("/specialist-count")
     @AnalystOnly
     public Response getTenantCount() {
         try {
             long totalTenants = getTenantCountUseCase.execute();
-            return Response.ok(
-                ResponseDTO.success("Total specialist count fetched", totalTenants)
-            ).build();
+            return Response.ok(ResponseDTO.success("Total specialist count fetched", totalTenants))
+                    .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                           .entity(ResponseDTO.error(e.getMessage()))
-                           .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+
+    @GET
+    @Path("/specialty/{specialty}/count")
+    @Produces(MediaType.APPLICATION_JSON)
+
+    public Response getSpecialistCountBySpecialty(@PathParam("specialty") String specialtyStr) {
+        TenantSpecialty specialty = userService.findSpecialtyByName(specialtyStr);
+
+        if (specialty == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", "Specialty not found: " + specialtyStr)).build();
+        }
+
+        long count = getSpecialistCountBySpecialtyUseCase.execute(specialty);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("specialty", specialty.getName());
+        response.put("count", count);
+
+        return Response.ok(response).build();
+    }
+
+
 
 }

@@ -148,4 +148,11 @@ public class UserService {
     public long countAllTenants() {
         return userRepository.countByUserType(User.UserType.TENANT);
     }
+    public long countTenantsBySpecialty(TenantSpecialty specialty){
+        return userRepository.countByUserTypeAndTenantSpecialty(User.UserType.TENANT, specialty);
+    }
+    public TenantSpecialty findSpecialtyByName(String name) {
+        return userRepository.findSpecialtyByNameIgnoreCase(name);
+    }
+    
 }

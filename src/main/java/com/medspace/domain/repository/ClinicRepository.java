@@ -20,5 +20,7 @@ public interface ClinicRepository {
     public Clinic assignClinicToUser(Long clinicId, Long userId);
     
     long countAll();
+
+    long countClinicsByCategory(Clinic.Category category);
     
 }
