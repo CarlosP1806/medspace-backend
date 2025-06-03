@@ -191,5 +191,8 @@ public class ClinicService {
     public long countAllClinics() {
         return clinicRepository.countAll();
     }
+    public long countClinicsByCategory(Clinic.Category category) {
+        return clinicRepository.countClinicsByCategory(category);
+    }
     
 }
