@@ -60,6 +60,10 @@ public class ClinicService {
         return clinicRepository.assignClinicToUser(clinicId, userId);
     }
 
+    public Clinic updateClinic(Long id, Clinic clinic) {
+        return clinicRepository.updateClinic(id, clinic);
+    }
+
     public Boolean validateClinicOwnership(Long clinicId, Long userId) {
         if (clinicId == null || userId == null) {
             return false;
@@ -188,8 +192,9 @@ public class ClinicService {
     public ClinicAvailability getClinicAvailabilityById(Long id) {
         return clinicAvailabilityRepository.getAvailabilityById(id);
     }
+
     public long countAllClinics() {
         return clinicRepository.countAll();
     }
-    
+
 }

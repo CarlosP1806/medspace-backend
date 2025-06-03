@@ -18,6 +18,7 @@ import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
+import com.medspace.infrastructure.dto.clinic.UpdateClinicDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
@@ -61,8 +62,10 @@ public class ClinicController {
     GetClinicsByLandlordIdUseCase getClinicsByLandlordIdUseCase;
     @Inject
     GetFilteredClinicsUseCase getFilteredClinicsUseCase;
-    @Inject 
+    @Inject
     GetTotalClinicsCountUseCase getTotalClinicsCountUseCase;
+    @Inject
+    UpdateClinicUseCase updateClinicUseCase;
 
     @Inject
     RequestContext requestContext;
@@ -138,23 +141,21 @@ public class ClinicController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+
     @GET
     @Path("/clinics-count")
 
     public Response getTotalClinicsCount() {
         try {
             long total = getTotalClinicsCountUseCase.execute();
-            return Response.ok(
-                ResponseDTO.success("Total clinics count fetched", total)
-            ).build();
+            return Response.ok(ResponseDTO.success("Total clinics count fetched", total)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage()))
-                    .build();
+                    .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
-    
-    
+
+
     @GET
     @Path("/{id}")
     @UserOnly
@@ -259,4 +260,22 @@ public class ClinicController {
                     .entity(ResponseDTO.error(e.getMessage())).build();
         }
     }
+
+    @PUT
+    @Path("/{id}")
+    @LandlordOnly
+    public Response updateClinic(@PathParam("id") Long id, @Valid UpdateClinicDTO request) {
+        try {
+            User loggedInUser = requestContext.getUser();
+            updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
+
+            return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.error(e.getMessage())).build();
+        }
+
+    }
+
+
 }
