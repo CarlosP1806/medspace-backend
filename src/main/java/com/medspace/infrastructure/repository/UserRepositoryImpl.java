@@ -121,10 +121,10 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
             originalUserEntity.setDefaultPaymentMethod(user.getDefaultPaymentMethod());
         }
 
-        persist(originalUserEntity);
 
         return UserMapper.toDomain(originalUserEntity);
     }
+
     @Override
     public long countByUserType(User.UserType userType) {
         return count("userType", userType);

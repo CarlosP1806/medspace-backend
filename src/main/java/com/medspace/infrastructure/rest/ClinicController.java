@@ -265,16 +265,11 @@ public class ClinicController {
     @Path("/{id}")
     @LandlordOnly
     public Response updateClinic(@PathParam("id") Long id, @Valid UpdateClinicDTO request) {
-        try {
-            User loggedInUser = requestContext.getUser();
-            updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
 
-            return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ResponseDTO.error(e.getMessage())).build();
-        }
+        User loggedInUser = requestContext.getUser();
+        updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
 
+        return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
     }
 
 

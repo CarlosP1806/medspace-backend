@@ -14,7 +14,7 @@ public class UpdateClinicUseCase {
 
     @Transactional
     public void execute(Long id, Clinic clinic, Long userId) {
-        Boolean isOwner = clinicService.validateClinicOwnership(id, userId) || true;
+        Boolean isOwner = clinicService.validateClinicOwnership(id, userId);
         if (!isOwner) {
             throw new ForbiddenException("Update unauthorized");
         }

@@ -56,6 +56,9 @@ public class CreateClinicDTO {
     @NotBlank
     private String addressLatitude;
 
+    @NotNull
+    private Integer size;
+
     public Clinic toClinic() {
         Clinic clinic = new Clinic();
 
@@ -73,6 +76,7 @@ public class CreateClinicDTO {
         clinic.setAddressCountry(addressCountry);
         clinic.setAddressLongitude(addressLongitude);
         clinic.setAddressLatitude(addressLatitude);
+        clinic.setSize(size);
 
         return clinic;
     }

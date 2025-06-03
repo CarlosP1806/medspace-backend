@@ -50,12 +50,6 @@ public class UpdateClinicDTO {
             clinic.setMaxStayDays(maxStayDays);
         }
 
-
-
-        System.out.println("Updating clinic with ID: ");
-
-
-
         return clinic;
     }
 }
