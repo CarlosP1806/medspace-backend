@@ -22,6 +22,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import java.time.Instant;
 import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import java.io.UnsupportedEncodingException;
 
 @ApplicationScoped
 public class ExternalClinicApiClient {
@@ -35,17 +37,22 @@ public class ExternalClinicApiClient {
     private static final int BATCH_SIZE = 1000; // Fetch 1000 records at a time
     private static final int EXACT_RECORDS = 100;
 
-    private final String apiUrl;
-    private final String authToken;
+    // Added constants for URL construction
+    private static final String BASE_API_URL =
+            "https://www.inegi.org.mx/app/api/denue/v1/consulta/BuscarEntidad";
+    private static final String ACTIVITY_DESCRIPTION =
+            "Consultorios de medicina especializada del sector privado";
+    private static final String ENTITY_CODE = "00"; // 00 for national level
+
+    private final String authToken; // Will be injected
     private final ObjectMapper objectMapper;
     private final JsonFactory jsonFactory;
     private final ExternalClinicRepository repository;
 
     @Inject
-    public ExternalClinicApiClient(ExternalClinicRepository repository) {
-        this.apiUrl =
-                "https://www.inegi.org.mx/app/api/denue/v1/consulta/BuscarEntidad/Consultorios de medicina especializada del sector privado/00/1/100000/7a7f67dc-2ce2-4160-b2b6-6ba8f7c933e1";
-        this.authToken = this.apiUrl.substring(this.apiUrl.lastIndexOf("/") + 1);
+    public ExternalClinicApiClient(ExternalClinicRepository repository,
+            @ConfigProperty(name = "external.clinic.client.token") String configuredAuthToken) {
+        this.authToken = configuredAuthToken; // Use injected token
         this.objectMapper = new ObjectMapper();
         this.jsonFactory = new JsonFactory();
         this.repository = repository;
@@ -53,43 +60,27 @@ public class ExternalClinicApiClient {
 
     private String buildUrl(int page, int pageSize) {
         try {
-            String cleanUrl = apiUrl.replaceAll("[\\u200B-\\u200D\\uFEFF]", "");
-            String[] parts = cleanUrl.split("\\?");
-            String baseUrl = parts[0];
-            String query = parts.length > 1 ? parts[1] : "";
+            String encodedActivity =
+                    URLEncoder.encode(ACTIVITY_DESCRIPTION, StandardCharsets.UTF_8.name())
+                            .replace("+", "%20");
 
-            String[] pathParts = baseUrl.split("/");
-            StringBuilder encodedPath = new StringBuilder();
-            for (int i = 0; i < pathParts.length; i++) {
-                if (i > 0)
-                    encodedPath.append("/");
-                if (i >= 5) {
-                    String encodedPart =
-                            URLEncoder.encode(pathParts[i].trim(), StandardCharsets.UTF_8.name())
-                                    .replace("+", "%20");
-                    encodedPath.append(encodedPart);
-                } else {
-                    encodedPath.append(pathParts[i]);
-                }
-            }
+            // Construct the URL using base, encoded activity, entity code, pagination, and
+            // configured token
+            String url = String.format("%s/%s/%s/%d/%d/%s", BASE_API_URL, encodedActivity,
+                    ENTITY_CODE, page, pageSize, this.authToken); // this.authToken is from config
 
-            String finalUrl = encodedPath.toString();
-            if (!query.isEmpty()) {
-                finalUrl += "?" + query;
-            }
-
-            if (!finalUrl.contains(authToken)) {
-                finalUrl += "/" + authToken;
-            }
-
-            // Replace with pagination parameters
-            finalUrl = finalUrl.replace("/1/100000/", "/" + page + "/" + pageSize + "/");
-
-            LOGGER.info("Final URL: " + finalUrl);
-            return finalUrl;
-        } catch (Exception e) {
-            LOGGER.severe("Error building URL: " + e.getMessage());
-            return apiUrl;
+            // LOGGER.info("Final URL: " + url); // Original LOGGER info for finalUrl
+            // The existing code had a logger statement here, if you want to keep it:
+            // LOGGER.info("Fetching clinics from URL: " + url); // This was in fetchClinics, now
+            // URL built here.
+            // Let's keep a consistent log message for the built URL.
+            LOGGER.info("Constructed URL for external API: " + url);
+            return url;
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.log(Level.SEVERE, "Error encoding URL part for external API", e);
+            // Propagate as a runtime exception as the URL is critical
+            throw new RuntimeException("Error building URL for external API due to encoding issue",
+                    e);
         }
     }
 
