@@ -19,7 +19,6 @@ import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
 import com.medspace.infrastructure.dto.clinic.UpdateClinicDTO;
-import com.medspace.infrastructure.rest.annotations.AnalystOnly;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.application.usecase.clinic.GetClinicCountByCategoryUseCase;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
@@ -274,6 +273,7 @@ public class ClinicController {
         updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
 
         return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
+    }
 
     @GET
     @Path("/{category}/count")
