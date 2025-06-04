@@ -181,4 +181,19 @@ public class ClinicRepositoryImpl
     public long countAll() {
         return count();
     }
+
+
+    @Override
+    public long countClinicsByCategory(Clinic.Category category) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<ClinicEntity> clinic = query.from(ClinicEntity.class);
+    
+        Predicate predicate = cb.equal(clinic.get("category"), category);
+        query.select(cb.count(clinic)).where(predicate);
+    
+        return em.createQuery(query).getSingleResult();
+    }
+    
+
 }

@@ -23,4 +23,6 @@ public interface ClinicRepository {
 
     long countAll();
 
+    long countClinicsByCategory(Clinic.Category category);
+
 }

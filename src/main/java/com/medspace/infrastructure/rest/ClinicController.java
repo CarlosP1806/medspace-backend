@@ -1,12 +1,12 @@
 package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
+import java.util.Map;
 import com.medspace.application.usecase.clinic.availability.GetAvailabilitiesByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.equipment.GetEquipmentsByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.photo.GetClinicPhotoByIdUseCase;
 import com.medspace.application.usecase.clinic.photo.GetPhotosByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.photo.SetPhotoAsPrimaryClinicPhotoUseCase;
-import com.medspace.application.usecase.clinic.GetTotalClinicsCountUseCase;
 import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
@@ -19,7 +19,9 @@ import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
 import com.medspace.infrastructure.dto.clinic.UpdateClinicDTO;
+import com.medspace.infrastructure.rest.annotations.AnalystOnly;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
+import com.medspace.application.usecase.clinic.GetClinicCountByCategoryUseCase;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -31,6 +33,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.sql.Date;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 
 @ApplicationScoped
@@ -66,7 +69,8 @@ public class ClinicController {
     GetTotalClinicsCountUseCase getTotalClinicsCountUseCase;
     @Inject
     UpdateClinicUseCase updateClinicUseCase;
-
+    @Inject
+    GetClinicCountByCategoryUseCase getClinicCountByCategoryUseCase;
     @Inject
     RequestContext requestContext;
 
@@ -270,6 +274,30 @@ public class ClinicController {
         updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
 
         return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
+
+    @GET
+    @Path("/{category}/count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClinicCountByCategory(@PathParam("category") String category) {
+        try {
+
+            Clinic.Category enumCategory = Clinic.Category.valueOf(category.toUpperCase());
+            long count = getClinicCountByCategoryUseCase.execute(enumCategory);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("category", enumCategory.name());
+            response.put("count", count);
+
+            return Response.ok(response).build();
+
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Invalid category: " + category)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", e.getMessage())).build();
+        }
+
     }
 
 

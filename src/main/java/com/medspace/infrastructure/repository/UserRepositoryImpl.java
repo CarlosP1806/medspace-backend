@@ -2,18 +2,30 @@ package com.medspace.infrastructure.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.medspace.domain.model.TenantSpecialty;
 import com.medspace.domain.model.User;
 import com.medspace.domain.repository.UserRepository;
+import com.medspace.infrastructure.entity.TenantSpecialtyEntity;
+import jakarta.persistence.criteria.Join;
+
 import com.medspace.infrastructure.entity.UserEntity;
 import com.medspace.infrastructure.mapper.TenantSpecialtyMapper;
 import com.medspace.infrastructure.mapper.UserMapper;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import jakarta.persistence.criteria.Predicate;
 
 
 @ApplicationScoped
 public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase<UserEntity, Long> {
+    @Inject
+    EntityManager em;
 
     @Override
     @Transactional
@@ -128,6 +140,42 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
     @Override
     public long countByUserType(User.UserType userType) {
         return count("userType", userType);
+    }
+
+    @Override
+    public TenantSpecialty findSpecialtyByNameIgnoreCase(String name) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<TenantSpecialtyEntity> query = cb.createQuery(TenantSpecialtyEntity.class);
+        Root<TenantSpecialtyEntity> root = query.from(TenantSpecialtyEntity.class);
+
+        Predicate predicate = cb.equal(cb.lower(root.get("name")), name.toLowerCase());
+        query.select(root).where(predicate);
+
+        TenantSpecialtyEntity entity =
+                em.createQuery(query).getResultStream().findFirst().orElse(null);
+        if (entity == null) {
+            return null;
+        }
+        // Conversión a dominio
+        return new TenantSpecialty(entity.getId(), entity.getName());
+    }
+
+    @Override
+    public long countByUserTypeAndTenantSpecialty(User.UserType userType,
+            TenantSpecialty specialty) {
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<UserEntity> user = query.from(UserEntity.class);
+
+        Predicate userTypePredicate = cb.equal(user.get("userType"), userType);
+
+        Join<UserEntity, TenantSpecialtyEntity> specialtyJoin = user.join("tenantSpecialty");
+        Predicate specialtyPredicate = cb.equal(specialtyJoin.get("id"), specialty.getId());
+
+        query.select(cb.count(user)).where(cb.and(userTypePredicate, specialtyPredicate));
+
+        return em.createQuery(query).getSingleResult();
     }
 
 
