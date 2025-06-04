@@ -30,6 +30,8 @@ public class ClinicMapper {
         clinic.setAddressLongitude(clinicEntity.getAddressLongitude());
         clinic.setAddressLatitude(clinicEntity.getAddressLatitude());
 
+        clinic.setSize(clinicEntity.getSize());
+
         clinic.setLandlord(UserMapper.toDomain(clinicEntity.getLandlord()));
 
         clinic.setCreatedAt(clinicEntity.getCreatedAt());
@@ -61,6 +63,8 @@ public class ClinicMapper {
         clinicEntity.setAddressZip(clinic.getAddressZip());
         clinicEntity.setAddressLongitude(clinic.getAddressLongitude());
         clinicEntity.setAddressLatitude(clinic.getAddressLatitude());
+
+        clinicEntity.setSize(clinic.getSize());
 
         clinicEntity.setLandlord(UserMapper.toEntity(clinic.getLandlord()));
 

@@ -67,6 +67,9 @@ public class ClinicEntity {
     @Column(name = "available_to_date", nullable = false)
     private Date availableToDate;
 
+    @Column(name = "size", nullable = false)
+    private Integer size;
+
     @ManyToOne
     @JoinColumn(name = "landlord_id")
     private UserEntity landlord;

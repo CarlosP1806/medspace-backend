@@ -33,6 +33,8 @@ public class GetClinicDTO {
     private String addressLongitude;
     private String addressLatitude;
 
+    private int size; // size of the clinic, in square meters
+
     private Long landLordId;
 
     private Double averageRating; // average rating of Clinic, or null if there are no ratings
@@ -59,6 +61,8 @@ public class GetClinicDTO {
         this.addressLongitude = clinic.getAddressLongitude();
         this.addressLatitude = clinic.getAddressLatitude();
         this.averageRating = averageRating;
+
+        this.size = clinic.getSize();
 
         this.landLordId = clinic.getLandlord().getId();
 

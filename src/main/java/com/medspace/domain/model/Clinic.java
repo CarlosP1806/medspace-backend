@@ -34,6 +34,8 @@ public class Clinic {
     private String addressLongitude;
     private String addressLatitude;
 
+    private int size;
+
     private User landlord;
 
     private Instant createdAt;

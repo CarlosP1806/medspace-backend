@@ -149,9 +149,39 @@ public class ClinicRepositoryImpl
     }
 
     @Override
+    @Transactional
+    public Clinic updateClinic(Long id, Clinic clinic) {
+        ClinicEntity clinicEntity = findById(id);
+        if (clinicEntity == null) {
+            throw new NotFoundException("clinic with id " + id + " not found");
+        }
+
+        // Update only the fields that are allowed to be updated
+        if (clinic.getDisplayName() != null) {
+            clinicEntity.setDisplayName(clinic.getDisplayName());
+        }
+        if (clinic.getCategory() != null) {
+            clinicEntity.setCategory(clinic.getCategory());
+        }
+        if (clinic.getDescription() != null) {
+            clinicEntity.setDescription(clinic.getDescription());
+        }
+        if (clinic.getPricePerDay() > 0) {
+            clinicEntity.setPricePerDay(clinic.getPricePerDay());
+        }
+        if (clinic.getMaxStayDays() > 0) {
+            clinicEntity.setMaxStayDays(clinic.getMaxStayDays());
+        }
+
+        persist(clinicEntity);
+        return ClinicMapper.toDomain(clinicEntity);
+    }
+
+    @Override
     public long countAll() {
         return count();
     }
+
 
     @Override
     public long countClinicsByCategory(Clinic.Category category) {

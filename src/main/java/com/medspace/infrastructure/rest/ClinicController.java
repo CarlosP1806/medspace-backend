@@ -18,6 +18,7 @@ import com.medspace.infrastructure.dto.clinic.GetClinicEquipmentDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicPhotoDTO;
 import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
+import com.medspace.infrastructure.dto.clinic.UpdateClinicDTO;
 import com.medspace.infrastructure.rest.annotations.AnalystOnly;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
 import com.medspace.application.usecase.clinic.GetClinicCountByCategoryUseCase;
@@ -67,8 +68,9 @@ public class ClinicController {
     @Inject
     GetTotalClinicsCountUseCase getTotalClinicsCountUseCase;
     @Inject
+    UpdateClinicUseCase updateClinicUseCase;
+    @Inject
     GetClinicCountByCategoryUseCase getClinicCountByCategoryUseCase;
-
     @Inject
     RequestContext requestContext;
 
@@ -263,6 +265,16 @@ public class ClinicController {
         }
     }
 
+    @PUT
+    @Path("/{id}")
+    @LandlordOnly
+    public Response updateClinic(@PathParam("id") Long id, @Valid UpdateClinicDTO request) {
+
+        User loggedInUser = requestContext.getUser();
+        updateClinicUseCase.execute(id, request.toClinic(), loggedInUser.getId());
+
+        return Response.ok(ResponseDTO.success("Clinic updated successfully")).build();
+
     @GET
     @Path("/{category}/count")
     @Produces(MediaType.APPLICATION_JSON)
@@ -285,6 +297,7 @@ public class ClinicController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", e.getMessage())).build();
         }
+
     }
 
 
