@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class PaymentRepositoryImpl implements PaymentRepository, PanacheRepositoryBase<PaymentEntity, Long> {
+public class PaymentRepositoryImpl
+        implements PaymentRepository, PanacheRepositoryBase<PaymentEntity, Long> {
 
     @Override
     @Transactional
@@ -43,6 +44,16 @@ public class PaymentRepositoryImpl implements PaymentRepository, PanacheReposito
     }
 
     @Override
+    public List<Payment> findAllPayments() {
+        List<PaymentEntity> entities = listAll();
+        List<Payment> payments = new ArrayList<>();
+        for (PaymentEntity entity : entities) {
+            payments.add(PaymentMapper.toDomain(entity));
+        }
+        return payments;
+    }
+
+    @Override
     @Transactional
     public void deletePaymentById(Long paymentId) {
         PaymentEntity entity = findById(paymentId);
@@ -52,4 +63,4 @@ public class PaymentRepositoryImpl implements PaymentRepository, PanacheReposito
             throw new NotFoundException("Payment with id " + paymentId + " not found");
         }
     }
-} 
+}
