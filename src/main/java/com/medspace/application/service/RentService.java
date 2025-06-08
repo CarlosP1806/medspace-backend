@@ -201,6 +201,10 @@ public class RentService {
         return paymentRepository.findPaymentsByRentAgreementId(rentAgreementId);
     }
 
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAllPayments();
+    }
+
     public void deletePaymentById(Long paymentId) {
         paymentRepository.deletePaymentById(paymentId);
     }
