@@ -3,6 +3,7 @@ package com.medspace.domain.repository;
 import com.medspace.domain.model.Clinic;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import java.util.List;
+import java.util.Set;
 
 public interface ClinicRepository {
     public Clinic insertClinic(Clinic clinic);
@@ -25,4 +26,9 @@ public interface ClinicRepository {
 
     long countClinicsByCategory(Clinic.Category category);
 
+    long countByCity(String city);
+
+    Set<String> findAllUniqueCities();
+    
+    long getByCategoryAndCity(Clinic.Category category, String city);
 }
