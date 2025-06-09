@@ -2,6 +2,7 @@ package com.medspace.infrastructure.rest;
 
 import com.medspace.application.usecase.clinic.*;
 import java.util.Map;
+import org.checkerframework.common.reflection.qual.GetClass;
 import com.medspace.application.usecase.clinic.availability.GetAvailabilitiesByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.equipment.GetEquipmentsByClinicIdUseCase;
 import com.medspace.application.usecase.clinic.photo.GetClinicPhotoByIdUseCase;
@@ -11,6 +12,7 @@ import com.medspace.domain.model.Clinic;
 import com.medspace.domain.model.User;
 import com.medspace.infrastructure.dto.*;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
+import com.medspace.infrastructure.dto.clinic.CityFilterDTO;
 import com.medspace.infrastructure.dto.clinic.CreateClinicDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicAvailabilityDTO;
 import com.medspace.infrastructure.dto.clinic.GetClinicDTO;
@@ -20,7 +22,6 @@ import com.medspace.infrastructure.dto.clinic.MyClinicDTO;
 import com.medspace.infrastructure.dto.clinic.SetPhotoAsPrimaryDTO;
 import com.medspace.infrastructure.dto.clinic.UpdateClinicDTO;
 import com.medspace.infrastructure.rest.annotations.LandlordOnly;
-import com.medspace.application.usecase.clinic.GetClinicCountByCategoryUseCase;
 import com.medspace.infrastructure.rest.annotations.UserOnly;
 import com.medspace.infrastructure.rest.context.RequestContext;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -31,9 +32,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.sql.Date;
+import java.text.Normalizer;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Path("/clinics")
@@ -70,6 +75,14 @@ public class ClinicController {
     UpdateClinicUseCase updateClinicUseCase;
     @Inject
     GetClinicCountByCategoryUseCase getClinicCountByCategoryUseCase;
+    @Inject
+    GetClinicCountByCityUseCase getClinicCountByCityUseCase;
+
+    @Inject
+    GetAllCitiesWithClinicsUseCase getAllClinicCitiesUseCase;
+
+    @Inject
+    GetClinicsByCategoryAndCityUseCase getClinicsByCategoryAndCityUseCase;
     @Inject
     RequestContext requestContext;
 
@@ -297,8 +310,91 @@ public class ClinicController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", e.getMessage())).build();
         }
+    }
+ @GET
+@Path("/city-clinics/{city}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getClinicCountByCity(@PathParam("city") String city) {
+    try {
+        long count = getClinicCountByCityUseCase.execute(city);
+        return Response.ok(ResponseDTO.success("Clinic count fetched", Map.of("city", city, "count", count))).build();
+    } catch (Exception e) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ResponseDTO.error("Error counting clinics by city")).build();
+    }
+}
+
+@GET
+@Path("/cities")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getAllCitiesWithClinics() {
+    try {
+        Set<String> rawCities = getAllClinicCitiesUseCase.execute();
+
+        List<CityFilterDTO> cities = rawCities.stream()
+            .map(city -> new CityFilterDTO(
+                city, // label
+                normalizeCity(city) 
+            ))
+            .collect(Collectors.toList());
+
+        return Response.ok(ResponseDTO.success("Cities fetched", cities)).build();
+    } catch (Exception e) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ResponseDTO.error("Error retrieving cities")).build();
+    }
+}
+
+
+
+
+@GET
+@Path("/filter")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getClinicCountByCategoryAndCity(
+    @QueryParam("category") String categoryRaw,
+    @QueryParam("city") String cityRaw
+) {
+    try {
+        if (categoryRaw == null || cityRaw == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ResponseDTO.error("Category and city are required"))
+                    .build();
+        }
+
+        Clinic.Category category;
+        try {
+            category = Clinic.Category.valueOf(categoryRaw.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ResponseDTO.error("Invalid category value"))
+                    .build();
+        }
+
+        String normalizedCity = normalizeCity(cityRaw);
+
+        long count = getClinicsByCategoryAndCityUseCase.execute(category, normalizedCity);
+
+        return Response.ok(ResponseDTO.success("Clinic count retrieved", count)).build();
+    } catch (Exception e) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ResponseDTO.error("Error retrieving clinic count")).build();
+    }
+}
+
+private String normalizeCity(String city) {
+    if (city == null) return null;
+    return city.trim()
+               .toLowerCase()
+               .replaceAll("[áÁ]", "a")
+               .replaceAll("[éÉ]", "e")
+               .replaceAll("[íÍ]", "i")
+               .replaceAll("[óÓ]", "o")
+               .replaceAll("[úÚ]", "u")
+               .replaceAll("\\s+", "_");
+}
 
     }
 
 
-}
+

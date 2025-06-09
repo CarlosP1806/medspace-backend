@@ -22,10 +22,13 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
+import java.util.Set;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import jakarta.persistence.criteria.Expression;
 
 @ApplicationScoped
 public class ClinicRepositoryImpl
@@ -194,6 +197,44 @@ public class ClinicRepositoryImpl
     
         return em.createQuery(query).getSingleResult();
     }
+
+    @Override
+    public long countByCity(String city) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<ClinicEntity> clinic = query.from(ClinicEntity.class);
     
+        // Normalizamos el city para ignorar mayúsculas y espacios (igual que en JPQL)
+        Expression<String> normalizedCityDb = cb.lower(cb.function("REPLACE", String.class, clinic.get("addressCity"), cb.literal(" "), cb.literal("_")));
+        String normalizedCityParam = city.toLowerCase().replaceAll("\\s+", "_");
+    
+        // Creamos el predicado con igualdad entre city normalizado en BD y parámetro normalizado
+        Predicate cityPredicate = cb.equal(normalizedCityDb, normalizedCityParam);
+    
+        query.select(cb.count(clinic)).where(cityPredicate);
+    
+        return em.createQuery(query).getSingleResult();
+    }
+    
+
+@Override
+public Set<String> findAllUniqueCities() {
+    return new HashSet<>(
+        em.createQuery("SELECT DISTINCT c.addressCity FROM ClinicEntity c", String.class)
+          .getResultList()
+    );
+}
+public long getByCategoryAndCity(Clinic.Category category, String city) {
+    String normalizedCity = city.toLowerCase().replaceAll("\\s+", "_");
+
+    return em.createQuery(
+        "SELECT COUNT(c) FROM ClinicEntity c WHERE " +
+        "LOWER(REPLACE(c.addressCity, ' ', '_')) = :normalizedCity AND c.category = :category",
+        Long.class)
+        .setParameter("normalizedCity", normalizedCity)
+        .setParameter("category", category)
+        .getSingleResult();
+}
+
 
 }

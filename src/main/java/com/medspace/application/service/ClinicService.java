@@ -13,6 +13,7 @@ import com.medspace.domain.repository.ReviewRepository;
 import com.medspace.infrastructure.dto.clinic.ClinicQueryDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.util.Set;
 
 import java.time.Instant;
 import java.util.List;
@@ -199,6 +200,15 @@ public class ClinicService {
 
     public long countClinicsByCategory(Clinic.Category category) {
         return clinicRepository.countClinicsByCategory(category);
+    }
+    public long countByCity(String city) {
+        return clinicRepository.countByCity(city);
+    }    
+    public Set<String> findAllUniqueCities() {
+        return clinicRepository.findAllUniqueCities();
+    }
+    public long getByCategoryAndCity(Clinic.Category category, String city){
+        return clinicRepository.getByCategoryAndCity(category, city);
     }
     
 }
